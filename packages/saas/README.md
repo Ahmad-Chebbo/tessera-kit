@@ -1,17 +1,17 @@
-# Tessera Core
+# Tessera SaaS
 
 The SaaS layer of [Tessera](https://github.com/Ahmad-Chebbo/tessera-kit): companies with branches and locations, and subscriptions with plans and limits. It builds on [`tessera-base`](https://github.com/Ahmad-Chebbo/tessera-base) (sign-in, users and roles), which it installs with it. Feature modules (sales, inventory, expenses, …) build on it.
 
-It installs with the [starter](https://github.com/Ahmad-Chebbo/tessera-starter). To add it to a project that started from the base:
+It replaces the old `tessera-core` package (same classes, same namespaces): `composer require ahmad-chebbo/tessera-saas` removes `tessera-core` for you. It installs with the [starter](https://github.com/Ahmad-Chebbo/tessera-starter). To add it to a project that started from the base:
 
 ```bash
 composer config repositories.tessera composer https://ahmad-chebbo.github.io/tessera-kit
-composer require ahmad-chebbo/tessera-core
+composer require ahmad-chebbo/tessera-saas
 php artisan migrate
 php artisan modules:sync
 ```
 
-## The two core modules
+## The two modules
 
 Core modules are always enabled and cannot be switched off.
 

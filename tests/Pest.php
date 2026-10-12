@@ -18,7 +18,7 @@ require_once __DIR__.'/Support/Frontend.php';
 
 pest()->extend(TestCase::class)
     ->use(RefreshDatabase::class)
-    ->in('Feature', 'Product', '../app/Modules/*/Tests/Feature', '../packages/modules/*/Tests/Feature', '../packages/base/modules/*/Tests/Feature', '../packages/core/modules/*/Tests/Feature');
+    ->in('Feature', 'Product', '../app/Modules/*/Tests/Feature', '../packages/modules/*/Tests/Feature', '../packages/base/modules/*/Tests/Feature', '../packages/saas/modules/*/Tests/Feature');
 
 /*
 |--------------------------------------------------------------------------

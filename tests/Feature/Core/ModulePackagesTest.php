@@ -66,7 +66,7 @@ describe('module:package', function () {
         expect($composer['name'])->toBe('ahmad-chebbo/tessera-zzdemo')
             ->and($composer['autoload']['psr-4'])->toBe(['App\\Modules\\Zzdemo\\' => ''])
             ->and($composer['extra']['tessera']['modules'])->toBe(['App\\Modules\\Zzdemo\\ZzdemoServiceProvider'])
-            ->and($composer['require'])->toHaveKeys(['php', 'ahmad-chebbo/tessera-engine', 'ahmad-chebbo/tessera-core'])
+            ->and($composer['require'])->toHaveKeys(['php', 'ahmad-chebbo/tessera-engine', 'ahmad-chebbo/tessera-base'])
             ->and(is_file("{$package}/ZzdemoServiceProvider.php"))->toBeTrue()
             ->and(is_file("{$package}/Resources/js/Pages/Zzdemo/Index.vue"))->toBeTrue();
     });
@@ -82,7 +82,9 @@ describe('module:package', function () {
         $this->artisan('module:package', ['key' => 'sales', '--path' => 'packages-test'])->assertSuccessful();
         $sales = json_decode(file_get_contents(base_path('packages-test/sales/composer.json')), true);
 
-        expect($sales['require'])->toHaveKeys(['ahmad-chebbo/tessera-catalog', 'ahmad-chebbo/tessera-inventory', 'ahmad-chebbo/tessera-customers'])->not->toHaveKey('ahmad-chebbo/tessera-team');
+        expect($sales['require'])->toHaveKeys(['ahmad-chebbo/tessera-catalog', 'ahmad-chebbo/tessera-inventory', 'ahmad-chebbo/tessera-customers'])->not->toHaveKey('ahmad-chebbo/tessera-team')
+            ->and($sales['require'])->toHaveKey('ahmad-chebbo/tessera-saas')
+            ->and($composer['require'])->not->toHaveKey('ahmad-chebbo/tessera-saas');
     })->skip(fn () => ! moduleInstalled('exports') || ! moduleInstalled('sales'), 'Needs Exports and Sales');
 
     it('refuses core modules, unknown keys and existing folders', function () {

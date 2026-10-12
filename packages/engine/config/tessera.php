@@ -20,6 +20,18 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Modules that come from the SaaS package
+    |--------------------------------------------------------------------------
+    |
+    | `module:package` requires the base package for every module, and the SaaS package too when the module requires one
+    | of these (companies, branches, plans).
+    |
+    */
+
+    'saas_modules' => ['company', 'subscription'],
+
+    /*
+    |--------------------------------------------------------------------------
     | Core translation files
     |--------------------------------------------------------------------------
     |

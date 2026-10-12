@@ -37,7 +37,7 @@ it('builds a fresh starter that requires the engine and the base only', function
 
         expect($composer['name'])->toBe('ahmad-chebbo/tessera-fresh')
             ->and($required)->toContain('ahmad-chebbo/tessera-engine', 'ahmad-chebbo/tessera-base')
-            ->and($required)->not->toContain('ahmad-chebbo/tessera-core')
+            ->and($required)->not->toContain('ahmad-chebbo/tessera-saas')
             ->and(collect($required)->filter(fn (string $name): bool => str_starts_with($name, 'ahmad-chebbo/tessera-'))->count())->toBe(2)
             ->and($composer['autoload'])->not->toHaveKey('files')
             ->and(file_exists($target.'/app/Helpers/currency.php'))->toBeFalse()
@@ -57,7 +57,7 @@ it('builds the SaaS starter with the core on top of the base', function () {
         $composer = json_decode(file_get_contents($target.'/composer.json'), true);
 
         expect($composer['name'])->toBe('ahmad-chebbo/tessera-starter')
-            ->and(array_keys($composer['require']))->toContain('ahmad-chebbo/tessera-engine', 'ahmad-chebbo/tessera-base', 'ahmad-chebbo/tessera-core')
+            ->and(array_keys($composer['require']))->toContain('ahmad-chebbo/tessera-engine', 'ahmad-chebbo/tessera-base', 'ahmad-chebbo/tessera-saas')
             ->and(file_exists($target.'/app/Helpers/currency.php'))->toBeTrue();
     } finally {
         File::deleteDirectory($target);

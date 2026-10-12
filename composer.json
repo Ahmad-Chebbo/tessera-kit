@@ -23,7 +23,7 @@
         "tightenco/ziggy": "^2.6",
         "ahmad-chebbo/tessera-engine": "@dev",
         "ahmad-chebbo/tessera-base": "@dev",
-        "ahmad-chebbo/tessera-core": "@dev",
+        "ahmad-chebbo/tessera-saas": "@dev",
         "ahmad-chebbo/tessera-attendance": "@dev",
         "ahmad-chebbo/tessera-catalog": "@dev",
         "ahmad-chebbo/tessera-customers": "@dev",
@@ -132,7 +132,7 @@
         },
         {
             "type": "path",
-            "url": "packages/core",
+            "url": "packages/saas",
             "options": {
                 "symlink": true
             }

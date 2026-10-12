@@ -36,7 +36,7 @@ php artisan module:add expenses
 bun run build
 ```
 
-Modules that work with companies (sales, catalog, inventory...) need the SaaS core, and `module:add` installs it for you, which also turns on branches, plans and the other company features. If you do not want those, start from the SaaS starter instead or write your own modules.
+Modules that work with companies (sales, catalog, inventory...) need the SaaS package, and `module:add` installs it for you, which also turns on branches, plans and the other company features. If you do not want those, start from the SaaS starter instead or write your own modules.
 
 ## Write your own module
 

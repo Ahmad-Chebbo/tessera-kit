@@ -14,7 +14,7 @@
             <directory>app/Modules/*/Tests/Feature</directory>
             <directory>packages/modules/*/Tests/Feature</directory>
             <directory>packages/base/modules/*/Tests/Feature</directory>
-            <directory>packages/core/modules/*/Tests/Feature</directory>
+            <directory>packages/saas/modules/*/Tests/Feature</directory>
         </testsuite>
     </testsuites>
     <source>

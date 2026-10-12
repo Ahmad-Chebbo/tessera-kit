@@ -1,5 +1,5 @@
 {
-    "name": "ahmad-chebbo/tessera-core",
+    "name": "ahmad-chebbo/tessera-saas",
     "description": "The SaaS layer of Tessera: companies with branches and locations, subscriptions with plans and limits. Builds on tessera-base.",
     "type": "library",
     "license": "proprietary",
@@ -29,5 +29,8 @@
         "branch-alias": {
             "dev-main": "1.x-dev"
         }
+    },
+    "replace": {
+        "ahmad-chebbo/tessera-core": "self.version"
     }
 }

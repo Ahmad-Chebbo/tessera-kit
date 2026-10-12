@@ -1,6 +1,6 @@
 # Tessera
 
-A modular kit for Laravel business applications. Install a small core, then add the features you need as modules, the way you add plugins to WordPress, but as normal Composer packages.
+A modular kit for Laravel business applications. Install a small base, then add the features you need as modules, the way you add plugins to WordPress, but as normal Composer packages.
 
 ```bash
 composer create-project ahmad-chebbo/tessera-starter shop --repository-url=https://ahmad-chebbo.github.io/tessera-kit
@@ -17,7 +17,7 @@ Start from the [starter](https://github.com/Ahmad-Chebbo/tessera-starter) to bui
 |---|---|---|---|
 | Engine | [tessera-engine](https://github.com/Ahmad-Chebbo/tessera-engine) | Composer | Finds, orders and boots modules; `module:*` commands. Works in any Laravel app. |
 | Base | [tessera-base](https://github.com/Ahmad-Chebbo/tessera-base) | Composer | Auth and Team (users, roles, permissions), plus the shared contracts. Works alone. |
-| Core | [tessera-core](https://github.com/Ahmad-Chebbo/tessera-core) | Composer | Company and Subscription: companies, branches, plans. Builds on the base. |
+| SaaS | [tessera-saas](https://github.com/Ahmad-Chebbo/tessera-saas) | Composer | Company and Subscription: companies, branches, plans. Builds on the base. |
 | UI | [tessera-ui](https://github.com/Ahmad-Chebbo/tessera-ui) | bun / npm | Vue 3 components, composables and the theme. Standalone. |
 | Modules | `tessera-<key>` | Composer | Attendance, Catalog, Customers, Discounts, Expenses, Exports, Inventory, Reports, Sales, Shifts. |
 | Starter | [tessera-starter](https://github.com/Ahmad-Chebbo/tessera-starter) | `composer create-project` | A Laravel SaaS app with the engine, base, core, UI and application shell. |
@@ -29,7 +29,8 @@ Every package has a README. They are read-only copies of folders here.
 
 ```
 packages/engine           Tessera\Engine         the module engine
-packages/core             Tessera\Core           contracts + modules/{Auth,Company,Subscription,Team}
+packages/base             Tessera\Core           contracts + modules/{Auth,Team}
+packages/saas             App\Modules\...        modules/{Company,Subscription}
 packages/ui               @ahmad-chebbo/tessera-ui   the interface kit (npm)
 packages/modules/<key>    App\Modules\<Name>    one folder per feature module
 app, resources, routes    the host application (it becomes the starter)

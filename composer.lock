@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "90613a5dc003cd38f38f1fd1d83e2bbf",
+    "content-hash": "67a2871b0ec05ff624beb1fd9daa0657",
     "packages": [
         {
             "name": "ahmad-chebbo/tessera-attendance",
@@ -12,11 +12,11 @@
             "dist": {
                 "type": "path",
                 "url": "packages/modules/attendance",
-                "reference": "6f244cafcd447790a4b4032713c6be3d6cc3aadc"
+                "reference": "afdcfdb832594993a9cdceff54ef4c50889af995"
             },
             "require": {
-                "ahmad-chebbo/tessera-core": "^1.0",
                 "ahmad-chebbo/tessera-engine": "^1.0",
+                "ahmad-chebbo/tessera-saas": "^1.2",
                 "ahmad-chebbo/tessera-shifts": "^1.0",
                 "php": "^8.4"
             },
@@ -51,7 +51,7 @@
             "dist": {
                 "type": "path",
                 "url": "packages/base",
-                "reference": "9f741d284801fe102669f4a0ab9002cc773fd1c1"
+                "reference": "8b5af0610a0d37fc3b4b79f86747213d28f4b36c"
             },
             "require": {
                 "ahmad-chebbo/tessera-engine": "^1.0",
@@ -89,7 +89,7 @@
             "license": [
                 "proprietary"
             ],
-            "description": "The base of Tessera: sign-in, users, roles and permissions. Add tessera-core on top for companies, branches and subscriptions.",
+            "description": "The base of Tessera: sign-in, users, roles and permissions. Add tessera-saas on top for companies, branches and subscriptions.",
             "transport-options": {
                 "symlink": true,
                 "relative": true
@@ -101,11 +101,11 @@
             "dist": {
                 "type": "path",
                 "url": "packages/modules/catalog",
-                "reference": "d57859770cccd4c4a61b42bfa24df4e6d308b427"
+                "reference": "3cde88f52a96bbd6f12eb8ef62851ad4e1da998d"
             },
             "require": {
-                "ahmad-chebbo/tessera-core": "^1.0",
                 "ahmad-chebbo/tessera-engine": "^1.0",
+                "ahmad-chebbo/tessera-saas": "^1.2",
                 "php": "^8.4",
                 "spatie/laravel-medialibrary": "*"
             },
@@ -135,61 +135,16 @@
             }
         },
         {
-            "name": "ahmad-chebbo/tessera-core",
-            "version": "dev-main",
-            "dist": {
-                "type": "path",
-                "url": "packages/core",
-                "reference": "97fe2d19c9d04f9af596dd63311e4bd25d2adf4d"
-            },
-            "require": {
-                "ahmad-chebbo/tessera-base": "^1.0",
-                "ahmad-chebbo/tessera-engine": "^1.0",
-                "inertiajs/inertia-laravel": "*",
-                "laravel/sanctum": "*",
-                "php": "^8.4",
-                "spatie/laravel-medialibrary": "*",
-                "spatie/laravel-permission": "*",
-                "tightenco/ziggy": "*"
-            },
-            "type": "library",
-            "extra": {
-                "tessera": {
-                    "modules": [
-                        "App\\Modules\\Company\\CompanyServiceProvider",
-                        "App\\Modules\\Subscription\\SubscriptionServiceProvider"
-                    ]
-                },
-                "branch-alias": {
-                    "dev-main": "1.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "App\\Modules\\Company\\": "modules/Company/",
-                    "App\\Modules\\Subscription\\": "modules/Subscription/"
-                }
-            },
-            "license": [
-                "proprietary"
-            ],
-            "description": "The SaaS layer of Tessera: companies with branches and locations, subscriptions with plans and limits. Builds on tessera-base.",
-            "transport-options": {
-                "symlink": true,
-                "relative": true
-            }
-        },
-        {
             "name": "ahmad-chebbo/tessera-customers",
             "version": "dev-main",
             "dist": {
                 "type": "path",
                 "url": "packages/modules/customers",
-                "reference": "ff12b287b3b6fe542863a97e5211ff8e37e6f48f"
+                "reference": "48e65a567921a9add93a5c085168ee329c30fe7e"
             },
             "require": {
-                "ahmad-chebbo/tessera-core": "^1.0",
                 "ahmad-chebbo/tessera-engine": "^1.0",
+                "ahmad-chebbo/tessera-saas": "^1.2",
                 "php": "^8.4"
             },
             "type": "library",
@@ -223,13 +178,13 @@
             "dist": {
                 "type": "path",
                 "url": "packages/modules/discounts",
-                "reference": "e4b4dfb253b785b914ab602dd1ecab62767fd37b"
+                "reference": "b6f0425723b1db99a707421facb94c55efe027df"
             },
             "require": {
                 "ahmad-chebbo/tessera-catalog": "^1.0",
-                "ahmad-chebbo/tessera-core": "^1.0",
                 "ahmad-chebbo/tessera-customers": "^1.0",
                 "ahmad-chebbo/tessera-engine": "^1.0",
+                "ahmad-chebbo/tessera-saas": "^1.2",
                 "ahmad-chebbo/tessera-sales": "^1.0",
                 "php": "^8.4"
             },
@@ -304,11 +259,11 @@
             "dist": {
                 "type": "path",
                 "url": "packages/modules/expenses",
-                "reference": "945c5263f48058030b05308e4d8e451cb056a3df"
+                "reference": "d022ff06456137f5ec279db1cbd80093dd1cdbc7"
             },
             "require": {
-                "ahmad-chebbo/tessera-core": "^1.0",
                 "ahmad-chebbo/tessera-engine": "^1.0",
+                "ahmad-chebbo/tessera-saas": "^1.2",
                 "php": "^8.4",
                 "spatie/laravel-medialibrary": "*"
             },
@@ -343,11 +298,11 @@
             "dist": {
                 "type": "path",
                 "url": "packages/modules/exports",
-                "reference": "e6fd4921052030a2597fdc443f35e0e9b7ed79f6"
+                "reference": "f92dcc4112bf93f8ae7a8f9dff574ffde2fdec9a"
             },
             "require": {
-                "ahmad-chebbo/tessera-core": "^1.0",
                 "ahmad-chebbo/tessera-engine": "^1.0",
+                "ahmad-chebbo/tessera-saas": "^1.2",
                 "mpdf/mpdf": "*",
                 "openspout/openspout": "*",
                 "php": "^8.4"
@@ -383,12 +338,12 @@
             "dist": {
                 "type": "path",
                 "url": "packages/modules/inventory",
-                "reference": "eadb25b95a185f6f0500323c5f7ba1ce81719231"
+                "reference": "9313bc76cf67d7e9018e5e1b411f64484f3a184a"
             },
             "require": {
                 "ahmad-chebbo/tessera-catalog": "^1.0",
-                "ahmad-chebbo/tessera-core": "^1.0",
                 "ahmad-chebbo/tessera-engine": "^1.0",
+                "ahmad-chebbo/tessera-saas": "^1.2",
                 "php": "^8.4"
             },
             "type": "library",
@@ -422,12 +377,12 @@
             "dist": {
                 "type": "path",
                 "url": "packages/modules/reports",
-                "reference": "06e37ee2c9385c89caaaf5c92e0d6e1fac4a6542"
+                "reference": "360f3cc8f5a95feb84634160b8361e611b61e66b"
             },
             "require": {
                 "ahmad-chebbo/tessera-catalog": "^1.0",
-                "ahmad-chebbo/tessera-core": "^1.0",
                 "ahmad-chebbo/tessera-engine": "^1.0",
+                "ahmad-chebbo/tessera-saas": "^1.2",
                 "ahmad-chebbo/tessera-sales": "^1.0",
                 "php": "^8.4"
             },
@@ -457,19 +412,67 @@
             }
         },
         {
+            "name": "ahmad-chebbo/tessera-saas",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "packages/saas",
+                "reference": "2147c2c018c71b9d1ef2372a8be3f4146b2ba9f5"
+            },
+            "require": {
+                "ahmad-chebbo/tessera-base": "^1.0",
+                "ahmad-chebbo/tessera-engine": "^1.0",
+                "inertiajs/inertia-laravel": "*",
+                "laravel/sanctum": "*",
+                "php": "^8.4",
+                "spatie/laravel-medialibrary": "*",
+                "spatie/laravel-permission": "*",
+                "tightenco/ziggy": "*"
+            },
+            "replace": {
+                "ahmad-chebbo/tessera-core": "self.version"
+            },
+            "type": "library",
+            "extra": {
+                "tessera": {
+                    "modules": [
+                        "App\\Modules\\Company\\CompanyServiceProvider",
+                        "App\\Modules\\Subscription\\SubscriptionServiceProvider"
+                    ]
+                },
+                "branch-alias": {
+                    "dev-main": "1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "App\\Modules\\Company\\": "modules/Company/",
+                    "App\\Modules\\Subscription\\": "modules/Subscription/"
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "description": "The SaaS layer of Tessera: companies with branches and locations, subscriptions with plans and limits. Builds on tessera-base.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
             "name": "ahmad-chebbo/tessera-sales",
             "version": "dev-main",
             "dist": {
                 "type": "path",
                 "url": "packages/modules/sales",
-                "reference": "121d750c3b48a3b89d2ab087dcc0cfd98c9e84d9"
+                "reference": "24e98e1279098689e16a81b162ff9187a0e92e1e"
             },
             "require": {
                 "ahmad-chebbo/tessera-catalog": "^1.0",
-                "ahmad-chebbo/tessera-core": "^1.0",
                 "ahmad-chebbo/tessera-customers": "^1.0",
                 "ahmad-chebbo/tessera-engine": "^1.0",
                 "ahmad-chebbo/tessera-inventory": "^1.0",
+                "ahmad-chebbo/tessera-saas": "^1.2",
                 "php": "^8.4"
             },
             "type": "library",
@@ -503,11 +506,11 @@
             "dist": {
                 "type": "path",
                 "url": "packages/modules/shifts",
-                "reference": "87660bccda0995c64af4d24cc706a02653b29ea2"
+                "reference": "b617d32ec2be90cf73edab35bfc09a55d6faa9db"
             },
             "require": {
-                "ahmad-chebbo/tessera-core": "^1.0",
                 "ahmad-chebbo/tessera-engine": "^1.0",
+                "ahmad-chebbo/tessera-saas": "^1.2",
                 "php": "^8.4"
             },
             "type": "library",
@@ -12169,7 +12172,6 @@
         "ahmad-chebbo/tessera-attendance": 20,
         "ahmad-chebbo/tessera-base": 20,
         "ahmad-chebbo/tessera-catalog": 20,
-        "ahmad-chebbo/tessera-core": 20,
         "ahmad-chebbo/tessera-customers": 20,
         "ahmad-chebbo/tessera-discounts": 20,
         "ahmad-chebbo/tessera-engine": 20,
@@ -12177,6 +12179,7 @@
         "ahmad-chebbo/tessera-exports": 20,
         "ahmad-chebbo/tessera-inventory": 20,
         "ahmad-chebbo/tessera-reports": 20,
+        "ahmad-chebbo/tessera-saas": 20,
         "ahmad-chebbo/tessera-sales": 20,
         "ahmad-chebbo/tessera-shifts": 20
     },

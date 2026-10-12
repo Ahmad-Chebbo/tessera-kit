@@ -1,6 +1,6 @@
 {
     "name": "ahmad-chebbo/tessera-base",
-    "description": "The base of Tessera: sign-in, users, roles and permissions. Add tessera-core on top for companies, branches and subscriptions.",
+    "description": "The base of Tessera: sign-in, users, roles and permissions. Add tessera-saas on top for companies, branches and subscriptions.",
     "type": "library",
     "license": "proprietary",
     "require": {
