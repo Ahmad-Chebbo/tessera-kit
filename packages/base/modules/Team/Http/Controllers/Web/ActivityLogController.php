@@ -10,17 +10,17 @@ use App\Modules\Team\Models\User;
 use Inertia\Inertia;
 use Inertia\Response;
 use Tessera\Core\Contracts\BranchScope;
+use Tessera\Core\Contracts\Tenancy;
 
 class ActivityLogController extends Controller
 {
-    public function __construct(private BranchScope $access) {}
+    public function __construct(private BranchScope $access, private Tenancy $tenancy) {}
 
     public function index(ActivityLogRequest $request): Response
     {
         $actor = $request->user();
 
-        $logs = ActivityLog::query()
-            ->where('tenant_id', $actor->tenant_id)
+        $logs = $this->tenancy->scope(ActivityLog::query(), $actor->tenant_id)
             ->with('user:id,name')
             ->tap(fn ($query) => $this->access->scopeThroughUser($query, $actor, $request->query('branch_id')))
             ->when($request->integer('user_id'), fn ($query, $id) => $query->where('user_id', $id))
@@ -44,7 +44,7 @@ class ActivityLogController extends Controller
 
         return Inertia::render('Activity/Index', [
             'logs' => $logs,
-            'employees' => $this->access->scope(User::query()->where('tenant_id', $actor->tenant_id), $actor, $request->query('branch_id'))->orderBy('name')->get(['id', 'name']),
+            'employees' => $this->access->scope($this->tenancy->scope(User::query(), $actor->tenant_id), $actor, $request->query('branch_id'))->orderBy('name')->get(['id', 'name']),
             'events' => collect(ActivityEvent::cases())->map(fn (ActivityEvent $event): array => ['value' => $event->value, 'label' => $event->label()]),
             'filters' => [...$request->only(['user_id', 'event', 'date_from', 'date_to', 'search']), 'branch_id' => $this->access->canSeeAll($actor) ? $this->access->effective($actor, $request->query('branch_id')) : null],
         ]);

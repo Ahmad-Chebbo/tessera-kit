@@ -19,11 +19,13 @@ use Inertia\Inertia;
 use Inertia\Response;
 use InvalidArgumentException;
 use Tessera\Core\Contracts\BranchScope;
+use Tessera\Core\Contracts\Tenancy;
 
 class UserController extends Controller
 {
     public function __construct(
         private BranchScope $access,
+        private Tenancy $tenancy,
         private TeamFeatures $features,
         private AssignableRoles $assignableRoles,
         private CreateEmployeeAction $createEmployee,
@@ -39,8 +41,7 @@ class UserController extends Controller
             abort(403);
         }
 
-        $query = User::query()
-            ->where('tenant_id', $user->tenant_id)
+        $query = $this->tenancy->scope(User::query(), $user->tenant_id)
             ->with(['roles:id,name', ...($this->features->branches() ? ['branch:id,name'] : []), ...($this->features->employeeProfiles() ? ['employeeProfile'] : [])])
             ->orderBy('name');
 
@@ -112,7 +113,7 @@ class UserController extends Controller
     {
         $actor = $request->user();
 
-        if (! $actor->can('view users') || $user->tenant_id !== $actor->tenant_id) {
+        if (! $actor->can('view users') || ! $this->tenancy->sameTenant($user, $actor)) {
             abort(403);
         }
 
@@ -120,8 +121,7 @@ class UserController extends Controller
 
         $user->load(['roles:id,name', ...($this->features->branches() ? ['branch:id,name'] : []), ...($this->features->employeeProfiles() ? ['employeeProfile'] : [])]);
 
-        $activity = ActivityLog::query()
-            ->where('tenant_id', $actor->tenant_id)
+        $activity = $this->tenancy->scope(ActivityLog::query(), $actor->tenant_id)
             ->where('user_id', $user->id)
             ->latest('id')
             ->paginate(10)
@@ -162,7 +162,7 @@ class UserController extends Controller
             abort(403);
         }
 
-        if ($user->tenant_id !== $currentUser->tenant_id) {
+        if (! $this->tenancy->sameTenant($user, $currentUser)) {
             abort(403);
         }
 
@@ -195,7 +195,7 @@ class UserController extends Controller
     public function update(UpdateUserRequest $request, User $user): RedirectResponse
     {
         $currentUser = $request->user();
-        abort_unless($user->tenant_id === $currentUser->tenant_id, 403);
+        abort_unless($this->tenancy->sameTenant($user, $currentUser), 403);
         $this->access->ensure($currentUser, $user->branch_id);
 
         $this->updateEmployee->execute($currentUser, $user, $request->validated());
@@ -212,7 +212,7 @@ class UserController extends Controller
             abort(403);
         }
 
-        if ($user->tenant_id !== $currentUser->tenant_id) {
+        if (! $this->tenancy->sameTenant($user, $currentUser)) {
             abort(403);
         }
 

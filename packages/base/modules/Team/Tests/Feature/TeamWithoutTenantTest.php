@@ -5,18 +5,22 @@ use App\Modules\Team\Models\ActivityLog;
 use App\Modules\Team\Models\User;
 use App\Modules\Team\Services\ActivityLogger;
 use App\Modules\Team\Services\TeamFeatures;
+use Illuminate\Support\Facades\DB;
 use Inertia\Testing\AssertableInertia as Assert;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Tessera\Core\Contracts\BranchScope;
 use Tessera\Core\Contracts\Defaults\NoBranches;
 use Tessera\Core\Contracts\Defaults\NoPlanLimits;
+use Tessera\Core\Contracts\Defaults\NoTenancy;
 use Tessera\Core\Contracts\PlanLimits;
+use Tessera\Core\Contracts\Tenancy;
 
 /**
- * What the fresh starter runs: no Tenant module, so no branches, no plan limits and a user without a tenant.
+ * What the fresh starter runs: no Tenant module, so no tenant column, no branches, no plan limits and roles everyone shares.
  */
 beforeEach(function () {
+    app()->bind(Tenancy::class, NoTenancy::class);
     app()->bind(BranchScope::class, NoBranches::class);
     app()->bind(PlanLimits::class, NoPlanLimits::class);
     config(['team.employee_profiles' => false, 'team.activity_log' => false]);
@@ -37,6 +41,11 @@ it('tells the pages which optional parts are off', function () {
 });
 
 it('creates, updates and deletes a user without a branch or a profile', function () {
+    $statements = [];
+    DB::listen(function ($query) use (&$statements): void {
+        $statements[] = $query->sql;
+    });
+
     $this->actingAs($this->owner)->post(route('users.store'), [
         'name' => 'Sam', 'email' => 'sam@example.com', 'password' => 'Str0ng!Passw0rd#2026', 'role' => 'Manager', 'is_active' => true,
     ])->assertRedirect(route('users.index'));
@@ -59,6 +68,10 @@ it('creates, updates and deletes a user without a branch or a profile', function
     $this->actingAs($this->owner)->delete(route('users.destroy', $sam))->assertRedirect(route('users.index'));
 
     expect(User::find($sam->id))->toBeNull();
+
+    $writes = collect($statements)->filter(fn (string $sql): bool => str_starts_with($sql, 'insert') || str_starts_with($sql, 'update'));
+
+    expect($writes->filter(fn (string $sql): bool => str_contains($sql, 'tenant_id') || str_contains($sql, 'branch_id')))->toBeEmpty();
 });
 
 it('manages the shared roles when there are no tenants', function () {

@@ -36,10 +36,10 @@ class AuthenticatedSessionController extends Controller
 
         $user = $request->user();
 
-        if ($user->hasRole('Cashier')) {
-            return redirect()->intended('/pos');
-        } elseif ($user->hasRole('Admin')) {
-            return redirect()->intended('/admin/tenants');
+        if ($user->hasRole('Cashier') && Route::has('pos.index')) {
+            return redirect()->intended(route('pos.index', absolute: false));
+        } elseif ($user->hasRole('Admin') && Route::has('admin.tenants.index')) {
+            return redirect()->intended(route('admin.tenants.index', absolute: false));
         }
 
         return redirect()->intended(Home::url());

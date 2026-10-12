@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Hash;
 use InvalidArgumentException;
 use Tessera\Core\Contracts\BranchScope;
 use Tessera\Core\Contracts\PlanLimits;
+use Tessera\Core\Contracts\Tenancy;
 
 class CreateEmployeeAction
 {
@@ -22,6 +23,7 @@ class CreateEmployeeAction
         private readonly EmployeeProfileService $profiles,
         private readonly ActivityLogger $activity,
         private readonly TeamFeatures $features,
+        private readonly Tenancy $tenancy,
     ) {}
 
     /**
@@ -42,12 +44,12 @@ class CreateEmployeeAction
                 'name' => $data['name'],
                 'email' => $data['email'],
                 'password' => Hash::make($data['password']),
-                'tenant_id' => $actor->tenant_id,
-                'branch_id' => $this->access->canSeeAll($actor) ? ($data['branch_id'] ?? null) : $actor->branch_id,
+                ...$this->tenancy->attributes($actor->tenant_id),
+                ...($this->access->available() ? ['branch_id' => $this->access->canSeeAll($actor) ? ($data['branch_id'] ?? null) : $actor->branch_id] : []),
                 'is_active' => $data['is_active'] ?? true,
             ]);
 
-            $employee->assignRole(Role::resolveFor($actor->tenant_id, $data['role']));
+            $employee->assignRole(Role::resolveFor($this->tenancy->roleOwner($actor), $data['role']));
 
             if ($this->features->employeeProfiles()) {
                 $this->profiles->save($employee, $data);

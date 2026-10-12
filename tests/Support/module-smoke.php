@@ -6,6 +6,7 @@
  * be migrated. Used by the module set tests, which run it as a separate process with MODULES_ENABLED set.
  */
 
+use App\Modules\Team\Models\Role;
 use App\Modules\Team\Models\User;
 use App\Modules\Team\Services\PermissionSynchronizer;
 use App\Modules\Tenant\Models\Branch;
@@ -15,6 +16,7 @@ use Illuminate\Contracts\Http\Kernel as HttpKernel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Models\Permission;
+use Tessera\Engine\ModuleRegistry;
 
 require __DIR__.'/../../vendor/autoload.php';
 
@@ -23,9 +25,15 @@ $app->make(Kernel::class)->bootstrap();
 
 app(PermissionSynchronizer::class)->sync();
 
-$tenant = Tenant::factory()->create();
-$branch = Branch::factory()->create(['tenant_id' => $tenant->id]);
-$user = User::factory()->create(['tenant_id' => $tenant->id, 'branch_id' => $branch->id]);
+if (app(ModuleRegistry::class)->has('subscription')) {
+    $tenant = Tenant::factory()->create();
+    $branch = Branch::factory()->create(['tenant_id' => $tenant->id]);
+    $user = User::factory()->create(['tenant_id' => $tenant->id, 'branch_id' => $branch->id]);
+} else {
+    // One business: the user is put in the default tenant and its main branch without being told which.
+    $user = User::factory()->create();
+}
+
 $user->givePermissionTo(Permission::all());
 
 $kernel = $app->make(HttpKernel::class);
@@ -39,5 +47,12 @@ foreach (json_decode((string) getenv('SMOKE_PATHS'), true) as $path) {
     $response = $kernel->handle($request);
     $statuses[$path] = $response->getStatusCode();
 }
+
+$statuses['_tenancy'] = [
+    'tenants' => Tenant::count(),
+    'user_tenant' => $user->tenant_id,
+    'user_branch' => $user->branch_id,
+    'tenant_roles' => Role::query()->whereNotNull('tenant_id')->count(),
+];
 
 echo json_encode($statuses);

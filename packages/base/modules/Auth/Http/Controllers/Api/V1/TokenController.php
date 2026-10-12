@@ -9,6 +9,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
+use Tessera\Core\Contracts\Tenancy;
 
 class TokenController extends Controller
 {
@@ -25,7 +26,7 @@ class TokenController extends Controller
 
         return response()->json([
             'token' => $user->createToken($request->validated('device_name'))->plainTextToken,
-            'user' => ['id' => $user->id, 'name' => $user->name, 'email' => $user->email, 'tenant_id' => $user->tenant_id, 'branch_id' => $user->branch_id],
+            'user' => ['id' => $user->id, 'name' => $user->name, 'email' => $user->email, ...$this->tenantFields($user)],
         ], 201);
     }
 
@@ -40,8 +41,7 @@ class TokenController extends Controller
             'id' => $user->id,
             'name' => $user->name,
             'email' => $user->email,
-            'tenant_id' => $user->tenant_id,
-            'branch_id' => $user->branch_id,
+            ...$this->tenantFields($user),
             'permissions' => $user->getAllPermissions()->pluck('name')->filter(fn (string $name): bool => $user->hasPermissionTo($name))->values(),
         ]]);
     }
@@ -54,5 +54,15 @@ class TokenController extends Controller
         $request->user()->currentAccessToken()->delete();
 
         return response()->json(null, 204);
+    }
+
+    /**
+     * The tenant and branch of the user, when the project has them.
+     *
+     * @return array<string, int|null>
+     */
+    private function tenantFields(User $user): array
+    {
+        return app(Tenancy::class)->available() ? ['tenant_id' => $user->tenant_id, 'branch_id' => $user->branch_id] : [];
     }
 }

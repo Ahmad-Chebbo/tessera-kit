@@ -9,8 +9,11 @@ use App\Modules\Tenant\Models\Branch;
 use App\Modules\Tenant\Models\Tenant;
 use App\Modules\Tenant\Services\BranchAccess;
 use App\Modules\Tenant\Services\CurrencyService;
+use App\Modules\Tenant\Services\TenantAccess;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Schema;
 use Tessera\Core\Contracts\BranchScope;
+use Tessera\Core\Contracts\Tenancy;
 use Tessera\Engine\MenuItem;
 use Tessera\Engine\ModuleManifest;
 use Tessera\Engine\ModuleServiceProvider;
@@ -41,16 +44,28 @@ class TenantServiceProvider extends ModuleServiceProvider
 
     protected function bindings(): void
     {
+        $this->app->singleton(TenantAccess::class);
+        $this->app->bind(Tenancy::class, TenantAccess::class);
         $this->app->bind(BranchScope::class, BranchAccess::class);
         $this->app->singleton(CurrencyService::class, fn () => new CurrencyService);
     }
 
     /**
-     * Team does not know about tenants; the relations to them are added here.
+     * Team does not know about tenants; the relations to them are added here. In a project with a single business every
+     * new user is put in that business.
      */
     public function boot(): void
     {
         parent::boot();
+
+        User::creating(function (User $user): void {
+            if ($user->tenant_id === null && ! $this->app->make(TenantAccess::class)->isMultiTenant() && Schema::hasColumn('users', 'tenant_id')) {
+                $tenant = Tenant::default();
+
+                $user->tenant_id = $tenant->id;
+                $user->branch_id ??= $tenant->mainBranch()?->id;
+            }
+        });
 
         User::resolveRelationUsing('tenant', fn (User $user) => $user->belongsTo(Tenant::class, 'tenant_id'));
         User::resolveRelationUsing('branch', fn (User $user) => $user->belongsTo(Branch::class, 'branch_id'));

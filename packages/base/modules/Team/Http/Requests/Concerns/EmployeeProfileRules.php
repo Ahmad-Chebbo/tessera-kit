@@ -3,6 +3,7 @@
 namespace App\Modules\Team\Http\Requests\Concerns;
 
 use Illuminate\Validation\Rule;
+use Tessera\Core\Contracts\Tenancy;
 
 trait EmployeeProfileRules
 {
@@ -14,8 +15,7 @@ trait EmployeeProfileRules
         return [
             'employee_number' => [
                 'nullable', 'string', 'max:32',
-                Rule::unique('employee_profiles', 'employee_number')
-                    ->where('tenant_id', $tenantId)
+                app(Tenancy::class)->scopeRule(Rule::unique('employee_profiles', 'employee_number'), $tenantId)
                     ->ignore($ignoreUserId, 'user_id'),
             ],
             'phone' => ['nullable', 'string', 'max:50'],

@@ -29,9 +29,16 @@ function basicsModule(string $key, array $requires = []): ModuleServiceProvider
 it('finds the core modules and enables them', function () {
     $registry = app(ModuleRegistry::class);
 
-    foreach (['auth', 'tenant', 'subscription', 'team'] as $core) {
+    foreach (['auth', 'tenant', 'team'] as $core) {
         expect($registry->has($core))->toBeTrue()->and($registry->get($core)->manifest()->core)->toBeTrue();
     }
+});
+
+it('treats the Subscription module as a feature, so a project can run without it', function () {
+    $subscription = app(ModuleRegistry::class)->get('subscription');
+
+    expect($subscription->manifest()->core)->toBeFalse()
+        ->and($subscription->manifest()->requires)->toBe([]);
 });
 
 it('lists requirements before the modules that need them', function () {
@@ -63,7 +70,7 @@ it('refuses to enable a module that is not installed', function () {
 it('keeps core modules enabled whatever is asked for', function () {
     $registry = new ModuleRegistry(array_values(app(ModuleRegistry::class)->all()), 'none');
 
-    expect(array_keys($registry->enabled()))->toEqualCanonicalizing(['auth', 'tenant', 'subscription', 'team']);
+    expect(array_keys($registry->enabled()))->toEqualCanonicalizing(['auth', 'tenant', 'team']);
 });
 
 it('turns the web layer off without touching the api layer', function () {

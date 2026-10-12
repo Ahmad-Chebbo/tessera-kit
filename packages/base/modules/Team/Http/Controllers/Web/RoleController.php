@@ -12,16 +12,17 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 use Spatie\Permission\Models\Permission;
+use Tessera\Core\Contracts\Tenancy;
 use Tessera\Engine\ModuleRegistry;
 
 class RoleController extends Controller
 {
-    public function __construct(private ActivityLogger $activity) {}
+    public function __construct(private ActivityLogger $activity, private Tenancy $tenancy) {}
 
     public function index(Request $request): Response
     {
         $roles = Role::query()
-            ->ownedBy($request->user()->tenant_id)
+            ->ownedBy($this->tenancy->roleOwner($request->user()))
             ->withCount(['users', 'permissions'])
             ->orderBy('name')
             ->get()
@@ -49,7 +50,7 @@ class RoleController extends Controller
         $role = Role::query()->create([
             'name' => $request->validated('name'),
             'guard_name' => 'web',
-            'tenant_id' => $request->user()->tenant_id,
+            ...$this->tenancy->attributes($this->tenancy->roleOwner($request->user())),
         ]);
 
         $role->syncPermissions($request->validated('permissions'));
@@ -98,7 +99,7 @@ class RoleController extends Controller
 
     private function ensureOwned(Request $request, Role $role): void
     {
-        abort_unless($request->user()->can('manage roles') && $role->tenant_id === $request->user()->tenant_id, 403);
+        abort_unless($request->user()->can('manage roles') && $role->tenant_id === $this->tenancy->roleOwner($request->user()), 403);
     }
 
     /**

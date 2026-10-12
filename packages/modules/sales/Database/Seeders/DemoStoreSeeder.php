@@ -14,6 +14,7 @@ use App\Modules\Tenant\Models\Location;
 use App\Modules\Tenant\Models\Tenant;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
+use Tessera\Engine\ModuleRegistry;
 
 /**
  * A demo store with a branch, a warehouse, categories, products and stock, for trying the till.
@@ -22,8 +23,10 @@ class DemoStoreSeeder extends Seeder
 {
     public function run(): void
     {
-        // Create Tenant
-        $tenant = Tenant::create([
+        $manyTenants = app(ModuleRegistry::class)->has('subscription');
+
+        // With one business the demo fills that business; with many it is a tenant of its own.
+        $details = [
             'name' => 'Tessera Demo Store',
             'currency' => 'USD',
             'locale' => 'en',
@@ -35,36 +38,32 @@ class DemoStoreSeeder extends Seeder
             'phone' => '+1 234 567 8900',
             'email' => 'info@tessera.test',
             'is_active' => true,
-        ]);
+        ];
 
-        app(SubscriptionService::class)->start($tenant, Plan::where('slug', 'pro')->firstOr(fn () => Plan::where('slug', 'legacy')->firstOrFail()));
+        if ($manyTenants) {
+            $tenant = Tenant::create($details);
 
-        // Create Branch
-        $branch = Branch::create([
-            'tenant_id' => $tenant->id,
-            'name' => 'Main Branch',
-            'address' => '123 Main Street, Demo City',
-            'phone' => '+1 234 567 8900',
-            'is_active' => true,
-        ]);
+            app(SubscriptionService::class)->start($tenant, Plan::where('slug', 'pro')->firstOr(fn () => Plan::where('slug', 'legacy')->firstOrFail()));
 
-        // Create Location for the branch
-        $location = Location::create([
-            'tenant_id' => $tenant->id,
-            'branch_id' => $branch->id,
-            'name' => 'Main Branch Stock',
-            'type' => 'branch',
-            'is_active' => true,
-        ]);
+            $branch = Branch::create(['tenant_id' => $tenant->id, 'name' => 'Main Branch', 'is_active' => true]);
+        } else {
+            $tenant = Tenant::default();
+            $tenant->update($details);
 
-        // Create Warehouse
-        $warehouse = Location::create([
-            'tenant_id' => $tenant->id,
-            'branch_id' => null,
-            'name' => 'Central Warehouse',
-            'type' => 'warehouse',
-            'is_active' => true,
-        ]);
+            $branch = $tenant->mainBranch();
+        }
+
+        $branch->update(['address' => '123 Main Street, Demo City', 'phone' => '+1 234 567 8900']);
+
+        $location = Location::query()->firstOrCreate(
+            ['tenant_id' => $tenant->id, 'branch_id' => $branch->id, 'type' => 'branch'],
+            ['name' => 'Main Branch Stock', 'is_active' => true],
+        );
+
+        $warehouse = Location::query()->firstOrCreate(
+            ['tenant_id' => $tenant->id, 'branch_id' => null, 'type' => 'warehouse'],
+            ['name' => 'Central Warehouse', 'is_active' => true],
+        );
 
         // The store's own owner; the platform admin stays outside every tenant.
         $user = User::updateOrCreate(['email' => 'owner@tessera.test'], [

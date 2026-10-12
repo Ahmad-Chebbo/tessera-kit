@@ -11,6 +11,7 @@ use App\Modules\Team\Services\TeamFeatures;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Tessera\Core\Contracts\BranchScope;
+use Tessera\Core\Contracts\Tenancy;
 
 class UpdateEmployeeAction
 {
@@ -19,6 +20,7 @@ class UpdateEmployeeAction
         private readonly EmployeeProfileService $profiles,
         private readonly ActivityLogger $activity,
         private readonly TeamFeatures $features,
+        private readonly Tenancy $tenancy,
     ) {}
 
     /**
@@ -32,7 +34,7 @@ class UpdateEmployeeAction
             $employee->update([
                 'name' => $data['name'],
                 'email' => $data['email'],
-                'branch_id' => $this->access->canSeeAll($actor) && array_key_exists('branch_id', $data) ? $data['branch_id'] : $employee->branch_id,
+                ...($this->access->available() ? ['branch_id' => $this->access->canSeeAll($actor) && array_key_exists('branch_id', $data) ? $data['branch_id'] : $employee->branch_id] : []),
                 'is_active' => $data['is_active'] ?? true,
             ]);
 
@@ -40,7 +42,7 @@ class UpdateEmployeeAction
                 $employee->update(['password' => Hash::make($data['password'])]);
             }
 
-            $employee->syncRoles([Role::resolveFor($employee->tenant_id, $data['role'])]);
+            $employee->syncRoles([Role::resolveFor($this->tenancy->roleOwner($employee), $data['role'])]);
 
             if ($this->features->employeeProfiles()) {
                 $this->profiles->save($employee, $data);

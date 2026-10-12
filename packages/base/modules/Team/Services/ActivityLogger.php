@@ -6,10 +6,11 @@ use App\Modules\Team\Enums\ActivityEvent;
 use App\Modules\Team\Models\ActivityLog;
 use App\Modules\Team\Models\User;
 use Illuminate\Database\Eloquent\Model;
+use Tessera\Core\Contracts\Tenancy;
 
 class ActivityLogger
 {
-    public function __construct(private readonly TeamFeatures $features) {}
+    public function __construct(private readonly TeamFeatures $features, private readonly Tenancy $tenancy) {}
 
     /**
      * Record something an employee did. The tenant comes from the actor, or from the subject. Nothing is recorded
@@ -31,7 +32,7 @@ class ActivityLogger
         $actor ??= auth()->user();
 
         return ActivityLog::create([
-            'tenant_id' => $actor?->tenant_id ?? $subject?->tenant_id ?? null,
+            ...$this->tenancy->attributes($actor?->tenant_id ?? $subject?->tenant_id ?? null),
             'user_id' => $actor?->id,
             'subject_type' => $subject?->getMorphClass(),
             'subject_id' => $subject?->getKey(),

@@ -5,6 +5,7 @@ namespace App\Modules\Team\Services;
 use App\Modules\Team\Models\Role;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\PermissionRegistrar;
+use Tessera\Core\Contracts\Tenancy;
 use Tessera\Engine\ModuleRegistry;
 
 /**
@@ -15,7 +16,7 @@ use Tessera\Engine\ModuleRegistry;
  */
 class PermissionSynchronizer
 {
-    public function __construct(private readonly ModuleRegistry $registry) {}
+    public function __construct(private readonly ModuleRegistry $registry, private readonly Tenancy $tenancy) {}
 
     /**
      * @return array{created: list<string>, roles: list<string>}
@@ -35,11 +36,11 @@ class PermissionSynchronizer
         $roles = [];
 
         foreach ($this->registry->defaultRolePermissions() as $roleName => $permissions) {
-            $template = Role::query()->firstOrCreate(['name' => $roleName, 'guard_name' => 'web', 'tenant_id' => null]);
+            $template = Role::query()->firstOrCreate(['name' => $roleName, 'guard_name' => 'web', ...$this->tenancy->attributes(null)]);
             $template->givePermissionTo($permissions);
             $roles[] = $roleName;
 
-            if ($fresh = array_values(array_intersect($permissions, $created))) {
+            if ($this->tenancy->available() && ($fresh = array_values(array_intersect($permissions, $created)))) {
                 Role::query()->where('name', $roleName)->whereNotNull('tenant_id')->each(fn (Role $role) => $role->givePermissionTo($fresh));
             }
         }

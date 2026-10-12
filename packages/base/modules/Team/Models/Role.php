@@ -5,10 +5,12 @@ namespace App\Modules\Team\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Spatie\Permission\Contracts\Role as RoleContract;
 use Spatie\Permission\Models\Role as SpatieRole;
+use Tessera\Core\Contracts\Tenancy;
 
 /**
- * A role, owned by one tenant when the Tenant module is installed. Roles without a tenant are the platform Admin
- * role and the templates new tenants are provisioned from; in a project without tenants they are the only roles.
+ * A role, owned by one tenant when the Subscription module manages many. Roles without a tenant are the platform Admin
+ * role and the templates new tenants are provisioned from; in a project with one business, or none, they are the only
+ * roles.
  */
 class Role extends SpatieRole
 {
@@ -17,7 +19,7 @@ class Role extends SpatieRole
      */
     public function scopeOwnedBy(Builder $query, ?int $tenantId): void
     {
-        $query->where('tenant_id', $tenantId);
+        app(Tenancy::class)->scope($query, $tenantId);
     }
 
     /**
@@ -25,8 +27,13 @@ class Role extends SpatieRole
      */
     public static function resolveFor(?int $tenantId, string $name): ?self
     {
-        return static::query()
-            ->where('name', $name)
+        $query = static::query()->where('name', $name);
+
+        if (! app(Tenancy::class)->available()) {
+            return $query->first();
+        }
+
+        return $query
             ->where(fn (Builder $query) => $query->whereNull('tenant_id')->when($tenantId, fn (Builder $query) => $query->orWhere('tenant_id', $tenantId)))
             ->orderByRaw('tenant_id is null')
             ->first();
@@ -39,10 +46,15 @@ class Role extends SpatieRole
      */
     protected static function findByParam(array $params = []): ?RoleContract
     {
+        $query = static::query()->where($params);
+
+        if (! app(Tenancy::class)->available()) {
+            return $query->first();
+        }
+
         $tenantId = (int) auth()->user()?->tenant_id;
 
-        return static::query()
-            ->where($params)
+        return $query
             ->where(fn (Builder $query) => $query->whereNull('tenant_id')->when($tenantId, fn (Builder $query) => $query->orWhere('tenant_id', $tenantId)))
             ->orderByRaw('tenant_id is null')
             ->first();

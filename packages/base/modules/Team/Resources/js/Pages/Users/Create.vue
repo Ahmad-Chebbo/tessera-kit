@@ -22,7 +22,7 @@ const form = useForm({
     name: '',
     email: '',
     password: '',
-    branch_id: '',
+    branch_id: props.branches?.length === 1 ? props.branches[0].id : '',
     role: '',
     is_active: true,
     employee_number: '',

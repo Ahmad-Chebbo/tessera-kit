@@ -30,7 +30,7 @@ class SubscriptionServiceProvider extends ModuleServiceProvider
             key: 'subscription',
             name: 'Subscription',
             requires: [],
-            core: true,
+            core: false,
         );
     }
 

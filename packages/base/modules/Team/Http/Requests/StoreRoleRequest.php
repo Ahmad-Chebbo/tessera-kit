@@ -6,6 +6,7 @@ use App\Modules\Team\Models\Role;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Validator;
+use Tessera\Core\Contracts\Tenancy;
 
 class StoreRoleRequest extends FormRequest
 {
@@ -20,11 +21,12 @@ class StoreRoleRequest extends FormRequest
     public function rules(): array
     {
         $role = $this->route('role');
+        $tenancy = app(Tenancy::class);
 
         return [
             'name' => [
                 'required', 'string', 'max:100', Rule::notIn(['Admin']),
-                Rule::unique('roles', 'name')->where('tenant_id', $this->user()->tenant_id)->ignore($role?->id),
+                $tenancy->scopeRule(Rule::unique('roles', 'name'), $tenancy->roleOwner($this->user()))->ignore($role?->id),
             ],
             'permissions' => ['present', 'array'],
             'permissions.*' => ['string', Rule::in($this->grantablePermissions())],

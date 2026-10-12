@@ -10,7 +10,6 @@ return new class extends Migration
     {
         Schema::create('activity_logs', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('tenant_id')->nullable();
             $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
             $table->string('subject_type')->nullable();
             $table->unsignedBigInteger('subject_id')->nullable();
@@ -20,7 +19,7 @@ return new class extends Migration
             $table->string('ip', 45)->nullable();
             $table->timestamp('created_at')->useCurrent();
 
-            $table->index(['tenant_id', 'created_at']);
+            $table->index('created_at');
             $table->index(['user_id', 'created_at']);
             $table->index(['subject_type', 'subject_id']);
             $table->index('event');

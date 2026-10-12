@@ -10,6 +10,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
 use Tessera\Core\Contracts\BranchScope;
+use Tessera\Core\Contracts\Tenancy;
 
 class UpdateUserRequest extends FormRequest
 {
@@ -23,7 +24,7 @@ class UpdateUserRequest extends FormRequest
 
         return $actor !== null
             && $actor->can('edit users')
-            && $target->tenant_id === $actor->tenant_id
+            && app(Tenancy::class)->sameTenant($target, $actor)
             && ! ($target->isSuperAdmin() && ! $actor->isSuperAdmin());
     }
 
