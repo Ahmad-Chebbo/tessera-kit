@@ -2,9 +2,9 @@
 
 namespace App\Modules\Discounts\Database\Factories;
 
-use App\Modules\Company\Models\Company;
 use App\Modules\Discounts\Enums\DiscountAction;
 use App\Modules\Discounts\Models\DiscountRule;
+use App\Modules\Tenant\Models\Tenant;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -18,7 +18,7 @@ class DiscountRuleFactory extends Factory
     public function definition(): array
     {
         return [
-            'company_id' => Company::factory(),
+            'tenant_id' => Tenant::factory(),
             'name' => fake()->words(3, true),
             'is_active' => true,
             'priority' => 100,

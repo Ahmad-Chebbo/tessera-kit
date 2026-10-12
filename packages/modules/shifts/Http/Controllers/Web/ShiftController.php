@@ -3,7 +3,6 @@
 namespace App\Modules\Shifts\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
-use App\Modules\Company\Services\BranchAccess;
 use App\Modules\Shifts\Actions\AssignShiftAction;
 use App\Modules\Shifts\Actions\CreateShiftCycleAction;
 use App\Modules\Shifts\Http\Requests\StoreShiftAssignmentRequest;
@@ -14,6 +13,7 @@ use App\Modules\Shifts\Models\ShiftCycle;
 use App\Modules\Shifts\Models\ShiftTemplate;
 use App\Modules\Team\Models\User;
 use App\Modules\Team\Services\ActivityLogger;
+use App\Modules\Tenant\Services\BranchAccess;
 use Carbon\CarbonImmutable;
 use Carbon\Exceptions\InvalidFormatException;
 use Illuminate\Http\RedirectResponse;
@@ -35,11 +35,11 @@ class ShiftController extends Controller
         return Inertia::render('Shifts/Index', [
             'weekStart' => $weekStart->toDateString(),
             'days' => collect(range(0, 6))->map(fn (int $offset): string => $weekStart->addDays($offset)->toDateString()),
-            'templates' => ShiftTemplate::query()->where('company_id', $actor->company_id)->orderBy('starts_at')->get(),
-            'employees' => $this->access->scope(User::query()->where('company_id', $actor->company_id)->where('is_active', true), $actor, $branch)->orderBy('name')->get(['id', 'name']),
+            'templates' => ShiftTemplate::query()->where('tenant_id', $actor->tenant_id)->orderBy('starts_at')->get(),
+            'employees' => $this->access->scope(User::query()->where('tenant_id', $actor->tenant_id)->where('is_active', true), $actor, $branch)->orderBy('name')->get(['id', 'name']),
             'branchId' => $this->access->canSeeAll($actor) ? $this->access->effective($actor, $branch) : null,
             'assignments' => ShiftAssignment::query()
-                ->where('company_id', $actor->company_id)
+                ->where('tenant_id', $actor->tenant_id)
                 ->tap(fn ($query) => $this->access->scopeThroughUser($query, $actor, $branch))
                 ->whereBetween('date', [$weekStart->toDateString(), $weekEnd->toDateString()])
                 ->get()
@@ -51,7 +51,7 @@ class ShiftController extends Controller
                     'from_cycle' => $assignment->shift_cycle_id !== null,
                 ]),
             'cycles' => ShiftCycle::query()
-                ->where('company_id', $actor->company_id)
+                ->where('tenant_id', $actor->tenant_id)
                 ->tap(fn ($query) => $this->access->scopeThroughUser($query, $actor, $branch))
                 ->with(['user:id,name', 'template:id,name'])
                 ->latest('id')
@@ -70,14 +70,14 @@ class ShiftController extends Controller
 
     public function storeTemplate(StoreShiftTemplateRequest $request): RedirectResponse
     {
-        ShiftTemplate::create([...$request->validated(), 'company_id' => $request->user()->company_id]);
+        ShiftTemplate::create([...$request->validated(), 'tenant_id' => $request->user()->tenant_id]);
 
         return back()->with('success', 'Shift created.');
     }
 
     public function updateTemplate(StoreShiftTemplateRequest $request, ShiftTemplate $template): RedirectResponse
     {
-        $this->ensureSameCompany($request, $template->company_id);
+        $this->ensureSameTenant($request, $template->tenant_id);
         $template->update($request->validated());
 
         return back()->with('success', 'Shift updated.');
@@ -85,7 +85,7 @@ class ShiftController extends Controller
 
     public function destroyTemplate(Request $request, ShiftTemplate $template): RedirectResponse
     {
-        $this->ensureSameCompany($request, $template->company_id);
+        $this->ensureSameTenant($request, $template->tenant_id);
         $template->delete();
 
         return back()->with('success', 'Shift deleted.');
@@ -100,7 +100,7 @@ class ShiftController extends Controller
 
     public function destroyAssignment(Request $request, ShiftAssignment $assignment): RedirectResponse
     {
-        $this->ensureSameCompany($request, $assignment->company_id);
+        $this->ensureSameTenant($request, $assignment->tenant_id);
         $this->access->ensure($request->user(), $assignment->user()->value('branch_id'));
         $assignment->delete();
 
@@ -116,7 +116,7 @@ class ShiftController extends Controller
 
     public function generateCycle(Request $request, ShiftCycle $cycle): RedirectResponse
     {
-        $this->ensureSameCompany($request, $cycle->company_id);
+        $this->ensureSameTenant($request, $cycle->tenant_id);
         $this->access->ensure($request->user(), $cycle->user()->value('branch_id'));
         $created = app(CreateShiftCycleAction::class)->generateAhead($cycle);
 
@@ -125,7 +125,7 @@ class ShiftController extends Controller
 
     public function destroyCycle(Request $request, ShiftCycle $cycle): RedirectResponse
     {
-        $this->ensureSameCompany($request, $cycle->company_id);
+        $this->ensureSameTenant($request, $cycle->tenant_id);
         $this->access->ensure($request->user(), $cycle->user()->value('branch_id'));
         $cycle->assignments()->where('date', '>=', now()->toDateString())->delete();
         $cycle->delete();
@@ -144,8 +144,8 @@ class ShiftController extends Controller
         return $date->startOfWeek(CarbonImmutable::MONDAY);
     }
 
-    private function ensureSameCompany(Request $request, int $companyId): void
+    private function ensureSameTenant(Request $request, int $tenantId): void
     {
-        abort_unless($request->user()->can('manage shifts') && $request->user()->company_id === $companyId, 403);
+        abort_unless($request->user()->can('manage shifts') && $request->user()->tenant_id === $tenantId, 403);
     }
 }

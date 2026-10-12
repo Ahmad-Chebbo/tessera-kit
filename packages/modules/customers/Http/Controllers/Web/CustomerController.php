@@ -21,7 +21,7 @@ class CustomerController extends Controller
         $user = $request->user();
 
         $query = Customer::query()
-            ->where('company_id', $user->company_id);
+            ->where('tenant_id', $user->tenant_id);
 
         if ($request->filled('search')) {
             $query->where(function ($q) use ($request) {
@@ -68,12 +68,12 @@ class CustomerController extends Controller
             'address' => ['nullable', 'string', 'max:500'],
             'notes' => ['nullable', 'string', 'max:1000'],
             'is_active' => ['boolean'],
-            'customer_group_id' => ['nullable', 'integer', Rule::exists('customer_groups', 'id')->where('company_id', $request->user()->company_id)],
+            'customer_group_id' => ['nullable', 'integer', Rule::exists('customer_groups', 'id')->where('tenant_id', $request->user()->tenant_id)],
         ]);
 
         $customer = Customer::create([
             ...$validated,
-            'company_id' => $request->user()->company_id,
+            'tenant_id' => $request->user()->tenant_id,
         ]);
 
         if ($request->expectsJson()) {
@@ -88,7 +88,7 @@ class CustomerController extends Controller
 
         $user = $request->user();
 
-        if ($customer->company_id !== $user->company_id) {
+        if ($customer->tenant_id !== $user->tenant_id) {
             abort(403);
         }
 
@@ -123,12 +123,12 @@ class CustomerController extends Controller
      */
     private function groups(Request $request)
     {
-        return CustomerGroup::query()->where('company_id', $request->user()->company_id)->orderBy('name')->get(['id', 'name']);
+        return CustomerGroup::query()->where('tenant_id', $request->user()->tenant_id)->orderBy('name')->get(['id', 'name']);
     }
 
     public function update(Request $request, Customer $customer): RedirectResponse
     {
-        if ($customer->company_id !== $request->user()->company_id) {
+        if ($customer->tenant_id !== $request->user()->tenant_id) {
             abort(403);
         }
 
@@ -139,7 +139,7 @@ class CustomerController extends Controller
             'address' => ['nullable', 'string', 'max:500'],
             'notes' => ['nullable', 'string', 'max:1000'],
             'is_active' => ['boolean'],
-            'customer_group_id' => ['nullable', 'integer', Rule::exists('customer_groups', 'id')->where('company_id', $request->user()->company_id)],
+            'customer_group_id' => ['nullable', 'integer', Rule::exists('customer_groups', 'id')->where('tenant_id', $request->user()->tenant_id)],
         ]);
 
         $customer->update($validated);
@@ -149,7 +149,7 @@ class CustomerController extends Controller
 
     public function destroy(Request $request, Customer $customer): RedirectResponse
     {
-        if ($customer->company_id !== $request->user()->company_id) {
+        if ($customer->tenant_id !== $request->user()->tenant_id) {
             abort(403);
         }
 

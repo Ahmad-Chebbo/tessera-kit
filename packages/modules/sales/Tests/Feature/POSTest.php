@@ -2,29 +2,29 @@
 
 use App\Modules\Catalog\Models\Category;
 use App\Modules\Catalog\Models\Product;
-use App\Modules\Company\Models\Branch;
-use App\Modules\Company\Models\Company;
-use App\Modules\Company\Models\Location;
 use App\Modules\Inventory\Models\StockMovement;
 use App\Modules\Team\Models\User;
+use App\Modules\Tenant\Models\Branch;
+use App\Modules\Tenant\Models\Location;
+use App\Modules\Tenant\Models\Tenant;
 use Spatie\Permission\Models\Permission;
 
 beforeEach(function () {
-    $this->company = Company::factory()->create(['currency' => 'USD']);
-    $this->branch = Branch::factory()->create(['company_id' => $this->company->id]);
+    $this->tenant = Tenant::factory()->create(['currency' => 'USD']);
+    $this->branch = Branch::factory()->create(['tenant_id' => $this->tenant->id]);
     $this->location = Location::factory()->create([
-        'company_id' => $this->company->id,
+        'tenant_id' => $this->tenant->id,
         'branch_id' => $this->branch->id,
         'type' => 'branch',
     ]);
     $this->user = User::factory()->create([
-        'company_id' => $this->company->id,
+        'tenant_id' => $this->tenant->id,
         'branch_id' => $this->branch->id,
     ]);
     Permission::findOrCreate('access pos');
     $this->user->givePermissionTo('access pos');
     $this->category = Category::factory()->create([
-        'company_id' => $this->company->id,
+        'tenant_id' => $this->tenant->id,
         'is_active' => true,
     ]);
 });
@@ -48,7 +48,7 @@ it('displays POS page for authenticated user', function () {
 
 it('returns products with stock levels', function () {
     $product = Product::factory()->create([
-        'company_id' => $this->company->id,
+        'tenant_id' => $this->tenant->id,
         'category_id' => $this->category->id,
         'is_active' => true,
         'base_price' => 10.00,
@@ -56,7 +56,7 @@ it('returns products with stock levels', function () {
 
     // Add stock
     StockMovement::factory()->create([
-        'company_id' => $this->company->id,
+        'tenant_id' => $this->tenant->id,
         'product_id' => $product->id,
         'location_id' => $this->location->id,
         'quantity' => 50,
@@ -81,19 +81,19 @@ it('returns products with stock levels', function () {
 
 it('filters products by category', function () {
     $category2 = Category::factory()->create([
-        'company_id' => $this->company->id,
+        'tenant_id' => $this->tenant->id,
         'is_active' => true,
     ]);
 
     Product::factory()->create([
-        'company_id' => $this->company->id,
+        'tenant_id' => $this->tenant->id,
         'category_id' => $this->category->id,
         'name' => 'Product A',
         'is_active' => true,
     ]);
 
     Product::factory()->create([
-        'company_id' => $this->company->id,
+        'tenant_id' => $this->tenant->id,
         'category_id' => $category2->id,
         'name' => 'Product B',
         'is_active' => true,
@@ -109,14 +109,14 @@ it('filters products by category', function () {
 
 it('searches products by name and barcode', function () {
     Product::factory()->create([
-        'company_id' => $this->company->id,
+        'tenant_id' => $this->tenant->id,
         'name' => 'Apple iPhone',
         'barcode' => '123456789',
         'is_active' => true,
     ]);
 
     Product::factory()->create([
-        'company_id' => $this->company->id,
+        'tenant_id' => $this->tenant->id,
         'name' => 'Samsung Galaxy',
         'barcode' => '987654321',
         'is_active' => true,

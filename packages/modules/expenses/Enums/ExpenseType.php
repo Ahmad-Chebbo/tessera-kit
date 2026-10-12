@@ -12,7 +12,7 @@ enum ExpenseType: string
     case Other = 'other';
 
     /**
-     * Whether categories of this type reduce profit unless the company says otherwise. Purchases are left out because
+     * Whether categories of this type reduce profit unless the tenant says otherwise. Purchases are left out because
      * stock is already costed into the products sold, and assets are capital spending.
      */
     public function affectsProfitByDefault(): bool

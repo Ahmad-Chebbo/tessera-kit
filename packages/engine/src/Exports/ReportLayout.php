@@ -18,7 +18,7 @@ final readonly class ReportLayout
     public function __construct(
         public ExportContext $context,
         public string $title,
-        public string $companyName,
+        public string $tenantName,
         public string $generatedLine,
         public array $filterLines,
         public array $summary,

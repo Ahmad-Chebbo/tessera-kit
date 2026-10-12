@@ -12,7 +12,7 @@ class SaveExpenseAction
     public function __construct(private readonly ExpenseBranch $branches) {}
 
     /**
-     * Records an expense for the actor's company, optionally with a receipt.
+     * Records an expense for the actor's tenant, optionally with a receipt.
      *
      * @param  array<string, mixed>  $data  Validated expense fields without the receipt.
      */
@@ -21,7 +21,7 @@ class SaveExpenseAction
         $expense = Expense::create([
             ...$data,
             'branch_id' => $this->branches->forWrite($actor, $data['branch_id'] ?? null),
-            'company_id' => $actor->company_id,
+            'tenant_id' => $actor->tenant_id,
             'created_by' => $actor->id,
         ]);
 

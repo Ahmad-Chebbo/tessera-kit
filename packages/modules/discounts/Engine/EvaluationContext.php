@@ -13,7 +13,7 @@ class EvaluationContext
      * @param  list<CartLine>  $lines
      */
     public function __construct(
-        public readonly int $companyId,
+        public readonly int $tenantId,
         public readonly int $branchId,
         public readonly ?int $customerId,
         public readonly ?int $customerGroupId,
@@ -22,7 +22,7 @@ class EvaluationContext
         public readonly array $lines,
         public readonly ?string $couponCode = null,
     ) {
-        $this->history = new CustomerHistory($companyId, $customerId, $now);
+        $this->history = new CustomerHistory($tenantId, $customerId, $now);
     }
 
     public function subtotal(): float

@@ -1,6 +1,6 @@
 # Tessera Fresh
 
-A Laravel 13 application with sign-in, registration, password reset, a profile page, and users with roles and permissions, ready for [Tessera](https://github.com/Tessera-kit/tessera-kit) modules. It has no companies, branches or subscriptions: use the [SaaS starter](https://github.com/Tessera-kit/tessera-starter) when you need those.
+A Laravel 13 application with sign-in, registration, password reset, a profile page, and users with roles and permissions, ready for [Tessera](https://github.com/Tessera-kit/tessera-kit) modules. It has no tenants, branches or subscriptions: use the [SaaS starter](https://github.com/Tessera-kit/tessera-starter) when you need those.
 
 It contains the module engine, the base package (Auth and Team), the interface kit and the application shell (sidebar layout, language and theme toggles).
 
@@ -36,7 +36,7 @@ php artisan module:add expenses
 bun run build
 ```
 
-Modules that work with companies (sales, catalog, inventory...) need the SaaS package, and `module:add` installs it for you, which also turns on branches, plans and the other company features. If you do not want those, start from the SaaS starter instead or write your own modules.
+Modules that work with tenants (sales, catalog, inventory...) need the SaaS package, and `module:add` installs it for you, which also turns on branches, plans and the other tenant features. If you do not want those, start from the SaaS starter instead or write your own modules.
 
 ## Write your own module
 

@@ -16,7 +16,7 @@ const props = defineProps({
     suppliers: Array,
     locations: Array,
     products: Array,
-    companyCurrency: {
+    tenantCurrency: {
         type: String,
         default: 'USD',
     },
@@ -44,7 +44,7 @@ const { formatCurrency } = useCurrency();
 const form = useForm({
     supplier_id: '',
     location_id: '',
-    currency: props.companyCurrency,
+    currency: props.tenantCurrency,
     reference_number: '',
     notes: '',
     items: [],
@@ -87,7 +87,7 @@ const findRate = (from, to) => {
  */
 const convertCostToPurchaseCurrency = (product) => {
     if (!product) return '';
-    const productCurrency = product.currency || props.companyCurrency;
+    const productCurrency = product.currency || props.tenantCurrency;
     const purchaseCurrency = form.currency;
 
     if (productCurrency === purchaseCurrency) {
@@ -104,8 +104,8 @@ const convertCostToPurchaseCurrency = (product) => {
 };
 
 const currentExchangeRate = computed(() => {
-    if (form.currency === props.companyCurrency) return null;
-    const rate = findRate(form.currency, props.companyCurrency);
+    if (form.currency === props.tenantCurrency) return null;
+    const rate = findRate(form.currency, props.tenantCurrency);
     return rate;
 });
 
@@ -135,7 +135,7 @@ const addItem = () => {
         product_id: parseInt(newItem.value.product_id),
         product_name: product.name,
         product_sku: product.sku,
-        product_currency: product.currency || props.companyCurrency,
+        product_currency: product.currency || props.tenantCurrency,
         quantity: parseFloat(newItem.value.quantity),
         unit_cost: parseFloat(newItem.value.unit_cost),
         unit_id: unitId,
@@ -247,16 +247,16 @@ const clearItems = () => {
 
                     <!-- Exchange Rate Notice -->
                     <div
-                        v-if="currentExchangeRate && form.currency !== companyCurrency"
+                        v-if="currentExchangeRate && form.currency !== tenantCurrency"
                         class="mt-4 flex items-center gap-2 rounded-lg bg-accent-wash p-3"
                     >
                         <Info class="h-5 w-5 shrink-0 text-status-info" />
                         <p class="text-sm text-status-info">
-                            {{ t('purchases.exchangeRateInfo') }}: 1 {{ form.currency }} = {{ currentExchangeRate.toFixed(4) }} {{ companyCurrency }}
+                            {{ t('purchases.exchangeRateInfo') }}: 1 {{ form.currency }} = {{ currentExchangeRate.toFixed(4) }} {{ tenantCurrency }}
                         </p>
                     </div>
                     <div
-                        v-else-if="form.currency !== companyCurrency && !currentExchangeRate"
+                        v-else-if="form.currency !== tenantCurrency && !currentExchangeRate"
                         class="mt-4 flex items-center gap-2 rounded-lg bg-status-warn-wash p-3"
                     >
                         <TriangleAlert class="h-5 w-5 shrink-0 text-status-warn" />

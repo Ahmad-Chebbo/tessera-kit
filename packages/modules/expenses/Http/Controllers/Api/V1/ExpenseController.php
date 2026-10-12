@@ -27,15 +27,15 @@ class ExpenseController extends Controller
     ) {}
 
     /**
-     * The company's expenses inside a period (the last 30 days by default), newest first.
+     * The tenant's expenses inside a period (the last 30 days by default), newest first.
      */
     public function index(ExpenseFilterRequest $request): AnonymousResourceCollection
     {
-        $companyId = $request->user()->company_id;
-        $this->defaults->ensure($companyId);
+        $tenantId = $request->user()->tenant_id;
+        $this->defaults->ensure($tenantId);
 
         [$from, $to] = $request->dateRange();
-        $query = $this->expenses->filtered($companyId, $from->toDateString(), $to->toDateString(), $request->filters());
+        $query = $this->expenses->filtered($tenantId, $from->toDateString(), $to->toDateString(), $request->filters());
 
         return ExpenseResource::collection(
             (clone $query)->with(self::WITH)->orderByDesc('expense_date')->orderByDesc('id')->paginate(min(max($request->integer('per_page', 20), 1), 100))->withQueryString()

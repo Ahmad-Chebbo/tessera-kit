@@ -2,9 +2,9 @@
 
 namespace App\Modules\Discounts\Models;
 
-use App\Modules\Company\Models\Company;
 use App\Modules\Discounts\Database\Factories\DiscountRuleFactory;
 use App\Modules\Discounts\Enums\DiscountAction;
+use App\Modules\Tenant\Models\Tenant;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -19,7 +19,7 @@ class DiscountRule extends Model
     use HasFactory;
 
     protected $fillable = [
-        'company_id',
+        'tenant_id',
         'name',
         'description',
         'is_active',
@@ -54,9 +54,9 @@ class DiscountRule extends Model
         ];
     }
 
-    public function company(): BelongsTo
+    public function tenant(): BelongsTo
     {
-        return $this->belongsTo(Company::class);
+        return $this->belongsTo(Tenant::class);
     }
 
     public function applications(): HasMany

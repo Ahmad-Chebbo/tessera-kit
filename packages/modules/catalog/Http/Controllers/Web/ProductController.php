@@ -20,7 +20,7 @@ class ProductController extends Controller
         $user = $request->user();
 
         $query = Product::query()
-            ->where('company_id', $user->company_id)
+            ->where('tenant_id', $user->tenant_id)
             ->with(['category:id,name', 'media']);
 
         if ($request->filled('search')) {
@@ -42,7 +42,7 @@ class ProductController extends Controller
 
         $products = $query->orderBy('name')->paginate(20)->withQueryString();
 
-        $categories = Category::where('company_id', $user->company_id)
+        $categories = Category::where('tenant_id', $user->tenant_id)
             ->where('is_active', true)
             ->orderBy('name')
             ->get(['id', 'name']);
@@ -58,15 +58,15 @@ class ProductController extends Controller
     {
         $user = $request->user();
 
-        $categories = Category::where('company_id', $user->company_id)
+        $categories = Category::where('tenant_id', $user->tenant_id)
             ->where('is_active', true)
             ->orderBy('name')
             ->get(['id', 'name']);
 
-        $units = Unit::forCompany($user->company_id)
+        $units = Unit::forTenant($user->tenant_id)
             ->active()
             ->orderBy('name')
-            ->get(['id', 'name', 'abbreviation', 'company_id']);
+            ->get(['id', 'name', 'abbreviation', 'tenant_id']);
 
         return Inertia::render('Products/Create', [
             'categories' => $categories,
@@ -79,7 +79,7 @@ class ProductController extends Controller
         $user = $request->user();
 
         $validated = collect($request->validated())->except('image')->all();
-        $validated['company_id'] = $user->company_id;
+        $validated['tenant_id'] = $user->tenant_id;
         $validated['cost_price'] ??= 0;
 
         $product = Product::create($validated);
@@ -101,19 +101,19 @@ class ProductController extends Controller
     {
         $user = $request->user();
 
-        if ($product->company_id !== $user->company_id) {
+        if ($product->tenant_id !== $user->tenant_id) {
             abort(403);
         }
 
-        $categories = Category::where('company_id', $user->company_id)
+        $categories = Category::where('tenant_id', $user->tenant_id)
             ->where('is_active', true)
             ->orderBy('name')
             ->get(['id', 'name']);
 
-        $units = Unit::forCompany($user->company_id)
+        $units = Unit::forTenant($user->tenant_id)
             ->active()
             ->orderBy('name')
-            ->get(['id', 'name', 'abbreviation', 'company_id']);
+            ->get(['id', 'name', 'abbreviation', 'tenant_id']);
 
         return Inertia::render('Products/Edit', [
             'product' => $product->load(['media', 'productUnits.unit']),
@@ -126,7 +126,7 @@ class ProductController extends Controller
     {
         $user = $request->user();
 
-        if ($product->company_id !== $user->company_id) {
+        if ($product->tenant_id !== $user->tenant_id) {
             abort(403);
         }
 
@@ -151,7 +151,7 @@ class ProductController extends Controller
     {
         $user = $request->user();
 
-        if ($product->company_id !== $user->company_id) {
+        if ($product->tenant_id !== $user->tenant_id) {
             abort(403);
         }
 

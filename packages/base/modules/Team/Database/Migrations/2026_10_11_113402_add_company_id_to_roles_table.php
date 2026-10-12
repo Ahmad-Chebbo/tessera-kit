@@ -15,26 +15,26 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('roles', function (Blueprint $table) {
-            $table->unsignedBigInteger('company_id')->nullable();
+            $table->unsignedBigInteger('tenant_id')->nullable();
         });
 
         Schema::table('roles', function (Blueprint $table) {
             $table->dropUnique(['name', 'guard_name']);
-            $table->unique(['company_id', 'name', 'guard_name']);
+            $table->unique(['tenant_id', 'name', 'guard_name']);
         });
 
-        $templates = DB::table('roles')->whereNull('company_id')->whereIn('name', $this->templates)->get();
+        $templates = DB::table('roles')->whereNull('tenant_id')->whereIn('name', $this->templates)->get();
 
-        if ($templates->isEmpty() || ! Schema::hasTable('companies')) {
+        if ($templates->isEmpty() || ! Schema::hasTable('tenants')) {
             return;
         }
 
-        foreach (DB::table('companies')->pluck('id') as $companyId) {
+        foreach (DB::table('tenants')->pluck('id') as $tenantId) {
             foreach ($templates as $template) {
                 $roleId = DB::table('roles')->insertGetId([
                     'name' => $template->name,
                     'guard_name' => $template->guard_name,
-                    'company_id' => $companyId,
+                    'tenant_id' => $tenantId,
                     'created_at' => now(),
                     'updated_at' => now(),
                 ]);
@@ -48,7 +48,7 @@ return new class extends Migration
                 DB::table('model_has_roles')
                     ->where('role_id', $template->id)
                     ->where('model_type', 'App\\Models\\User')
-                    ->whereIn('model_id', DB::table('users')->where('company_id', $companyId)->select('id'))
+                    ->whereIn('model_id', DB::table('users')->where('tenant_id', $tenantId)->select('id'))
                     ->update(['role_id' => $roleId]);
             }
         }
@@ -56,23 +56,23 @@ return new class extends Migration
 
     public function down(): void
     {
-        $templates = DB::table('roles')->whereNull('company_id')->whereIn('name', $this->templates)->get()->keyBy('name');
+        $templates = DB::table('roles')->whereNull('tenant_id')->whereIn('name', $this->templates)->get()->keyBy('name');
 
-        foreach (DB::table('roles')->whereNotNull('company_id')->get() as $role) {
+        foreach (DB::table('roles')->whereNotNull('tenant_id')->get() as $role) {
             if ($templates->has($role->name)) {
                 DB::table('model_has_roles')->where('role_id', $role->id)->update(['role_id' => $templates[$role->name]->id]);
             }
         }
 
-        DB::table('roles')->whereNotNull('company_id')->delete();
+        DB::table('roles')->whereNotNull('tenant_id')->delete();
 
         Schema::table('roles', function (Blueprint $table) {
-            $table->dropUnique(['company_id', 'name', 'guard_name']);
+            $table->dropUnique(['tenant_id', 'name', 'guard_name']);
             $table->unique(['name', 'guard_name']);
         });
 
         Schema::table('roles', function (Blueprint $table) {
-            $table->dropColumn('company_id');
+            $table->dropColumn('tenant_id');
         });
     }
 };

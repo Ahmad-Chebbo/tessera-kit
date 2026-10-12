@@ -41,7 +41,7 @@ describe('BranchFilter', () => {
         expect(mountFilter().findComponent({ name: 'Select' }).exists()).toBe(false);
     });
 
-    it('is hidden when the company has a single branch', () => {
+    it('is hidden when the tenant has a single branch', () => {
         page.props.branchScope = { canSeeAll: true, branches: [{ id: 1, name: 'Main' }], branchId: 1 };
 
         expect(mountFilter().findComponent({ name: 'Select' }).exists()).toBe(false);

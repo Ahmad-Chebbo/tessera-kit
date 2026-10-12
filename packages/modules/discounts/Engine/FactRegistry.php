@@ -7,7 +7,7 @@ use Tessera\Core\Pricing\CartLine;
 
 /**
  * Everything a rule condition can look at. The same list drives the rule builder in the UI, so adding a
- * fact here makes it available to companies without touching anything else.
+ * fact here makes it available to tenants without touching anything else.
  */
 class FactRegistry
 {

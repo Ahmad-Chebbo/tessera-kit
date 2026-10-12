@@ -21,7 +21,7 @@
         "branches": "Branches",
         "locations": "Locations",
         "users": "Users",
-        "companies": "Companies",
+        "tenants": "Tenants",
         "warehouse": "Warehouse",
         "customers": "Customers"
     },

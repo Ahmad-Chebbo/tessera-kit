@@ -16,7 +16,7 @@ class ShiftCycle extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['company_id', 'user_id', 'shift_template_id', 'weekdays', 'starts_on', 'ends_on'];
+    protected $fillable = ['tenant_id', 'user_id', 'shift_template_id', 'weekdays', 'starts_on', 'ends_on'];
 
     protected function casts(): array
     {
@@ -59,7 +59,7 @@ class ShiftCycle extends Model
 
             $assignment = ShiftAssignment::firstOrCreate(
                 ['user_id' => $this->user_id, 'shift_template_id' => $this->shift_template_id, 'date' => $day->toDateString()],
-                ['company_id' => $this->company_id, 'shift_cycle_id' => $this->id],
+                ['tenant_id' => $this->tenant_id, 'shift_cycle_id' => $this->id],
             );
 
             $created += $assignment->wasRecentlyCreated ? 1 : 0;

@@ -7,7 +7,7 @@ use Illuminate\Validation\Rule;
 
 /**
  * Ready-made rules for the promotions most shops run. Each template asks for a few values and builds a normal
- * discount rule, which the company can then edit like any other.
+ * discount rule, which the tenant can then edit like any other.
  */
 class DiscountTemplates
 {
@@ -47,7 +47,7 @@ class DiscountTemplates
      *
      * @return array<string, array<int, mixed>>
      */
-    public static function rules(string $key, int $companyId): array
+    public static function rules(string $key, int $tenantId): array
     {
         $rules = [];
 
@@ -56,7 +56,7 @@ class DiscountTemplates
 
             if ($param['type'] === 'products') {
                 $rules[$param['name']] = [$required, 'array', 'min:1', 'max:50'];
-                $rules[$param['name'].'.*'] = ['integer', Rule::exists('products', 'id')->where('company_id', $companyId)];
+                $rules[$param['name'].'.*'] = ['integer', Rule::exists('products', 'id')->where('tenant_id', $tenantId)];
 
                 continue;
             }
@@ -67,10 +67,10 @@ class DiscountTemplates
                 'quantity' => [$required, 'integer', 'min:1', 'max:100000'],
                 'days' => [$required, 'integer', 'min:1', 'max:3650'],
                 'time' => [$required, 'date_format:H:i'],
-                'code' => [$required, 'string', 'max:50', 'alpha_dash', Rule::unique('discount_rules', 'coupon_code')->where('company_id', $companyId)],
-                'category' => [$required, 'integer', Rule::exists('categories', 'id')->where('company_id', $companyId)],
-                'group' => [$required, 'integer', Rule::exists('customer_groups', 'id')->where('company_id', $companyId)],
-                'product' => [$required, 'integer', Rule::exists('products', 'id')->where('company_id', $companyId)],
+                'code' => [$required, 'string', 'max:50', 'alpha_dash', Rule::unique('discount_rules', 'coupon_code')->where('tenant_id', $tenantId)],
+                'category' => [$required, 'integer', Rule::exists('categories', 'id')->where('tenant_id', $tenantId)],
+                'group' => [$required, 'integer', Rule::exists('customer_groups', 'id')->where('tenant_id', $tenantId)],
+                'product' => [$required, 'integer', Rule::exists('products', 'id')->where('tenant_id', $tenantId)],
             };
         }
 

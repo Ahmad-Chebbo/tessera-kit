@@ -2,7 +2,7 @@
 
 namespace App\Modules\Catalog\Models;
 
-use App\Modules\Company\Models\Company;
+use App\Modules\Tenant\Models\Tenant;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -13,7 +13,7 @@ class Unit extends Model
     use HasFactory;
 
     protected $fillable = [
-        'company_id',
+        'tenant_id',
         'name',
         'abbreviation',
         'is_active',
@@ -26,9 +26,9 @@ class Unit extends Model
         ];
     }
 
-    public function company(): BelongsTo
+    public function tenant(): BelongsTo
     {
-        return $this->belongsTo(Company::class);
+        return $this->belongsTo(Tenant::class);
     }
 
     public function productUnits(): HasMany
@@ -45,21 +45,21 @@ class Unit extends Model
     }
 
     /**
-     * Scope to only global (system) units (company_id is null).
+     * Scope to only global (system) units (tenant_id is null).
      */
     public function scopeGlobal($query)
     {
-        return $query->whereNull('company_id');
+        return $query->whereNull('tenant_id');
     }
 
     /**
-     * Scope to units available for a company (global + company-specific).
+     * Scope to units available for a tenant (global + tenant-specific).
      */
-    public function scopeForCompany($query, int $companyId)
+    public function scopeForTenant($query, int $tenantId)
     {
-        return $query->where(function ($q) use ($companyId) {
-            $q->whereNull('company_id')
-                ->orWhere('company_id', $companyId);
+        return $query->where(function ($q) use ($tenantId) {
+            $q->whereNull('tenant_id')
+                ->orWhere('tenant_id', $tenantId);
         });
     }
 
@@ -68,6 +68,6 @@ class Unit extends Model
      */
     public function isGlobal(): bool
     {
-        return $this->company_id === null;
+        return $this->tenant_id === null;
     }
 }

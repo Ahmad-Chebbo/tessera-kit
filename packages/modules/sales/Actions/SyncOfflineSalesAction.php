@@ -2,9 +2,9 @@
 
 namespace App\Modules\Sales\Actions;
 
-use App\Modules\Company\Models\Branch;
 use App\Modules\Sales\Services\SaleRules;
 use App\Modules\Team\Models\User;
+use App\Modules\Tenant\Models\Branch;
 use Illuminate\Support\Facades\Validator;
 use InvalidArgumentException;
 use Throwable;

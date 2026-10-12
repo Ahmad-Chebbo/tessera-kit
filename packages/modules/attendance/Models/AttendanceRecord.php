@@ -20,7 +20,7 @@ class AttendanceRecord extends Model
     public const MANAGER = 'manager';
 
     protected $fillable = [
-        'company_id',
+        'tenant_id',
         'user_id',
         'open_user_id',
         'shift_template_id',

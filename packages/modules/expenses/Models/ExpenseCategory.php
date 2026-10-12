@@ -2,9 +2,9 @@
 
 namespace App\Modules\Expenses\Models;
 
-use App\Modules\Company\Models\Company;
 use App\Modules\Expenses\Database\Factories\ExpenseCategoryFactory;
 use App\Modules\Expenses\Enums\ExpenseType;
+use App\Modules\Tenant\Models\Tenant;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -17,7 +17,7 @@ class ExpenseCategory extends Model
     use HasFactory;
 
     protected $fillable = [
-        'company_id',
+        'tenant_id',
         'name',
         'description',
         'type',
@@ -34,9 +34,9 @@ class ExpenseCategory extends Model
         ];
     }
 
-    public function company(): BelongsTo
+    public function tenant(): BelongsTo
     {
-        return $this->belongsTo(Company::class);
+        return $this->belongsTo(Tenant::class);
     }
 
     public function expenses(): HasMany

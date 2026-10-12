@@ -2,9 +2,9 @@
 
 namespace App\Modules\Expenses\Database\Factories;
 
-use App\Modules\Company\Models\Company;
 use App\Modules\Expenses\Enums\ExpenseType;
 use App\Modules\Expenses\Models\ExpenseCategory;
+use App\Modules\Tenant\Models\Tenant;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -18,7 +18,7 @@ class ExpenseCategoryFactory extends Factory
     public function definition(): array
     {
         return [
-            'company_id' => Company::factory(),
+            'tenant_id' => Tenant::factory(),
             'name' => fake()->unique()->word(),
             'type' => ExpenseType::Operating,
             'affects_profit' => true,

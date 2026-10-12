@@ -25,7 +25,7 @@ class TokenController extends Controller
 
         return response()->json([
             'token' => $user->createToken($request->validated('device_name'))->plainTextToken,
-            'user' => ['id' => $user->id, 'name' => $user->name, 'email' => $user->email, 'company_id' => $user->company_id, 'branch_id' => $user->branch_id],
+            'user' => ['id' => $user->id, 'name' => $user->name, 'email' => $user->email, 'tenant_id' => $user->tenant_id, 'branch_id' => $user->branch_id],
         ], 201);
     }
 
@@ -40,7 +40,7 @@ class TokenController extends Controller
             'id' => $user->id,
             'name' => $user->name,
             'email' => $user->email,
-            'company_id' => $user->company_id,
+            'tenant_id' => $user->tenant_id,
             'branch_id' => $user->branch_id,
             'permissions' => $user->getAllPermissions()->pluck('name')->filter(fn (string $name): bool => $user->hasPermissionTo($name))->values(),
         ]]);

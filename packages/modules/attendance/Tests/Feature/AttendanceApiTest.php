@@ -1,34 +1,34 @@
 <?php
 
 use App\Modules\Attendance\Models\AttendanceRecord;
-use App\Modules\Company\Models\Branch;
-use App\Modules\Company\Models\Company;
 use App\Modules\Shifts\Models\ShiftAssignment;
 use App\Modules\Shifts\Models\ShiftTemplate;
 use App\Modules\Team\Models\User;
+use App\Modules\Tenant\Models\Branch;
+use App\Modules\Tenant\Models\Tenant;
 use Carbon\CarbonImmutable;
 use Laravel\Sanctum\Sanctum;
 use Spatie\Permission\Models\Permission;
 
-function apiCrew(Company $company, Branch $branch, array $permissions): User
+function apiCrew(Tenant $tenant, Branch $branch, array $permissions): User
 {
     foreach ($permissions as $permission) {
         Permission::findOrCreate($permission);
     }
 
-    return User::factory()->create(['company_id' => $company->id, 'branch_id' => $branch->id])->givePermissionTo($permissions);
+    return User::factory()->create(['tenant_id' => $tenant->id, 'branch_id' => $branch->id])->givePermissionTo($permissions);
 }
 
 beforeEach(function () {
     $this->travelTo(CarbonImmutable::parse('2026-10-14 09:10:00', 'UTC'));
 
-    $this->company = Company::factory()->create(['timezone' => 'UTC']);
-    $this->branch = Branch::factory()->create(['company_id' => $this->company->id]);
-    $this->manager = apiCrew($this->company, $this->branch, ['view attendance', 'record attendance']);
-    $this->employee = apiCrew($this->company, $this->branch, ['record attendance']);
-    $this->outsider = apiCrew($this->company, $this->branch, []);
+    $this->tenant = Tenant::factory()->create(['timezone' => 'UTC']);
+    $this->branch = Branch::factory()->create(['tenant_id' => $this->tenant->id]);
+    $this->manager = apiCrew($this->tenant, $this->branch, ['view attendance', 'record attendance']);
+    $this->employee = apiCrew($this->tenant, $this->branch, ['record attendance']);
+    $this->outsider = apiCrew($this->tenant, $this->branch, []);
 
-    $morning = ShiftTemplate::factory()->create(['company_id' => $this->company->id, 'starts_at' => '09:00', 'ends_at' => '17:00']);
+    $morning = ShiftTemplate::factory()->create(['tenant_id' => $this->tenant->id, 'starts_at' => '09:00', 'ends_at' => '17:00']);
     ShiftAssignment::factory()->create(['user_id' => $this->employee->id, 'shift_template_id' => $morning->id, 'date' => '2026-10-14']);
 });
 
@@ -72,7 +72,7 @@ describe('checking in and out', function () {
 describe('listing', function () {
     beforeEach(function () {
         foreach ([$this->employee, $this->manager] as $person) {
-            AttendanceRecord::create(['company_id' => $this->company->id, 'user_id' => $person->id, 'work_date' => '2026-10-14', 'check_in_at' => '2026-10-14 08:00:00', 'check_out_at' => '2026-10-14 16:00:00', 'worked_minutes' => 480, 'source' => 'self']);
+            AttendanceRecord::create(['tenant_id' => $this->tenant->id, 'user_id' => $person->id, 'work_date' => '2026-10-14', 'check_in_at' => '2026-10-14 08:00:00', 'check_out_at' => '2026-10-14 16:00:00', 'worked_minutes' => 480, 'source' => 'self']);
         }
     });
 
@@ -98,7 +98,7 @@ describe('the report', function () {
     });
 
     it('summarises hours and lateness per employee', function () {
-        AttendanceRecord::create(['company_id' => $this->company->id, 'user_id' => $this->employee->id, 'work_date' => '2026-10-13', 'check_in_at' => '2026-10-13 09:30:00', 'check_out_at' => '2026-10-13 17:00:00', 'late_minutes' => 30, 'worked_minutes' => 450, 'source' => 'self']);
+        AttendanceRecord::create(['tenant_id' => $this->tenant->id, 'user_id' => $this->employee->id, 'work_date' => '2026-10-13', 'check_in_at' => '2026-10-13 09:30:00', 'check_out_at' => '2026-10-13 17:00:00', 'late_minutes' => 30, 'worked_minutes' => 450, 'source' => 'self']);
         Sanctum::actingAs($this->manager);
 
         $this->getJson('/api/v1/attendance/report?date_from=2026-10-13&date_to=2026-10-14')

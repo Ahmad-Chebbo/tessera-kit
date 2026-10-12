@@ -4,10 +4,10 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Process;
 
 /**
- * The base package (Auth and Team) has to work without the core (Company and Subscription), because the fresh starter
+ * The base package (Auth and Team) has to work without the core (Tenant and Subscription), because the fresh starter
  * installs only the base. Its tests may use the core; nothing else may.
  */
-it('keeps the base package free of the Company and Subscription modules', function () {
+it('keeps the base package free of the Tenant and Subscription modules', function () {
     $offenders = [];
 
     foreach (File::allFiles(base_path('packages/base')) as $file) {
@@ -17,7 +17,7 @@ it('keeps the base package free of the Company and Subscription modules', functi
             continue;
         }
 
-        if (preg_match('#App\\\\Modules\\\\(Company|Subscription)\\\\|@modules/(Company|Subscription)/#', $file->getContents())) {
+        if (preg_match('#App\\\\Modules\\\\(Tenant|Subscription)\\\\|@modules/(Tenant|Subscription)/#', $file->getContents())) {
             $offenders[] = substr($path, strlen(str_replace('\\', '/', base_path())) + 1);
         }
     }

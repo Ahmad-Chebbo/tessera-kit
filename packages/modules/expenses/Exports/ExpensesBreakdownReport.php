@@ -27,11 +27,11 @@ class ExpensesBreakdownReport extends ReportDefinition
         return 'view expenses';
     }
 
-    public function filterRules(int $companyId): array
+    public function filterRules(int $tenantId): array
     {
         return [
-            'category_id' => ['nullable', 'integer', Rule::exists('expense_categories', 'id')->where('company_id', $companyId)],
-            'branch_id' => ['nullable', 'integer', Rule::exists('branches', 'id')->where('company_id', $companyId)],
+            'category_id' => ['nullable', 'integer', Rule::exists('expense_categories', 'id')->where('tenant_id', $tenantId)],
+            'branch_id' => ['nullable', 'integer', Rule::exists('branches', 'id')->where('tenant_id', $tenantId)],
             'type' => ['nullable', Rule::in(ExpenseType::values())],
         ];
     }
@@ -112,7 +112,7 @@ class ExpensesBreakdownReport extends ReportDefinition
         return $context->remember('expense-breakdown', function () use ($context): array {
             [$from, $to] = $this->range($context);
 
-            return $this->ledger->breakdown($context->company->id, $from, $to, array_filter([...array_intersect_key($context->filters, array_flip(['category_id', 'type'])), 'branch_id' => $this->branchId($context)], fn ($value) => $value !== null));
+            return $this->ledger->breakdown($context->tenant->id, $from, $to, array_filter([...array_intersect_key($context->filters, array_flip(['category_id', 'type'])), 'branch_id' => $this->branchId($context)], fn ($value) => $value !== null));
         });
     }
 }

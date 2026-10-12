@@ -10,8 +10,8 @@ use App\Modules\Attendance\Models\AttendanceExcuse;
 use App\Modules\Attendance\Models\AttendanceRecord;
 use App\Modules\Attendance\Services\AttendanceRecords;
 use App\Modules\Attendance\Services\AttendanceService;
-use App\Modules\Company\Services\BranchAccess;
 use App\Modules\Team\Models\User;
+use App\Modules\Tenant\Services\BranchAccess;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -39,7 +39,7 @@ class AttendanceController extends Controller
 
     private function employeesFor(User $actor): mixed
     {
-        return $this->access->scope(User::query()->where('company_id', $actor->company_id), $actor)->orderBy('name')->get(['id', 'name', 'branch_id']);
+        return $this->access->scope(User::query()->where('tenant_id', $actor->tenant_id), $actor)->orderBy('name')->get(['id', 'name', 'branch_id']);
     }
 
     public function index(AttendanceFilterRequest $request): Response
@@ -104,7 +104,7 @@ class AttendanceController extends Controller
 
     public function update(StoreAttendanceRecordRequest $request, AttendanceRecord $record): RedirectResponse
     {
-        abort_unless($record->company_id === $request->user()->company_id, 403);
+        abort_unless($record->tenant_id === $request->user()->tenant_id, 403);
         $this->access->ensure($request->user(), $record->user()->value('branch_id'));
 
         return $this->persist($request, $record);
@@ -112,7 +112,7 @@ class AttendanceController extends Controller
 
     public function destroy(Request $request, AttendanceRecord $record): RedirectResponse
     {
-        abort_unless($request->user()->can('manage attendance') && $record->company_id === $request->user()->company_id, 403);
+        abort_unless($request->user()->can('manage attendance') && $record->tenant_id === $request->user()->tenant_id, 403);
         $this->access->ensure($request->user(), $record->user()->value('branch_id'));
         $record->delete();
 
@@ -124,7 +124,7 @@ class AttendanceController extends Controller
         $actor = $request->user();
 
         return Inertia::render('Attendance/Absences', [
-            'absences' => $this->attendance->absences($actor->company_id, $request->from(), $request->to(), $request->integer('user_id') ?: null, $this->access->effective($actor, $request->query('branch_id'))),
+            'absences' => $this->attendance->absences($actor->tenant_id, $request->from(), $request->to(), $request->integer('user_id') ?: null, $this->access->effective($actor, $request->query('branch_id'))),
             'employees' => $this->employeesFor($actor),
             'filters' => $this->filtersFor($request),
             'can' => ['manage' => $actor->can('manage attendance')],
@@ -141,7 +141,7 @@ class AttendanceController extends Controller
 
     public function destroyExcuse(Request $request, AttendanceExcuse $excuse): RedirectResponse
     {
-        abort_unless($request->user()->can('manage attendance') && $excuse->company_id === $request->user()->company_id, 403);
+        abort_unless($request->user()->can('manage attendance') && $excuse->tenant_id === $request->user()->tenant_id, 403);
         $this->access->ensure($request->user(), $excuse->user()->value('branch_id'));
         $excuse->delete();
 
@@ -153,7 +153,7 @@ class AttendanceController extends Controller
         $actor = $request->user();
 
         return Inertia::render('Attendance/Report', [
-            'report' => $this->attendance->report($actor->company_id, $request->from(), $request->to(), $request->integer('user_id') ?: null, $this->access->effective($actor, $request->query('branch_id'))),
+            'report' => $this->attendance->report($actor->tenant_id, $request->from(), $request->to(), $request->integer('user_id') ?: null, $this->access->effective($actor, $request->query('branch_id'))),
             'employees' => $this->employeesFor($actor),
             'filters' => $this->filtersFor($request),
         ]);

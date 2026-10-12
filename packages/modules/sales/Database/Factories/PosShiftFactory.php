@@ -18,7 +18,7 @@ class PosShiftFactory extends Factory
     {
         return [
             'user_id' => User::factory(),
-            'company_id' => fn (array $attributes) => User::find($attributes['user_id'])->company_id,
+            'tenant_id' => fn (array $attributes) => User::find($attributes['user_id'])->tenant_id,
             'branch_id' => fn (array $attributes) => User::find($attributes['user_id'])->branch_id,
             'open_user_id' => fn (array $attributes) => $attributes['user_id'],
             'status' => PosShift::OPEN,

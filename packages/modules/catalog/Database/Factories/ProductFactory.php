@@ -4,7 +4,7 @@ namespace App\Modules\Catalog\Database\Factories;
 
 use App\Modules\Catalog\Models\Category;
 use App\Modules\Catalog\Models\Product;
-use App\Modules\Company\Models\Company;
+use App\Modules\Tenant\Models\Tenant;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -20,7 +20,7 @@ class ProductFactory extends Factory
         $costPrice = $basePrice * 0.6;
 
         return [
-            'company_id' => Company::factory(),
+            'tenant_id' => Tenant::factory(),
             'category_id' => Category::factory(),
             'name' => fake()->words(3, true),
             'barcode' => fake()->ean13(),

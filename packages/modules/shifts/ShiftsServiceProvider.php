@@ -19,7 +19,7 @@ class ShiftsServiceProvider extends ModuleServiceProvider
         return new ModuleManifest(
             key: 'shifts',
             name: 'Shifts',
-            requires: ['company', 'team'],
+            requires: ['tenant', 'team'],
         );
     }
 

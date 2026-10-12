@@ -24,7 +24,7 @@ class StoreRoleRequest extends FormRequest
         return [
             'name' => [
                 'required', 'string', 'max:100', Rule::notIn(['Admin']),
-                Rule::unique('roles', 'name')->where('company_id', $this->user()->company_id)->ignore($role?->id),
+                Rule::unique('roles', 'name')->where('tenant_id', $this->user()->tenant_id)->ignore($role?->id),
             ],
             'permissions' => ['present', 'array'],
             'permissions.*' => ['string', Rule::in($this->grantablePermissions())],
@@ -51,7 +51,7 @@ class StoreRoleRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'name.unique' => 'Your company already has a role with this name.',
+            'name.unique' => 'Your tenant already has a role with this name.',
             'name.not_in' => 'This name is reserved.',
             'permissions.*.in' => 'You can only grant permissions you hold yourself.',
         ];
@@ -64,6 +64,6 @@ class StoreRoleRequest extends FormRequest
      */
     public function grantablePermissions(): array
     {
-        return $this->user()->getAllPermissions()->pluck('name')->reject(fn (string $name): bool => $name === 'manage companies')->values()->all();
+        return $this->user()->getAllPermissions()->pluck('name')->reject(fn (string $name): bool => $name === 'manage tenants')->values()->all();
     }
 }

@@ -14,7 +14,7 @@ class AttendanceExcuse extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['company_id', 'user_id', 'created_by', 'date', 'reason'];
+    protected $fillable = ['tenant_id', 'user_id', 'created_by', 'date', 'reason'];
 
     public function user(): BelongsTo
     {

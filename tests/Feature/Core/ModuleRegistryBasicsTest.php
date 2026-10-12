@@ -29,7 +29,7 @@ function basicsModule(string $key, array $requires = []): ModuleServiceProvider
 it('finds the core modules and enables them', function () {
     $registry = app(ModuleRegistry::class);
 
-    foreach (['auth', 'company', 'subscription', 'team'] as $core) {
+    foreach (['auth', 'tenant', 'subscription', 'team'] as $core) {
         expect($registry->has($core))->toBeTrue()->and($registry->get($core)->manifest()->core)->toBeTrue();
     }
 });
@@ -63,7 +63,7 @@ it('refuses to enable a module that is not installed', function () {
 it('keeps core modules enabled whatever is asked for', function () {
     $registry = new ModuleRegistry(array_values(app(ModuleRegistry::class)->all()), 'none');
 
-    expect(array_keys($registry->enabled()))->toEqualCanonicalizing(['auth', 'company', 'subscription', 'team']);
+    expect(array_keys($registry->enabled()))->toEqualCanonicalizing(['auth', 'tenant', 'subscription', 'team']);
 });
 
 it('turns the web layer off without touching the api layer', function () {

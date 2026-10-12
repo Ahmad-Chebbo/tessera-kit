@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('attendance_records', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('tenant_id')->constrained()->cascadeOnDelete();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->unsignedBigInteger('open_user_id')->nullable()->unique();
             $table->foreignId('shift_template_id')->nullable()->constrained()->nullOnDelete();
@@ -25,7 +25,7 @@ return new class extends Migration
             $table->text('notes')->nullable();
             $table->timestamps();
 
-            $table->index(['company_id', 'work_date']);
+            $table->index(['tenant_id', 'work_date']);
             $table->index(['user_id', 'work_date']);
         });
     }

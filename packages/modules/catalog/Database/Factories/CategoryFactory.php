@@ -3,7 +3,7 @@
 namespace App\Modules\Catalog\Database\Factories;
 
 use App\Modules\Catalog\Models\Category;
-use App\Modules\Company\Models\Company;
+use App\Modules\Tenant\Models\Tenant;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -16,7 +16,7 @@ class CategoryFactory extends Factory
     public function definition(): array
     {
         return [
-            'company_id' => Company::factory(),
+            'tenant_id' => Tenant::factory(),
             'parent_id' => null,
             'name' => fake()->word(),
             'description' => fake()->sentence(),

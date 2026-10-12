@@ -2,8 +2,8 @@
 
 namespace App\Modules\Customers\Database\Factories;
 
-use App\Modules\Company\Models\Company;
 use App\Modules\Customers\Models\CustomerGroup;
+use App\Modules\Tenant\Models\Tenant;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,7 +17,7 @@ class CustomerGroupFactory extends Factory
     public function definition(): array
     {
         return [
-            'company_id' => Company::factory(),
+            'tenant_id' => Tenant::factory(),
             'name' => fake()->unique()->word(),
             'description' => null,
         ];

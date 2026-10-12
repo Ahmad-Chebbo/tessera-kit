@@ -8,7 +8,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\DB;
 
 /**
- * Records a manager typed in were saved as the company's wall clock time instead of the moment it stands for, so a
+ * Records a manager typed in were saved as the tenant's wall clock time instead of the moment it stands for, so a
  * 09:00 entry in Beirut was read back as 09:00 UTC. This rewrites those records as real moments and measures
  * lateness and hours again. Only records written before the fix are touched.
  */
@@ -33,10 +33,10 @@ return new class extends Migration
     {
         $rows = DB::table('attendance_records')
             ->join('users', 'users.id', '=', 'attendance_records.user_id')
-            ->join('companies', 'companies.id', '=', 'attendance_records.company_id')
+            ->join('tenants', 'tenants.id', '=', 'attendance_records.tenant_id')
             ->where('attendance_records.source', AttendanceRecord::MANAGER)
             ->where('attendance_records.updated_at', '<=', self::WRITTEN_BEFORE)
-            ->select('attendance_records.id', 'attendance_records.user_id', 'attendance_records.check_in_at', 'attendance_records.check_out_at', 'companies.timezone')
+            ->select('attendance_records.id', 'attendance_records.user_id', 'attendance_records.check_in_at', 'attendance_records.check_out_at', 'tenants.timezone')
             ->get();
 
         foreach ($rows as $row) {

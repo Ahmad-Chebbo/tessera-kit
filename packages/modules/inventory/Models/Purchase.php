@@ -2,9 +2,9 @@
 
 namespace App\Modules\Inventory\Models;
 
-use App\Modules\Company\Models\Company;
-use App\Modules\Company\Models\Location;
 use App\Modules\Team\Models\User;
+use App\Modules\Tenant\Models\Location;
+use App\Modules\Tenant\Models\Tenant;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Purchase extends Model
 {
     protected $fillable = [
-        'company_id',
+        'tenant_id',
         'supplier_id',
         'location_id',
         'created_by',
@@ -38,9 +38,9 @@ class Purchase extends Model
         ];
     }
 
-    public function company(): BelongsTo
+    public function tenant(): BelongsTo
     {
-        return $this->belongsTo(Company::class);
+        return $this->belongsTo(Tenant::class);
     }
 
     public function supplier(): BelongsTo

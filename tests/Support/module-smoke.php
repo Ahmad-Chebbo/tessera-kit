@@ -6,10 +6,10 @@
  * be migrated. Used by the module set tests, which run it as a separate process with MODULES_ENABLED set.
  */
 
-use App\Modules\Company\Models\Branch;
-use App\Modules\Company\Models\Company;
 use App\Modules\Team\Models\User;
 use App\Modules\Team\Services\PermissionSynchronizer;
+use App\Modules\Tenant\Models\Branch;
+use App\Modules\Tenant\Models\Tenant;
 use Illuminate\Contracts\Console\Kernel;
 use Illuminate\Contracts\Http\Kernel as HttpKernel;
 use Illuminate\Http\Request;
@@ -23,9 +23,9 @@ $app->make(Kernel::class)->bootstrap();
 
 app(PermissionSynchronizer::class)->sync();
 
-$company = Company::factory()->create();
-$branch = Branch::factory()->create(['company_id' => $company->id]);
-$user = User::factory()->create(['company_id' => $company->id, 'branch_id' => $branch->id]);
+$tenant = Tenant::factory()->create();
+$branch = Branch::factory()->create(['tenant_id' => $tenant->id]);
+$user = User::factory()->create(['tenant_id' => $tenant->id, 'branch_id' => $branch->id]);
 $user->givePermissionTo(Permission::all());
 
 $kernel = $app->make(HttpKernel::class);

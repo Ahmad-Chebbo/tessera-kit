@@ -23,17 +23,17 @@ class ExpenseCategoryDefaults
     ];
 
     /**
-     * Gives a company a starting set of categories the first time it uses expenses.
+     * Gives a tenant a starting set of categories the first time it uses expenses.
      */
-    public function ensure(int $companyId): void
+    public function ensure(int $tenantId): void
     {
-        if (ExpenseCategory::query()->where('company_id', $companyId)->exists()) {
+        if (ExpenseCategory::query()->where('tenant_id', $tenantId)->exists()) {
             return;
         }
 
         foreach (self::CATEGORIES as $name => $type) {
             ExpenseCategory::create([
-                'company_id' => $companyId,
+                'tenant_id' => $tenantId,
                 'name' => $name,
                 'type' => $type,
                 'affects_profit' => $type->affectsProfitByDefault(),

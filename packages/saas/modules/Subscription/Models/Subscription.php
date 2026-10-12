@@ -2,10 +2,10 @@
 
 namespace App\Modules\Subscription\Models;
 
-use App\Modules\Company\Models\Company;
 use App\Modules\Subscription\Database\Factories\SubscriptionFactory;
 use App\Modules\Subscription\Enums\SubscriptionStatus;
 use App\Modules\Subscription\Services\Entitlements;
+use App\Modules\Tenant\Models\Tenant;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -17,7 +17,7 @@ class Subscription extends Model
     use HasFactory;
 
     protected $fillable = [
-        'company_id',
+        'tenant_id',
         'plan_id',
         'status',
         'starts_at',
@@ -40,9 +40,9 @@ class Subscription extends Model
         ];
     }
 
-    public function company(): BelongsTo
+    public function tenant(): BelongsTo
     {
-        return $this->belongsTo(Company::class);
+        return $this->belongsTo(Tenant::class);
     }
 
     public function plan(): BelongsTo
@@ -51,7 +51,7 @@ class Subscription extends Model
     }
 
     /**
-     * Whether the company may use the platform right now.
+     * Whether the tenant may use the platform right now.
      */
     public function isUsable(): bool
     {
@@ -64,7 +64,7 @@ class Subscription extends Model
     }
 
     /**
-     * The status as the company experiences it: a lapsed trial or period reads as expired.
+     * The status as the tenant experiences it: a lapsed trial or period reads as expired.
      */
     public function effectiveStatus(): SubscriptionStatus
     {

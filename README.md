@@ -9,7 +9,7 @@ php artisan module:add sales
 bun run build
 ```
 
-Start from the [starter](https://github.com/Tessera-kit/tessera-starter) to build a multi-company app, or from [fresh](https://github.com/Tessera-kit/tessera-fresh) for a plain one with users and roles. This repository is where Tessera itself is developed.
+Start from the [starter](https://github.com/Tessera-kit/tessera-starter) to build a multi-tenant app, or from [fresh](https://github.com/Tessera-kit/tessera-fresh) for a plain one with users and roles. This repository is where Tessera itself is developed.
 
 ## The pieces
 
@@ -17,11 +17,11 @@ Start from the [starter](https://github.com/Tessera-kit/tessera-starter) to buil
 |---|---|---|---|
 | Engine | [tessera-engine](https://github.com/Tessera-kit/tessera-engine) | Composer | Finds, orders and boots modules; `module:*` commands. Works in any Laravel app. |
 | Base | [tessera-base](https://github.com/Tessera-kit/tessera-base) | Composer | Auth and Team (users, roles, permissions), plus the shared contracts. Works alone. |
-| SaaS | [tessera-saas](https://github.com/Tessera-kit/tessera-saas) | Composer | Company and Subscription: companies, branches, plans. Builds on the base. |
+| SaaS | [tessera-saas](https://github.com/Tessera-kit/tessera-saas) | Composer | Tenant and Subscription: tenants, branches, plans. Builds on the base. |
 | UI | [tessera-ui](https://github.com/Tessera-kit/tessera-ui) | bun / npm | Vue 3 components, composables and the theme. Standalone. |
 | Modules | `tessera-<key>` | Composer | Attendance, Catalog, Customers, Discounts, Expenses, Exports, Inventory, Reports, Sales, Shifts. |
 | Starter | [tessera-starter](https://github.com/Tessera-kit/tessera-starter) | `composer create-project` | A Laravel SaaS app with the engine, base, core, UI and application shell. |
-| Fresh | [tessera-fresh](https://github.com/Tessera-kit/tessera-fresh) | `composer create-project` | The same without companies and plans: sign-in, users, roles and permissions. |
+| Fresh | [tessera-fresh](https://github.com/Tessera-kit/tessera-fresh) | `composer create-project` | The same without tenants and plans: sign-in, users, roles and permissions. |
 
 Every package has a README. They are read-only copies of folders here.
 
@@ -30,7 +30,7 @@ Every package has a README. They are read-only copies of folders here.
 ```
 packages/engine           Tessera\Engine         the module engine
 packages/base             Tessera\Core           contracts + modules/{Auth,Team}
-packages/saas             App\Modules\...        modules/{Company,Subscription}
+packages/saas             App\Modules\...        modules/{Tenant,Subscription}
 packages/ui               @tessera/tessera-ui   the interface kit (npm)
 packages/modules/<key>    App\Modules\<Name>    one folder per feature module
 app, resources, routes    the host application (it becomes the starter)

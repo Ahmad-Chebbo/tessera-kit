@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Process;
  */
 const MODULE_PAGES = [
     'team' => ['users', 'users/create', 'roles', 'roles/create', 'activity'],
-    'company' => ['settings', 'exchange-rates', 'branches', 'branches/create', 'locations', 'locations/create'],
+    'tenant' => ['settings', 'exchange-rates', 'branches', 'branches/create', 'locations', 'locations/create'],
     'subscription' => ['subscription'],
     'auth' => ['profile'],
     'reports' => ['dashboard', 'reports/sales', 'reports/items', 'reports/profit'],
@@ -24,7 +24,7 @@ const MODULE_PAGES = [
     'exports' => ['exports'],
 ];
 
-const ALWAYS_ON = ['team', 'company', 'subscription', 'auth'];
+const ALWAYS_ON = ['team', 'tenant', 'subscription', 'auth'];
 
 /**
  * Migrates an empty database with the given modules enabled, then asks every page of every module for its status.

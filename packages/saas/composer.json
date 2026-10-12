@@ -1,6 +1,6 @@
 {
     "name": "tessera/tessera-saas",
-    "description": "The SaaS layer of Tessera: companies with branches and locations, subscriptions with plans and limits. Builds on tessera-base.",
+    "description": "The SaaS layer of Tessera: tenants with branches and locations, subscriptions with plans and limits. Builds on tessera-base.",
     "type": "library",
     "license": "proprietary",
     "require": {
@@ -15,14 +15,14 @@
     },
     "autoload": {
         "psr-4": {
-            "App\\Modules\\Company\\": "modules/Company/",
+            "App\\Modules\\Tenant\\": "modules/Tenant/",
             "App\\Modules\\Subscription\\": "modules/Subscription/"
         }
     },
     "extra": {
         "tessera": {
             "modules": [
-                "App\\Modules\\Company\\CompanyServiceProvider",
+                "App\\Modules\\Tenant\\TenantServiceProvider",
                 "App\\Modules\\Subscription\\SubscriptionServiceProvider"
             ]
         },

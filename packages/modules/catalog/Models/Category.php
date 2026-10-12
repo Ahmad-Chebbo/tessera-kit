@@ -3,7 +3,7 @@
 namespace App\Modules\Catalog\Models;
 
 use App\Modules\Catalog\Database\Factories\CategoryFactory;
-use App\Modules\Company\Models\Company;
+use App\Modules\Tenant\Models\Tenant;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -16,7 +16,7 @@ class Category extends Model
     use HasFactory;
 
     protected $fillable = [
-        'company_id',
+        'tenant_id',
         'parent_id',
         'color',
         'icon',
@@ -32,9 +32,9 @@ class Category extends Model
         ];
     }
 
-    public function company(): BelongsTo
+    public function tenant(): BelongsTo
     {
-        return $this->belongsTo(Company::class);
+        return $this->belongsTo(Tenant::class);
     }
 
     public function parent(): BelongsTo

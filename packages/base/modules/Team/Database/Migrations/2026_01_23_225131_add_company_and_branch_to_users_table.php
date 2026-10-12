@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->unsignedBigInteger('company_id')->nullable()->after('id')->index();
-            $table->unsignedBigInteger('branch_id')->nullable()->after('company_id')->index();
+            $table->unsignedBigInteger('tenant_id')->nullable()->after('id')->index();
+            $table->unsignedBigInteger('branch_id')->nullable()->after('tenant_id')->index();
             $table->boolean('is_active')->default(true)->after('remember_token');
         });
     }
@@ -24,9 +24,9 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropIndex(['company_id']);
+            $table->dropIndex(['tenant_id']);
             $table->dropIndex(['branch_id']);
-            $table->dropColumn(['company_id', 'branch_id', 'is_active']);
+            $table->dropColumn(['tenant_id', 'branch_id', 'is_active']);
         });
     }
 };

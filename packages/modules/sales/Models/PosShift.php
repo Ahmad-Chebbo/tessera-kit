@@ -2,9 +2,9 @@
 
 namespace App\Modules\Sales\Models;
 
-use App\Modules\Company\Models\Branch;
 use App\Modules\Sales\Database\Factories\PosShiftFactory;
 use App\Modules\Team\Models\User;
+use App\Modules\Tenant\Models\Branch;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -21,7 +21,7 @@ class PosShift extends Model
     public const CLOSED = 'closed';
 
     protected $fillable = [
-        'company_id',
+        'tenant_id',
         'branch_id',
         'user_id',
         'open_user_id',

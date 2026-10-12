@@ -7,7 +7,7 @@ use App\Modules\Attendance\Http\Requests\AttendanceFilterRequest;
 use App\Modules\Attendance\Http\Resources\AttendanceRecordResource;
 use App\Modules\Attendance\Services\AttendanceRecords;
 use App\Modules\Attendance\Services\AttendanceService;
-use App\Modules\Company\Services\BranchAccess;
+use App\Modules\Tenant\Services\BranchAccess;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -71,7 +71,7 @@ class AttendanceController extends Controller
         $actor = $request->user();
 
         return response()->json([
-            'data' => $this->attendance->report($actor->company_id, $request->from(), $request->to(), $request->integer('user_id') ?: null, $this->access->effective($actor, $request->query('branch_id'))),
+            'data' => $this->attendance->report($actor->tenant_id, $request->from(), $request->to(), $request->integer('user_id') ?: null, $this->access->effective($actor, $request->query('branch_id'))),
             'period' => ['from' => $request->from()->toDateString(), 'to' => $request->to()->toDateString()],
         ]);
     }

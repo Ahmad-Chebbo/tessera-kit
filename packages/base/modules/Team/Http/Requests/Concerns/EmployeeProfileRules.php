@@ -9,13 +9,13 @@ trait EmployeeProfileRules
     /**
      * @return array<string, array<int, mixed>>
      */
-    protected function profileRules(?int $companyId, ?int $ignoreUserId = null): array
+    protected function profileRules(?int $tenantId, ?int $ignoreUserId = null): array
     {
         return [
             'employee_number' => [
                 'nullable', 'string', 'max:32',
                 Rule::unique('employee_profiles', 'employee_number')
-                    ->where('company_id', $companyId)
+                    ->where('tenant_id', $tenantId)
                     ->ignore($ignoreUserId, 'user_id'),
             ],
             'phone' => ['nullable', 'string', 'max:50'],

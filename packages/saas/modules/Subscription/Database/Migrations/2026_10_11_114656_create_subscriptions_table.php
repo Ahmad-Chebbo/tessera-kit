@@ -11,7 +11,7 @@ return new class extends Migration
     {
         Schema::create('subscriptions', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('tenant_id')->constrained()->cascadeOnDelete();
             $table->foreignId('plan_id')->constrained()->restrictOnDelete();
             $table->string('status', 16);
             $table->timestamp('starts_at')->nullable();
@@ -22,14 +22,14 @@ return new class extends Migration
             $table->text('notes')->nullable();
             $table->timestamps();
 
-            $table->index(['company_id', 'id']);
+            $table->index(['tenant_id', 'id']);
         });
 
         $legacyId = DB::table('plans')->where('slug', 'legacy')->value('id');
 
-        foreach (DB::table('companies')->pluck('id') as $companyId) {
+        foreach (DB::table('tenants')->pluck('id') as $tenantId) {
             DB::table('subscriptions')->insert([
-                'company_id' => $companyId,
+                'tenant_id' => $tenantId,
                 'plan_id' => $legacyId,
                 'status' => 'active',
                 'starts_at' => now(),

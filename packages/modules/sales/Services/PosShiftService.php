@@ -29,7 +29,7 @@ class PosShiftService
 
         try {
             $shift = PosShift::create([
-                'company_id' => $user->company_id,
+                'tenant_id' => $user->tenant_id,
                 'branch_id' => $user->branch_id,
                 'user_id' => $user->id,
                 'open_user_id' => $user->id,

@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('held_orders', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('tenant_id')->constrained()->cascadeOnDelete();
             $table->foreignId('branch_id')->constrained()->cascadeOnDelete();
             $table->foreignId('cashier_id')->constrained('users')->cascadeOnDelete();
             $table->string('name')->nullable();

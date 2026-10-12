@@ -1,29 +1,29 @@
 <?php
 
-use App\Modules\Company\Models\Branch;
-use App\Modules\Company\Models\Company;
 use App\Modules\Expenses\Models\Expense;
 use App\Modules\Expenses\Models\ExpenseCategory;
 use App\Modules\Team\Models\User;
+use App\Modules\Tenant\Models\Branch;
+use App\Modules\Tenant\Models\Tenant;
 use Carbon\CarbonImmutable;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Laravel\Sanctum\Sanctum;
 use Spatie\Permission\Models\Permission;
 
-function apiExpenseUser(Company $company, ?Branch $branch, array $permissions): User
+function apiExpenseUser(Tenant $tenant, ?Branch $branch, array $permissions): User
 {
     foreach ($permissions as $permission) {
         Permission::findOrCreate($permission);
     }
 
-    return User::factory()->create(['company_id' => $company->id, 'branch_id' => $branch?->id])->givePermissionTo($permissions);
+    return User::factory()->create(['tenant_id' => $tenant->id, 'branch_id' => $branch?->id])->givePermissionTo($permissions);
 }
 
 function apiExpense(array $attributes = []): Expense
 {
     return Expense::factory()->create([
-        'company_id' => test()->company->id,
+        'tenant_id' => test()->tenant->id,
         'expense_category_id' => test()->category->id,
         'branch_id' => test()->north->id,
         'created_by' => test()->boss->id,
@@ -37,15 +37,15 @@ beforeEach(function () {
     Storage::fake('local');
     $this->travelTo(CarbonImmutable::parse('2026-10-14 10:00:00', 'UTC'));
 
-    $this->company = Company::factory()->create(['timezone' => 'UTC']);
-    $this->north = Branch::factory()->create(['company_id' => $this->company->id]);
-    $this->south = Branch::factory()->create(['company_id' => $this->company->id]);
-    $this->category = ExpenseCategory::factory()->create(['company_id' => $this->company->id, 'name' => 'Rent']);
+    $this->tenant = Tenant::factory()->create(['timezone' => 'UTC']);
+    $this->north = Branch::factory()->create(['tenant_id' => $this->tenant->id]);
+    $this->south = Branch::factory()->create(['tenant_id' => $this->tenant->id]);
+    $this->category = ExpenseCategory::factory()->create(['tenant_id' => $this->tenant->id, 'name' => 'Rent']);
 
     $all = ['view expenses', 'create expenses', 'edit expenses', 'delete expenses'];
-    $this->boss = apiExpenseUser($this->company, $this->north, [...$all, 'view all branches']);
-    $this->clerk = apiExpenseUser($this->company, $this->north, $all);
-    $this->viewer = apiExpenseUser($this->company, $this->north, ['view expenses']);
+    $this->boss = apiExpenseUser($this->tenant, $this->north, [...$all, 'view all branches']);
+    $this->clerk = apiExpenseUser($this->tenant, $this->north, $all);
+    $this->viewer = apiExpenseUser($this->tenant, $this->north, ['view expenses']);
 });
 
 describe('listing', function () {
@@ -92,7 +92,7 @@ describe('listing', function () {
     });
 
     it('needs the view permission', function () {
-        Sanctum::actingAs(apiExpenseUser($this->company, $this->north, []));
+        Sanctum::actingAs(apiExpenseUser($this->tenant, $this->north, []));
 
         $this->getJson('/api/v1/expenses')->assertForbidden();
     });
@@ -105,15 +105,15 @@ describe('listing', function () {
 });
 
 describe('showing', function () {
-    it('shows an expense of the company', function () {
+    it('shows an expense of the tenant', function () {
         $expense = apiExpense(['description' => 'Rent']);
         Sanctum::actingAs($this->viewer);
 
         $this->getJson("/api/v1/expenses/{$expense->id}")->assertOk()->assertJsonPath('data.description', 'Rent')->assertJsonPath('data.branch.id', $this->north->id);
     });
 
-    it('hides expenses of another company and of another branch', function () {
-        $stranger = Expense::factory()->create(['company_id' => Company::factory()->create()->id]);
+    it('hides expenses of another tenant and of another branch', function () {
+        $stranger = Expense::factory()->create(['tenant_id' => Tenant::factory()->create()->id]);
         $southern = apiExpense(['branch_id' => $this->south->id]);
         Sanctum::actingAs($this->viewer);
 

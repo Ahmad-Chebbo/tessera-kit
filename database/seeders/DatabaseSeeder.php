@@ -15,8 +15,8 @@ class DatabaseSeeder extends Seeder
 
     /**
      * Seeds the roles and the first account, then whatever the enabled modules seed (plans, units, a demo store with its
-     * own owner...). With the Company module the account is the platform Admin, who has no company and manages
-     * companies and plans; without it, the Owner, who holds every permission the Team module gives.
+     * own owner...). With the Tenant module the account is the platform Admin, who has no tenant and manages
+     * tenants and plans; without it, the Owner, who holds every permission the Team module gives.
      */
     public function run(): void
     {
@@ -27,7 +27,7 @@ class DatabaseSeeder extends Seeder
 
         $this->call(RolesAndPermissionsSeeder::class);
 
-        if (app(ModuleRegistry::class)->has('company')) {
+        if (app(ModuleRegistry::class)->has('tenant')) {
             $user->assignRole('Admin');
         } else {
             Role::findByName('Owner')->syncPermissions(Permission::all());

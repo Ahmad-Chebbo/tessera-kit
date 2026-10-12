@@ -5,8 +5,6 @@ namespace App\Modules\Sales\Http\Controllers\Web;
 use App\Http\Controllers\Controller;
 use App\Modules\Catalog\Models\Category;
 use App\Modules\Catalog\Models\Product;
-use App\Modules\Company\Models\ExchangeRate;
-use App\Modules\Company\Models\Location;
 use App\Modules\Customers\Models\Customer;
 use App\Modules\Inventory\Services\StockService;
 use App\Modules\Sales\Actions\CheckoutAction;
@@ -16,6 +14,8 @@ use App\Modules\Sales\Http\Requests\CheckoutRequest;
 use App\Modules\Sales\Models\HeldOrder;
 use App\Modules\Sales\Models\Order;
 use App\Modules\Sales\Services\ReceiptService;
+use App\Modules\Tenant\Models\ExchangeRate;
+use App\Modules\Tenant\Models\Location;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -46,15 +46,15 @@ class POSController extends Controller
             ->first();
 
         $categories = Category::query()
-            ->where('company_id', $user->company_id)
+            ->where('tenant_id', $user->tenant_id)
             ->where('is_active', true)
             ->orderBy('name')
             ->get(['id', 'name']);
 
-        $systemCurrency = $branch->company->currency ?? 'USD';
+        $systemCurrency = $branch->tenant->currency ?? 'USD';
 
-        // Get exchange rates for this company
-        $exchangeRates = ExchangeRate::where('company_id', $user->company_id)
+        // Get exchange rates for this tenant
+        $exchangeRates = ExchangeRate::where('tenant_id', $user->tenant_id)
             ->where('is_active', true)
             ->get()
             ->mapWithKeys(fn ($rate) => ["{$rate->from_currency}_{$rate->to_currency}" => (float) $rate->rate]);
@@ -73,7 +73,7 @@ class POSController extends Controller
             ]);
 
         $customers = Customer::query()
-            ->where('company_id', $user->company_id)
+            ->where('tenant_id', $user->tenant_id)
             ->where('is_active', true)
             ->orderBy('name')
             ->get(['id', 'name', 'phone']);
@@ -89,7 +89,7 @@ class POSController extends Controller
             'exchangeRates' => $exchangeRates,
             'heldOrders' => $heldOrders,
             'customers' => $customers,
-            'taxRate' => (float) ($user->company?->tax_rate ?? 0),
+            'taxRate' => (float) ($user->tenant?->tax_rate ?? 0),
         ]);
     }
 
@@ -108,7 +108,7 @@ class POSController extends Controller
             ->first();
 
         $query = Product::query()
-            ->where('company_id', $user->company_id)
+            ->where('tenant_id', $user->tenant_id)
             ->where('is_active', true)
             ->with(['category:id,name', 'media', 'sellUnits.unit:id,name,abbreviation']);
 
@@ -170,9 +170,9 @@ class POSController extends Controller
 
         $data = $request->validate([
             'items' => ['present', 'array', 'max:200'],
-            'items.*.product_id' => ['required', 'integer', 'exists:products,id,company_id,'.$user->company_id],
+            'items.*.product_id' => ['required', 'integer', 'exists:products,id,tenant_id,'.$user->tenant_id],
             'items.*.quantity' => ['required', 'numeric', 'min:0.0001', 'max:1000000'],
-            'customer_id' => ['nullable', 'integer', 'exists:customers,id,company_id,'.$user->company_id],
+            'customer_id' => ['nullable', 'integer', 'exists:customers,id,tenant_id,'.$user->tenant_id],
             'coupon_code' => ['nullable', 'string', 'max:50'],
             'payment_type' => ['nullable', 'in:cash,debt'],
         ]);

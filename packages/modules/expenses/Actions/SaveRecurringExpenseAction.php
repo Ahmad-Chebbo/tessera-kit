@@ -26,7 +26,7 @@ class SaveRecurringExpenseAction
         $recurring = RecurringExpense::create([
             ...$data,
             'branch_id' => $this->branches->forWrite($actor, $data['branch_id'] ?? null),
-            'company_id' => $actor->company_id,
+            'tenant_id' => $actor->tenant_id,
             'created_by' => $actor->id,
             'next_run_on' => $data['starts_on'],
             'runs_count' => 0,

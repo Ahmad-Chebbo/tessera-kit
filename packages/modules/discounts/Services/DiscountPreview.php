@@ -24,14 +24,14 @@ class DiscountPreview
      */
     public function run(User $user, array $items, ?int $customerId = null, ?string $couponCode = null, string $paymentType = 'cash'): array
     {
-        $company = $user->company;
-        $currency = $company->currency ?? 'USD';
-        $customer = $customerId ? Customer::query()->where('company_id', $user->company_id)->find($customerId) : null;
+        $tenant = $user->tenant;
+        $currency = $tenant->currency ?? 'USD';
+        $customer = $customerId ? Customer::query()->where('tenant_id', $user->tenant_id)->find($customerId) : null;
 
         $lines = [];
 
         foreach (array_values($items) as $index => $item) {
-            $product = Product::query()->where('company_id', $user->company_id)->find($item['product_id']);
+            $product = Product::query()->where('tenant_id', $user->tenant_id)->find($item['product_id']);
 
             if ($product === null) {
                 continue;
@@ -43,12 +43,12 @@ class DiscountPreview
         }
 
         $result = $this->engine->evaluate(new EvaluationContext(
-            companyId: $user->company_id,
+            tenantId: $user->tenant_id,
             branchId: (int) $user->branch_id,
             customerId: $customer?->id,
             customerGroupId: $customer?->customer_group_id,
             paymentType: $paymentType,
-            now: CarbonImmutable::now($company->timezone ?: config('app.timezone')),
+            now: CarbonImmutable::now($tenant->timezone ?: config('app.timezone')),
             lines: $lines,
             couponCode: $couponCode,
         ));

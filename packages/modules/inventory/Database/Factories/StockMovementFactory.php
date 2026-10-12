@@ -3,11 +3,11 @@
 namespace App\Modules\Inventory\Database\Factories;
 
 use App\Modules\Catalog\Models\Product;
-use App\Modules\Company\Models\Company;
-use App\Modules\Company\Models\Location;
 use App\Modules\Inventory\Enums\StockMovementType;
 use App\Modules\Inventory\Models\StockMovement;
 use App\Modules\Team\Models\User;
+use App\Modules\Tenant\Models\Location;
+use App\Modules\Tenant\Models\Tenant;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -20,7 +20,7 @@ class StockMovementFactory extends Factory
     public function definition(): array
     {
         return [
-            'company_id' => Company::factory(),
+            'tenant_id' => Tenant::factory(),
             'product_id' => Product::factory(),
             'location_id' => Location::factory(),
             'type' => StockMovementType::Purchase,

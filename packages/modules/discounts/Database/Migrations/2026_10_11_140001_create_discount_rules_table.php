@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('discount_rules', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('tenant_id')->constrained()->cascadeOnDelete();
             $table->string('name', 150);
             $table->string('description', 500)->nullable();
             $table->boolean('is_active')->default(true);
@@ -28,8 +28,8 @@ return new class extends Migration
             $table->unsignedInteger('per_customer_limit')->nullable();
             $table->timestamps();
 
-            $table->index(['company_id', 'is_active', 'priority']);
-            $table->unique(['company_id', 'coupon_code']);
+            $table->index(['tenant_id', 'is_active', 'priority']);
+            $table->unique(['tenant_id', 'coupon_code']);
         });
 
         Schema::create('discount_applications', function (Blueprint $table) {

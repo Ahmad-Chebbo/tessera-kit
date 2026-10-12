@@ -10,7 +10,7 @@ class ReceiptService
      * Generate structured receipt data from an order.
      *
      * @return array{
-     *     company_name: string,
+     *     tenant_name: string,
      *     branch_name: string,
      *     branch_address: ?string,
      *     order_number: string,
@@ -26,15 +26,15 @@ class ReceiptService
      */
     public function generateReceiptData(Order $order): array
     {
-        $order->load(['branch.company', 'items.product', 'payment', 'cashier']);
+        $order->load(['branch.tenant', 'items.product', 'payment', 'cashier']);
 
         return [
-            'company_name' => $order->branch->company->name,
-            'company_logo' => $order->branch->company->logo_url ?? '',
+            'tenant_name' => $order->branch->tenant->name,
+            'tenant_logo' => $order->branch->tenant->logo_url ?? '',
             'branch_name' => $order->branch->name,
             'branch_address' => $order->branch->address,
-            'receipt_header' => $order->branch->company->receipt_header,
-            'receipt_footer' => $order->branch->company->receipt_footer,
+            'receipt_header' => $order->branch->tenant->receipt_header,
+            'receipt_footer' => $order->branch->tenant->receipt_footer,
             'order_number' => $order->order_number,
             'date' => $order->created_at->format('M d, Y'),
             'time' => $order->created_at->format('h:i A'),

@@ -13,9 +13,9 @@ class ExpenseCategoryController extends Controller
 {
     public function index(Request $request, ExpenseCategoryDefaults $defaults): AnonymousResourceCollection
     {
-        $companyId = $request->user()->company_id;
-        $defaults->ensure($companyId);
+        $tenantId = $request->user()->tenant_id;
+        $defaults->ensure($tenantId);
 
-        return ExpenseCategoryResource::collection(ExpenseCategory::query()->where('company_id', $companyId)->orderBy('name')->get());
+        return ExpenseCategoryResource::collection(ExpenseCategory::query()->where('tenant_id', $tenantId)->orderBy('name')->get());
     }
 }

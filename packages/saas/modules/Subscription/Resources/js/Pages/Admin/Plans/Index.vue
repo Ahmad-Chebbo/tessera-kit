@@ -21,7 +21,7 @@ const columns = computed(() => [
     { key: 'price', label: t('plans.price') },
     { key: 'modules', label: t('plans.modules') },
     { key: 'limits', label: t('plans.maxUsers') },
-    { key: 'subscriptions_count', label: t('plans.companies') },
+    { key: 'subscriptions_count', label: t('plans.tenants') },
     { key: 'status', label: t('common.status') },
     { key: 'actions', label: t('common.actions'), align: 'end' },
 ]);

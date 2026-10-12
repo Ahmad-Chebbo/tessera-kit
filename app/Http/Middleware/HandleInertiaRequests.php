@@ -47,7 +47,7 @@ class HandleInertiaRequests extends Middleware
 
         return $module === null
             || $user->isSuperAdmin()
-            || app(PlanLimits::class)->hasModule($user->company_id, $module);
+            || app(PlanLimits::class)->hasModule($user->tenant_id, $module);
     }
 
     /**
@@ -81,7 +81,7 @@ class HandleInertiaRequests extends Middleware
                     'id' => $user->id,
                     'name' => $user->name,
                     'email' => $user->email,
-                    'company_id' => $user->company_id,
+                    'tenant_id' => $user->tenant_id,
                     'branch_id' => $user->branch_id,
                     'roles' => $user->roles->map(fn ($role) => ['id' => $role->id, 'name' => $role->name]),
                 ] : null,

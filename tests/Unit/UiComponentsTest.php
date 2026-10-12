@@ -70,7 +70,7 @@ it('offers a table and grid view on every entity list page', function (string $p
     'Branches/Index.vue',
     'Locations/Index.vue',
     'Units/Index.vue',
-    'Admin/Companies/Index.vue',
+    'Admin/Tenants/Index.vue',
     'Orders/Index.vue',
     'Purchases/Index.vue',
     'Inventory/Index.vue',
@@ -171,7 +171,7 @@ it('renders list page grids through CardGrid', function (string $page) {
     'Branches/Index.vue',
     'Locations/Index.vue',
     'Units/Index.vue',
-    'Admin/Companies/Index.vue',
+    'Admin/Tenants/Index.vue',
     'Orders/Index.vue',
     'Purchases/Index.vue',
     'Inventory/Index.vue',
@@ -208,7 +208,7 @@ it('lets the confirm dialog default text explain deletes instead of appending qu
     requireInstalled($page);
     expect(uiFile($page))->not->toMatch("/confirm\\.delete\\(t\\('common\\.confirm(?:Delete)?'\\) \\+ '\\?'\\)/");
 })->with(installedFiles([
-    'resources/js/Pages/Admin/Companies/Index.vue',
+    'resources/js/Pages/Admin/Tenants/Index.vue',
     'resources/js/Pages/Branches/Index.vue',
     'resources/js/Pages/Categories/Index.vue',
     'resources/js/Pages/ExchangeRates/Index.vue',

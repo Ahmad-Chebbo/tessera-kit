@@ -32,8 +32,8 @@ class StoreUserRequest extends FormRequest
             'password' => ['required', Password::defaults()],
             'role' => ['required', Rule::in(app(AssignableRoles::class)->for($user))],
             'is_active' => ['boolean'],
-            ...(app(BranchScope::class)->available() ? ['branch_id' => ['required', 'integer', Rule::exists('branches', 'id')->where('company_id', $user->company_id)]] : []),
-            ...(app(TeamFeatures::class)->employeeProfiles() ? $this->profileRules($user->company_id) : []),
+            ...(app(BranchScope::class)->available() ? ['branch_id' => ['required', 'integer', Rule::exists('branches', 'id')->where('tenant_id', $user->tenant_id)]] : []),
+            ...(app(TeamFeatures::class)->employeeProfiles() ? $this->profileRules($user->tenant_id) : []),
         ];
     }
 }

@@ -21,9 +21,9 @@ class AttendanceHistoryReport extends ReportDefinition
         return 'view attendance';
     }
 
-    public function filterRules(int $companyId): array
+    public function filterRules(int $tenantId): array
     {
-        return [...$this->branchRules($companyId), 'user_id' => ['nullable', 'integer', Rule::exists('users', 'id')->where('company_id', $companyId)]];
+        return [...$this->branchRules($tenantId), 'user_id' => ['nullable', 'integer', Rule::exists('users', 'id')->where('tenant_id', $tenantId)]];
     }
 
     public function columns(ExportContext $context): array
@@ -80,7 +80,7 @@ class AttendanceHistoryReport extends ReportDefinition
         $lines = array_filter([$this->periodLine($context), $this->branchLine($context)]);
 
         if ($userId = $context->filter('user_id')) {
-            $lines[] = $context->t('filters.employee', ['value' => $context->company->users()->whereKey($userId)->value('name')]);
+            $lines[] = $context->t('filters.employee', ['value' => $context->tenant->users()->whereKey($userId)->value('name')]);
         }
 
         return array_values($lines);
@@ -92,7 +92,7 @@ class AttendanceHistoryReport extends ReportDefinition
     private function query(ExportContext $context): Builder
     {
         $query = AttendanceRecord::query()
-            ->where('company_id', $context->company->id)
+            ->where('tenant_id', $context->tenant->id)
             ->when($this->branchId($context), fn ($inner, $branchId) => $inner->whereHas('user', fn ($user) => $user->where('branch_id', $branchId)));
 
         if ($userId = $context->filter('user_id')) {

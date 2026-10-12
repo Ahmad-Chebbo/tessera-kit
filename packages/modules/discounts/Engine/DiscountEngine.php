@@ -29,12 +29,12 @@ class DiscountEngine
     {
         $couponStatus = $context->couponCode !== null && $context->couponCode !== '' ? DiscountResult::COUPON_UNKNOWN : DiscountResult::COUPON_NONE;
 
-        if (! $this->entitlements->hasModule($context->companyId, Module::Discounts)) {
+        if (! $this->entitlements->hasModule($context->tenantId, Module::Discounts)) {
             return new DiscountResult($context->lines, $couponStatus);
         }
 
         $rules = DiscountRule::query()
-            ->where('company_id', $context->companyId)
+            ->where('tenant_id', $context->tenantId)
             ->runningAt($context->now)
             ->orderBy('priority')
             ->orderBy('id')

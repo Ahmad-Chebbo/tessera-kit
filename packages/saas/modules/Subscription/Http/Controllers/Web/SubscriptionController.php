@@ -15,9 +15,9 @@ class SubscriptionController extends Controller
 
     public function show(Request $request): Response
     {
-        $companyId = (int) $request->user()->company_id;
-        $subscription = $this->entitlements->subscription($companyId);
-        $enabled = $this->entitlements->modules($companyId);
+        $tenantId = (int) $request->user()->tenant_id;
+        $subscription = $this->entitlements->subscription($tenantId);
+        $enabled = $this->entitlements->modules($tenantId);
 
         return Inertia::render('Subscription/Show', [
             'subscription' => $subscription ? [
@@ -29,15 +29,15 @@ class SubscriptionController extends Controller
             ] : null,
             'modules' => collect(app(ModuleRegistry::class)->featureOptions())->map(fn (array $feature): array => [...$feature, 'enabled' => in_array($feature['value'], $enabled, true)])->all(),
             'usage' => [
-                'users' => ['used' => $this->entitlements->usage($companyId, 'users'), 'limit' => $this->entitlements->limit($companyId, 'users')],
-                'branches' => ['used' => $this->entitlements->usage($companyId, 'branches'), 'limit' => $this->entitlements->limit($companyId, 'branches')],
+                'users' => ['used' => $this->entitlements->usage($tenantId, 'users'), 'limit' => $this->entitlements->limit($tenantId, 'users')],
+                'branches' => ['used' => $this->entitlements->usage($tenantId, 'branches'), 'limit' => $this->entitlements->limit($tenantId, 'branches')],
             ],
         ]);
     }
 
     public function expired(Request $request): Response
     {
-        $subscription = $this->entitlements->subscription((int) $request->user()->company_id);
+        $subscription = $this->entitlements->subscription((int) $request->user()->tenant_id);
 
         return Inertia::render('Subscription/Expired', [
             'plan' => $subscription?->plan->name,

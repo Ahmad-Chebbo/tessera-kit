@@ -1,9 +1,6 @@
 <?php
 
 use App\Modules\Catalog\Models\Product;
-use App\Modules\Company\Models\Branch;
-use App\Modules\Company\Models\Company;
-use App\Modules\Company\Models\Location;
 use App\Modules\Discounts\Enums\DiscountAction;
 use App\Modules\Discounts\Models\DiscountApplication;
 use App\Modules\Discounts\Models\DiscountRule;
@@ -12,12 +9,15 @@ use App\Modules\Discounts\Templates\DiscountTemplates;
 use App\Modules\Sales\Actions\CheckoutAction;
 use App\Modules\Sales\Models\Order;
 use App\Modules\Team\Models\User;
+use App\Modules\Tenant\Models\Branch;
+use App\Modules\Tenant\Models\Location;
+use App\Modules\Tenant\Models\Tenant;
 use Spatie\Permission\Models\Permission;
 
 function bundleRule(array $config, array $attributes = []): DiscountRule
 {
     return DiscountRule::factory()->create([
-        'company_id' => test()->company->id,
+        'tenant_id' => test()->tenant->id,
         'name' => 'Burger deal',
         'action_type' => DiscountAction::BuyGetItem,
         'action_value' => 0,
@@ -53,12 +53,12 @@ function previewBundle(array $items): array
 }
 
 beforeEach(function () {
-    $this->company = Company::factory()->create();
-    $this->branch = Branch::factory()->create(['company_id' => $this->company->id]);
-    Location::factory()->create(['company_id' => $this->company->id, 'branch_id' => $this->branch->id, 'type' => 'branch']);
-    $this->cashier = User::factory()->create(['company_id' => $this->company->id, 'branch_id' => $this->branch->id]);
+    $this->tenant = Tenant::factory()->create();
+    $this->branch = Branch::factory()->create(['tenant_id' => $this->tenant->id]);
+    Location::factory()->create(['tenant_id' => $this->tenant->id, 'branch_id' => $this->branch->id, 'type' => 'branch']);
+    $this->cashier = User::factory()->create(['tenant_id' => $this->tenant->id, 'branch_id' => $this->branch->id]);
 
-    $make = fn (string $name, float $price): Product => Product::factory()->create(['company_id' => $this->company->id, 'name' => $name, 'base_price' => $price, 'unlimited_quantity' => true, 'is_active' => true]);
+    $make = fn (string $name, float $price): Product => Product::factory()->create(['tenant_id' => $this->tenant->id, 'name' => $name, 'base_price' => $price, 'unlimited_quantity' => true, 'is_active' => true]);
     $this->burger = $make('Burger', 100);
     $this->wrap = $make('Wrap', 80);
     $this->cola = $make('Cola', 30);
@@ -168,7 +168,7 @@ it('gives no suggestion before the deal is earned', function () {
 
 it('works with conditions, priority and stacking like any other rule', function () {
     bundleRule(['buy_product_ids' => [$this->burger->id], 'get_product_ids' => [$this->cola->id], 'buy_quantity' => 1, 'get_quantity' => 1], ['priority' => 1, 'stackable' => false]);
-    DiscountRule::factory()->create(['company_id' => $this->company->id, 'name' => 'Ten off', 'priority' => 2, 'action_value' => 10]);
+    DiscountRule::factory()->create(['tenant_id' => $this->tenant->id, 'name' => 'Ten off', 'priority' => 2, 'action_value' => 10]);
 
     $order = sellBundle([[$this->burger, 1], [$this->cola, 1]]);
 
@@ -192,7 +192,7 @@ it('ignores a rule with missing settings', function () {
 describe('management', function () {
     beforeEach(function () {
         Permission::findOrCreate('manage discounts');
-        $this->manager = User::factory()->create(['company_id' => $this->company->id, 'branch_id' => $this->branch->id])->givePermissionTo('manage discounts');
+        $this->manager = User::factory()->create(['tenant_id' => $this->tenant->id, 'branch_id' => $this->branch->id])->givePermissionTo('manage discounts');
     });
 
     $payload = fn (array $config = []) => [
@@ -215,7 +215,7 @@ describe('management', function () {
             ->assertSessionHasErrors(['action_config.buy_product_ids', 'action_config.get_product_ids', 'action_config.buy_quantity', 'action_config.get_quantity']);
     });
 
-    it('rejects items from another company', function () use ($payload) {
+    it('rejects items from another tenant', function () use ($payload) {
         $foreign = Product::factory()->create();
 
         $this->actingAs($this->manager)->post(route('discounts.store'), $payload(['get_product_ids' => [$foreign->id]]))->assertSessionHasErrors('action_config.get_product_ids.0');

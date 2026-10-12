@@ -3,7 +3,6 @@
 namespace App\Modules\Expenses\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
-use App\Modules\Company\Services\BranchAccess;
 use App\Modules\Expenses\Actions\SaveRecurringExpenseAction;
 use App\Modules\Expenses\Enums\RecurrenceFrequency;
 use App\Modules\Expenses\Http\Requests\StoreRecurringExpenseRequest;
@@ -11,6 +10,7 @@ use App\Modules\Expenses\Models\ExpenseCategory;
 use App\Modules\Expenses\Models\RecurringExpense;
 use App\Modules\Expenses\Services\ExpenseCategoryDefaults;
 use App\Modules\Team\Models\User;
+use App\Modules\Tenant\Services\BranchAccess;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -22,13 +22,13 @@ class RecurringExpenseController extends Controller
 
     public function index(Request $request, ExpenseCategoryDefaults $defaults): Response
     {
-        $companyId = $request->user()->company_id;
-        $defaults->ensure($companyId);
+        $tenantId = $request->user()->tenant_id;
+        $defaults->ensure($tenantId);
 
         return Inertia::render('Expenses/Recurring', [
             'items' => RecurringExpense::query()
                 ->with(['category:id,name,type', 'branch:id,name', 'employee:id,name'])
-                ->where('company_id', $companyId)
+                ->where('tenant_id', $tenantId)
                 ->tap(fn ($query) => $this->access->scope($query, $request->user()))
                 ->orderByDesc('is_active')
                 ->orderBy('next_run_on')
@@ -54,9 +54,9 @@ class RecurringExpenseController extends Controller
                     'notes' => $item->notes,
                 ]),
             'lookups' => [
-                'categories' => ExpenseCategory::query()->where('company_id', $companyId)->where('is_active', true)->orderBy('name')->get(['id', 'name', 'type']),
+                'categories' => ExpenseCategory::query()->where('tenant_id', $tenantId)->where('is_active', true)->orderBy('name')->get(['id', 'name', 'type']),
                 'branches' => $this->access->branches($request->user()),
-                'employees' => $this->access->scope(User::query()->where('company_id', $companyId), $request->user())->orderBy('name')->get(['id', 'name']),
+                'employees' => $this->access->scope(User::query()->where('tenant_id', $tenantId), $request->user())->orderBy('name')->get(['id', 'name']),
                 'frequencies' => RecurrenceFrequency::values(),
             ],
             'can' => ['edit' => $request->user()->can('edit expenses')],
@@ -99,7 +99,7 @@ class RecurringExpenseController extends Controller
 
     private function ensureOwned(Request $request, RecurringExpense $recurring): void
     {
-        abort_unless($recurring->company_id === $request->user()->company_id, 403);
+        abort_unless($recurring->tenant_id === $request->user()->tenant_id, 403);
         $this->access->ensure($request->user(), $recurring->branch_id);
     }
 }

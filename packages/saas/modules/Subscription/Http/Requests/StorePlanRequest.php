@@ -11,7 +11,7 @@ class StorePlanRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return $this->user()?->can('manage companies') ?? false;
+        return $this->user()?->can('manage tenants') ?? false;
     }
 
     /**

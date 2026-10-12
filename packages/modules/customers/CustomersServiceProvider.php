@@ -17,7 +17,7 @@ class CustomersServiceProvider extends ModuleServiceProvider
         return new ModuleManifest(
             key: 'customers',
             name: 'Customers',
-            requires: ['company'],
+            requires: ['tenant'],
         );
     }
 

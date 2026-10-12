@@ -27,7 +27,7 @@ class UnitSeeder extends Seeder
 
         foreach ($units as $unit) {
             Unit::firstOrCreate(
-                ['name' => $unit['name'], 'company_id' => null],
+                ['name' => $unit['name'], 'tenant_id' => null],
                 ['abbreviation' => $unit['abbreviation'], 'is_active' => true]
             );
         }

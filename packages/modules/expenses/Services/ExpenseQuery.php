@@ -6,7 +6,7 @@ use App\Modules\Expenses\Models\Expense;
 use Illuminate\Database\Eloquent\Builder;
 
 /**
- * The expenses of a company inside a period, narrowed by the filters both the pages and the API offer.
+ * The expenses of a tenant inside a period, narrowed by the filters both the pages and the API offer.
  */
 class ExpenseQuery
 {
@@ -14,9 +14,9 @@ class ExpenseQuery
      * @param  array<string, mixed>  $filters  category_id, branch_id, employee_id, type and search.
      * @return Builder<Expense>
      */
-    public function filtered(int $companyId, string $from, string $to, array $filters = []): Builder
+    public function filtered(int $tenantId, string $from, string $to, array $filters = []): Builder
     {
-        $query = Expense::query()->where('company_id', $companyId)->whereBetween('expense_date', [$from, $to]);
+        $query = Expense::query()->where('tenant_id', $tenantId)->whereBetween('expense_date', [$from, $to]);
 
         foreach (['category_id' => 'expense_category_id', 'branch_id' => 'branch_id', 'employee_id' => 'employee_id'] as $key => $column) {
             if (isset($filters[$key])) {

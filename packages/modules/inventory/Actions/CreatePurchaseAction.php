@@ -3,10 +3,10 @@
 namespace App\Modules\Inventory\Actions;
 
 use App\Modules\Catalog\Services\UnitConversionService;
-use App\Modules\Company\Models\ExchangeRate;
 use App\Modules\Inventory\Models\Purchase;
 use App\Modules\Inventory\Models\PurchaseItem;
 use App\Modules\Team\Models\User;
+use App\Modules\Tenant\Models\ExchangeRate;
 use Illuminate\Support\Facades\DB;
 
 class CreatePurchaseAction
@@ -20,14 +20,14 @@ class CreatePurchaseAction
      */
     public function execute(User $user, array $data): Purchase
     {
-        $companyCurrency = $user->company->currency ?? 'USD';
-        $exchangeRate = ExchangeRate::getRate($user->company_id, $data['currency'], $companyCurrency);
+        $tenantCurrency = $user->tenant->currency ?? 'USD';
+        $exchangeRate = ExchangeRate::getRate($user->tenant_id, $data['currency'], $tenantCurrency);
 
         return DB::transaction(function () use ($user, $data, $exchangeRate): Purchase {
             $totalAmount = collect($data['items'])->sum(fn ($item) => $item['quantity'] * $item['unit_cost']);
 
             $purchase = Purchase::create([
-                'company_id' => $user->company_id,
+                'tenant_id' => $user->tenant_id,
                 'supplier_id' => $data['supplier_id'],
                 'location_id' => $data['location_id'],
                 'currency' => $data['currency'],

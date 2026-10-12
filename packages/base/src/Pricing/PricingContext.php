@@ -13,7 +13,7 @@ final readonly class PricingContext
      * @param  list<CartLine>  $lines
      */
     public function __construct(
-        public int $companyId,
+        public int $tenantId,
         public int $branchId,
         public ?int $customerId,
         public ?int $customerGroupId,

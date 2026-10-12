@@ -6,7 +6,7 @@
  *
  *     php bin/build-starter.php <target-folder> [--flavor=saas|fresh] [--source=vcs|path] [--vendor=tessera] [--org=Tessera-kit]
  *
- * --flavor=saas   (default) tessera-starter: the engine, the base and the SaaS package, so companies, branches and plans.
+ * --flavor=saas   (default) tessera-starter: the engine, the base and the SaaS package, so tenants, branches and plans.
  * --flavor=fresh  tessera-fresh: the engine and the base only, so sign-in, users, roles and permissions.
  * --source=vcs    requires the packages from their GitHub repositories (what a release does).
  * --vendor        the Composer vendor of the packages.
@@ -173,7 +173,7 @@ $viteConfig = $target.'/.gitignore';
 file_put_contents($viteConfig, rtrim((string) file_get_contents($viteConfig))."\n/bootstrap/cache/*.php\n");
 
 if ($fresh) {
-    // Currency formatting belongs to the Company module.
+    // Currency formatting belongs to the Tenant module.
     @unlink($target.'/app/Helpers/currency.php');
     @rmdir($target.'/app/Helpers');
 }

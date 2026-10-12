@@ -3,7 +3,7 @@
 namespace App\Modules\Catalog\Models;
 
 use App\Modules\Catalog\Database\Factories\ProductFactory;
-use App\Modules\Company\Models\Company;
+use App\Modules\Tenant\Models\Tenant;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -20,7 +20,7 @@ class Product extends Model implements HasMedia
     use HasFactory, InteractsWithMedia, SoftDeletes;
 
     protected $fillable = [
-        'company_id',
+        'tenant_id',
         'category_id',
         'name',
         'barcode',
@@ -71,9 +71,9 @@ class Product extends Model implements HasMedia
         $this->addMediaCollection('documents');
     }
 
-    public function company(): BelongsTo
+    public function tenant(): BelongsTo
     {
-        return $this->belongsTo(Company::class);
+        return $this->belongsTo(Tenant::class);
     }
 
     public function category(): BelongsTo

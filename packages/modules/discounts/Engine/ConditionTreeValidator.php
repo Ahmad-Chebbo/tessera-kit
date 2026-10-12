@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\DB;
 
 /**
  * Checks a condition tree sent from the rule builder: known facts, operators that suit the fact, sensible
- * values, and ids that belong to the company.
+ * values, and ids that belong to the tenant.
  */
 class ConditionTreeValidator
 {
@@ -28,7 +28,7 @@ class ConditionTreeValidator
      * @param  array<string, mixed>|null  $tree
      * @return list<string>
      */
-    public function errors(?array $tree, int $companyId): array
+    public function errors(?array $tree, int $tenantId): array
     {
         $this->nodes = 0;
 
@@ -40,14 +40,14 @@ class ConditionTreeValidator
             return ['The conditions must start with a group.'];
         }
 
-        return $this->node($tree, $companyId, 0);
+        return $this->node($tree, $tenantId, 0);
     }
 
     /**
      * @param  array<string, mixed>  $node
      * @return list<string>
      */
-    private function node(array $node, int $companyId, int $depth): array
+    private function node(array $node, int $tenantId, int $depth): array
     {
         if (++$this->nodes > self::MAX_NODES) {
             return ['There are too many conditions.'];
@@ -69,7 +69,7 @@ class ConditionTreeValidator
                     return ['A condition is malformed.'];
                 }
 
-                array_push($errors, ...$this->node($child, $companyId, $depth + 1));
+                array_push($errors, ...$this->node($child, $tenantId, $depth + 1));
 
                 if (count($errors) >= 5) {
                     break;
@@ -79,14 +79,14 @@ class ConditionTreeValidator
             return $errors;
         }
 
-        return $this->condition($node, $companyId);
+        return $this->condition($node, $tenantId);
     }
 
     /**
      * @param  array<string, mixed>  $condition
      * @return list<string>
      */
-    private function condition(array $condition, int $companyId): array
+    private function condition(array $condition, int $tenantId): array
     {
         $field = (string) ($condition['field'] ?? '');
         $definition = FactRegistry::definitions()[$field] ?? null;
@@ -129,7 +129,7 @@ class ConditionTreeValidator
 
         if (isset(self::ID_TABLES[$field]) && in_array($operator, ['eq', 'neq', 'in', 'not_in'], true)) {
             $ids = array_unique(array_map('intval', $scalars));
-            $found = DB::table(self::ID_TABLES[$field])->where('company_id', $companyId)->whereIn('id', $ids)->count();
+            $found = DB::table(self::ID_TABLES[$field])->where('tenant_id', $tenantId)->whereIn('id', $ids)->count();
 
             if ($found !== count($ids)) {
                 return ["One of the selected values for [{$field}] does not exist."];

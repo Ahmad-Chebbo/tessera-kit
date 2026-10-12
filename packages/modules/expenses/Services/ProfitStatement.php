@@ -23,9 +23,9 @@ class ProfitStatement implements NetProfit
     /**
      * @return array{months: list<array<string, mixed>>, totals: array<string, float>}
      */
-    public function forPeriod(int $companyId, CarbonImmutable $from, CarbonImmutable $to, ?int $branchId = null): array
+    public function forPeriod(int $tenantId, CarbonImmutable $from, CarbonImmutable $to, ?int $branchId = null): array
     {
-        $revenue = $this->revenue->byMonth($companyId, $from, $to, $branchId);
+        $revenue = $this->revenue->byMonth($tenantId, $from, $to, $branchId);
 
         $months = [];
 
@@ -39,7 +39,7 @@ class ProfitStatement implements NetProfit
             }
         }
 
-        foreach ($this->ledger->includedByMonth($companyId, $from, $to, $branchId) as $month => $amount) {
+        foreach ($this->ledger->includedByMonth($tenantId, $from, $to, $branchId) as $month => $amount) {
             $months[$month]['expenses'] += $amount;
         }
 

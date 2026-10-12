@@ -23,12 +23,12 @@ class ExpensesReport extends ReportDefinition
         return 'view expenses';
     }
 
-    public function filterRules(int $companyId): array
+    public function filterRules(int $tenantId): array
     {
         return [
-            'category_id' => ['nullable', 'integer', Rule::exists('expense_categories', 'id')->where('company_id', $companyId)],
-            'branch_id' => ['nullable', 'integer', Rule::exists('branches', 'id')->where('company_id', $companyId)],
-            'employee_id' => ['nullable', 'integer', Rule::exists('users', 'id')->where('company_id', $companyId)],
+            'category_id' => ['nullable', 'integer', Rule::exists('expense_categories', 'id')->where('tenant_id', $tenantId)],
+            'branch_id' => ['nullable', 'integer', Rule::exists('branches', 'id')->where('tenant_id', $tenantId)],
+            'employee_id' => ['nullable', 'integer', Rule::exists('users', 'id')->where('tenant_id', $tenantId)],
             'type' => ['nullable', Rule::in(ExpenseType::values())],
             'search' => ['nullable', 'string', 'max:100'],
         ];
@@ -89,7 +89,7 @@ class ExpensesReport extends ReportDefinition
         $lines = array_filter([$this->periodLine($context), $this->branchLine($context)]);
 
         if ($categoryId = $context->filter('category_id')) {
-            $lines[] = $context->t('filters.category', ['value' => ExpenseCategory::query()->where('company_id', $context->company->id)->whereKey($categoryId)->value('name')]);
+            $lines[] = $context->t('filters.category', ['value' => ExpenseCategory::query()->where('tenant_id', $context->tenant->id)->whereKey($categoryId)->value('name')]);
         }
 
         if ($type = $context->filter('type')) {
@@ -108,7 +108,7 @@ class ExpensesReport extends ReportDefinition
      */
     private function query(ExportContext $context): Builder
     {
-        $query = Expense::query()->where('company_id', $context->company->id);
+        $query = Expense::query()->where('tenant_id', $context->tenant->id);
 
         foreach (['category_id' => 'expense_category_id', 'employee_id' => 'employee_id'] as $key => $column) {
             if ($value = $context->filter($key)) {

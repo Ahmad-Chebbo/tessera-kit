@@ -17,7 +17,7 @@ class CategoryController extends Controller
         $user = $request->user();
 
         $categories = Category::query()
-            ->where('company_id', $user->company_id)
+            ->where('tenant_id', $user->tenant_id)
             ->withCount('products')
             ->orderBy('name')
             ->paginate(20);
@@ -31,7 +31,7 @@ class CategoryController extends Controller
     {
         $user = $request->user();
 
-        $parentCategories = Category::where('company_id', $user->company_id)
+        $parentCategories = Category::where('tenant_id', $user->tenant_id)
             ->whereNull('parent_id')
             ->orderBy('name')
             ->get(['id', 'name']);
@@ -45,7 +45,7 @@ class CategoryController extends Controller
     {
         $user = $request->user();
         $validated = $request->validated();
-        $validated['company_id'] = $user->company_id;
+        $validated['tenant_id'] = $user->tenant_id;
         Category::create($validated);
 
         return redirect()->route('categories.index')
@@ -56,11 +56,11 @@ class CategoryController extends Controller
     {
         $user = $request->user();
 
-        if ($category->company_id !== $user->company_id) {
+        if ($category->tenant_id !== $user->tenant_id) {
             abort(403);
         }
 
-        $parentCategories = Category::where('company_id', $user->company_id)
+        $parentCategories = Category::where('tenant_id', $user->tenant_id)
             ->whereNull('parent_id')
             ->where('id', '!=', $category->id)
             ->orderBy('name')
@@ -75,7 +75,7 @@ class CategoryController extends Controller
     public function update(StoreCategoryRequest $request, Category $category): RedirectResponse
     {
         $user = $request->user();
-        if ($category->company_id !== $user->company_id) {
+        if ($category->tenant_id !== $user->tenant_id) {
             abort(403);
         }
         $validated = $request->validated();
@@ -89,7 +89,7 @@ class CategoryController extends Controller
     {
         $user = $request->user();
 
-        if ($category->company_id !== $user->company_id) {
+        if ($category->tenant_id !== $user->tenant_id) {
             abort(403);
         }
 

@@ -3,9 +3,9 @@
 namespace App\Modules\Inventory\Dashboard;
 
 use App\Modules\Catalog\Models\Product;
-use App\Modules\Company\Models\Location;
 use App\Modules\Inventory\Models\StockMovement;
 use App\Modules\Team\Models\User;
+use App\Modules\Tenant\Models\Location;
 use Tessera\Engine\Dashboard\DashboardWidget;
 
 class LowStockWidget implements DashboardWidget
@@ -38,7 +38,7 @@ class LowStockWidget implements DashboardWidget
     public function data(User $user, ?int $branchId): array
     {
         $products = Product::query()
-            ->where('company_id', $user->company_id)
+            ->where('tenant_id', $user->tenant_id)
             ->where('is_active', true)
             ->get(['id', 'name']);
 

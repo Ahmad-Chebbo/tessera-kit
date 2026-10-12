@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('transfers', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('tenant_id')->constrained()->cascadeOnDelete();
             $table->foreignId('from_location_id')->constrained('locations')->cascadeOnDelete();
             $table->foreignId('to_location_id')->constrained('locations')->cascadeOnDelete();
             $table->enum('status', ['pending', 'approved', 'completed', 'cancelled'])->default('pending');

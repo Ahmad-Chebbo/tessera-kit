@@ -22,7 +22,7 @@ class StoreShiftTemplateRequest extends FormRequest
         return [
             'name' => [
                 'required', 'string', 'max:100',
-                Rule::unique('shift_templates', 'name')->where('company_id', $this->user()->company_id)->ignore($template?->id),
+                Rule::unique('shift_templates', 'name')->where('tenant_id', $this->user()->tenant_id)->ignore($template?->id),
             ],
             'starts_at' => ['required', 'date_format:H:i'],
             'ends_at' => ['required', 'date_format:H:i', 'different:starts_at'],

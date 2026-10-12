@@ -41,7 +41,7 @@ const loadReceipt = async () => {
     if (props.order.offline) {
         // For offline orders, create receipt data from order object
         receiptData.value = {
-            company_name: 'Store',
+            tenant_name: 'Store',
             branch_name: 'Branch',
             branch_address: null,
             receipt_header: '',
@@ -148,7 +148,7 @@ const generateReceiptHtml = () => {
             margin-bottom: 15px;
             white-space: pre-line;
         }
-        .company-name {
+        .tenant-name {
             font-weight: bold;
             font-size: 14px;
             margin-bottom: 5px;
@@ -222,7 +222,7 @@ const generateReceiptHtml = () => {
 </head>
 <body>
     <div class="receipt-header">
-        <div class="company-name">${escapeHtml(data.company_name || 'Store')}</div>
+        <div class="tenant-name">${escapeHtml(data.tenant_name || 'Store')}</div>
         ${data.branch_name ? `<div class="branch-info">${escapeHtml(data.branch_name)}</div>` : ''}
         ${data.branch_address ? `<div class="branch-info">${escapeHtml(data.branch_address)}</div>` : ''}
         ${data.receipt_header ? `<div class="branch-info">${escapeHtml(data.receipt_header)}</div>` : ''}
@@ -327,10 +327,10 @@ const downloadPDF = async () => {
         y += headerLines.length * 4;
     }
 
-    // Company name
+    // Tenant name
     doc.setFontSize(12);
     doc.setFont(undefined, 'bold');
-    doc.text(data.company_name || 'Store', pageWidth / 2, y, { align: 'center' });
+    doc.text(data.tenant_name || 'Store', pageWidth / 2, y, { align: 'center' });
     y += 6;
 
     // Branch info
@@ -461,11 +461,11 @@ watch(() => props.show, (show) => {
                 <div v-if="receiptData.receipt_header" class="mb-3 whitespace-pre-line text-center text-xs">
                     {{ receiptData.receipt_header }}
                 </div>
-                <div v-if="!receiptData.company_logo" class="mb-2 text-center font-bold text-base">
-                    {{ receiptData.company_name || 'Store' }}
+                <div v-if="!receiptData.tenant_logo" class="mb-2 text-center font-bold text-base">
+                    {{ receiptData.tenant_name || 'Store' }}
                 </div>
                 <div v-else class="flex mb-2 justify-center">
-                    <img :src="receiptData.company_logo" alt="" class="h-12 w-12 rounded-lg object-cover" />
+                    <img :src="receiptData.tenant_logo" alt="" class="h-12 w-12 rounded-lg object-cover" />
                 </div>
                 <div v-if="receiptData.branch_name" class="mb-1 text-center text-xs">
                     {{ receiptData.branch_name }}

@@ -1,9 +1,6 @@
 <?php
 
 use App\Modules\Catalog\Models\Product;
-use App\Modules\Company\Models\Branch;
-use App\Modules\Company\Models\Company;
-use App\Modules\Company\Models\Location;
 use App\Modules\Customers\Models\Customer;
 use App\Modules\Discounts\Models\DiscountApplication;
 use App\Modules\Discounts\Models\DiscountRule;
@@ -12,6 +9,9 @@ use App\Modules\Subscription\Enums\Module;
 use App\Modules\Subscription\Models\Plan;
 use App\Modules\Subscription\Models\Subscription;
 use App\Modules\Team\Models\User;
+use App\Modules\Tenant\Models\Branch;
+use App\Modules\Tenant\Models\Location;
+use App\Modules\Tenant\Models\Tenant;
 use Inertia\Testing\AssertableInertia as Assert;
 use Spatie\Permission\Models\Permission;
 
@@ -20,12 +20,12 @@ beforeEach(function () {
         Permission::findOrCreate($permission);
     }
 
-    $this->company = Company::factory()->create();
-    $this->branch = Branch::factory()->create(['company_id' => $this->company->id]);
-    Location::factory()->create(['company_id' => $this->company->id, 'branch_id' => $this->branch->id, 'type' => 'branch']);
-    $this->cashier = User::factory()->create(['company_id' => $this->company->id, 'branch_id' => $this->branch->id])->givePermissionTo(['access pos', 'view orders', 'view all orders']);
-    $this->product = Product::factory()->create(['company_id' => $this->company->id, 'base_price' => 100, 'unlimited_quantity' => true, 'is_active' => true]);
-    $this->rule = DiscountRule::factory()->create(['company_id' => $this->company->id, 'name' => 'Ten off', 'action_value' => 10]);
+    $this->tenant = Tenant::factory()->create();
+    $this->branch = Branch::factory()->create(['tenant_id' => $this->tenant->id]);
+    Location::factory()->create(['tenant_id' => $this->tenant->id, 'branch_id' => $this->branch->id, 'type' => 'branch']);
+    $this->cashier = User::factory()->create(['tenant_id' => $this->tenant->id, 'branch_id' => $this->branch->id])->givePermissionTo(['access pos', 'view orders', 'view all orders']);
+    $this->product = Product::factory()->create(['tenant_id' => $this->tenant->id, 'base_price' => 100, 'unlimited_quantity' => true, 'is_active' => true]);
+    $this->rule = DiscountRule::factory()->create(['tenant_id' => $this->tenant->id, 'name' => 'Ten off', 'action_value' => 10]);
 });
 
 it('previews the discounts of a cart for the till', function () {
@@ -39,8 +39,8 @@ it('previews the discounts of a cart for the till', function () {
 });
 
 it('previews an empty cart, a coupon status and a customer', function () {
-    DiscountRule::factory()->create(['company_id' => $this->company->id, 'coupon_code' => 'EXTRA', 'action_value' => 5]);
-    $customer = Customer::create(['company_id' => $this->company->id, 'name' => 'Rana']);
+    DiscountRule::factory()->create(['tenant_id' => $this->tenant->id, 'coupon_code' => 'EXTRA', 'action_value' => 5]);
+    $customer = Customer::create(['tenant_id' => $this->tenant->id, 'name' => 'Rana']);
 
     $this->actingAs($this->cashier)->postJson(route('pos.discounts.preview'), ['items' => []])->assertOk()->assertJsonPath('total', 0);
 
@@ -53,7 +53,7 @@ it('previews an empty cart, a coupon status and a customer', function () {
     ])->assertOk()->assertJsonPath('coupon_status', 'unknown');
 });
 
-it('does not preview products or customers of another company', function () {
+it('does not preview products or customers of another tenant', function () {
     $foreign = Product::factory()->create();
 
     $this->actingAs($this->cashier)->postJson(route('pos.discounts.preview'), ['items' => [['product_id' => $foreign->id, 'quantity' => 1]]])
@@ -61,13 +61,13 @@ it('does not preview products or customers of another company', function () {
 });
 
 it('requires the point of sale permission to preview', function () {
-    $clerk = User::factory()->create(['company_id' => $this->company->id, 'branch_id' => $this->branch->id]);
+    $clerk = User::factory()->create(['tenant_id' => $this->tenant->id, 'branch_id' => $this->branch->id]);
 
     $this->actingAs($clerk)->postJson(route('pos.discounts.preview'), ['items' => []])->assertForbidden();
 });
 
 it('checks out with the rule discount and the coupon from the till', function () {
-    DiscountRule::factory()->create(['company_id' => $this->company->id, 'name' => 'Coupon', 'coupon_code' => 'SAVE5', 'action_value' => 5]);
+    DiscountRule::factory()->create(['tenant_id' => $this->tenant->id, 'name' => 'Coupon', 'coupon_code' => 'SAVE5', 'action_value' => 5]);
 
     $this->actingAs($this->cashier)->postJson(route('pos.checkout'), [
         'items' => [['product_id' => $this->product->id, 'quantity' => 1]], 'cash_received' => 200, 'coupon_code' => 'save5',
@@ -87,7 +87,7 @@ it('rejects checkout with an invalid coupon without creating an order', function
 });
 
 it('applies rules and coupons to offline sales when they sync', function () {
-    DiscountRule::factory()->create(['company_id' => $this->company->id, 'coupon_code' => 'OFF1', 'action_value' => 5]);
+    DiscountRule::factory()->create(['tenant_id' => $this->tenant->id, 'coupon_code' => 'OFF1', 'action_value' => 5]);
 
     $this->actingAs($this->cashier)->postJson(route('pos.sync'), ['sales' => [[
         'offline_id' => 'sale-9', 'items' => [['product_id' => $this->product->id, 'quantity' => 1]], 'cash_received' => 200, 'coupon_code' => 'OFF1',
@@ -98,8 +98,8 @@ it('applies rules and coupons to offline sales when they sync', function () {
 
 it('stops applying discounts when the plan no longer includes the module', function () {
     $plan = Plan::factory()->withModules([Module::Pos])->create();
-    $this->company->subscriptions()->delete();
-    Subscription::create(['company_id' => $this->company->id, 'plan_id' => $plan->id, 'status' => 'active', 'starts_at' => now()->subDay()]);
+    $this->tenant->subscriptions()->delete();
+    Subscription::create(['tenant_id' => $this->tenant->id, 'plan_id' => $plan->id, 'status' => 'active', 'starts_at' => now()->subDay()]);
 
     $this->actingAs($this->cashier)->postJson(route('pos.discounts.preview'), ['items' => [['product_id' => $this->product->id, 'quantity' => 1]]])
         ->assertOk()->assertJsonPath('total', 0);

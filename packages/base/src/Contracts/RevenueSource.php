@@ -14,5 +14,5 @@ interface RevenueSource
      *
      * @return array<string, array{revenue: float, discounts: float, cogs: float}>
      */
-    public function byMonth(int $companyId, CarbonImmutable $from, CarbonImmutable $to, ?int $branchId = null): array;
+    public function byMonth(int $tenantId, CarbonImmutable $from, CarbonImmutable $to, ?int $branchId = null): array;
 }

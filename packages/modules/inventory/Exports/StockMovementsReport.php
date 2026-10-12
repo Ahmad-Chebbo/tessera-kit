@@ -22,12 +22,12 @@ class StockMovementsReport extends ReportDefinition
         return 'view inventory';
     }
 
-    public function filterRules(int $companyId): array
+    public function filterRules(int $tenantId): array
     {
         return [
-            ...$this->branchRules($companyId),
-            'product_id' => ['nullable', 'integer', Rule::exists('products', 'id')->where('company_id', $companyId)],
-            'location_id' => ['nullable', 'integer', Rule::exists('locations', 'id')->where('company_id', $companyId)],
+            ...$this->branchRules($tenantId),
+            'product_id' => ['nullable', 'integer', Rule::exists('products', 'id')->where('tenant_id', $tenantId)],
+            'location_id' => ['nullable', 'integer', Rule::exists('locations', 'id')->where('tenant_id', $tenantId)],
             'type' => ['nullable', Rule::in(array_column(StockMovementType::cases(), 'value'))],
         ];
     }
@@ -86,7 +86,7 @@ class StockMovementsReport extends ReportDefinition
     private function query(ExportContext $context): Builder
     {
         $query = StockMovement::query()
-            ->where('company_id', $context->company->id)
+            ->where('tenant_id', $context->tenant->id)
             ->when($this->branchLocationIds($context) !== null, fn ($inner) => $inner->whereIn('location_id', $this->branchLocationIds($context)));
 
         foreach (['product_id', 'location_id', 'type'] as $column) {

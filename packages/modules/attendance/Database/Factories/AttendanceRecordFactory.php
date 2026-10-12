@@ -20,7 +20,7 @@ class AttendanceRecordFactory extends Factory
 
         return [
             'user_id' => User::factory(),
-            'company_id' => fn (array $attributes) => User::find($attributes['user_id'])->company_id,
+            'tenant_id' => fn (array $attributes) => User::find($attributes['user_id'])->tenant_id,
             'work_date' => $checkIn->toDateString(),
             'check_in_at' => $checkIn,
             'check_out_at' => $checkIn->copy()->addHours(8),

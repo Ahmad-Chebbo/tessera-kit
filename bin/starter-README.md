@@ -1,6 +1,6 @@
 # Tessera Starter
 
-A Laravel 13 application ready for [Tessera](https://github.com/Tessera-kit/tessera-kit) modules. It contains the module engine, the base (sign-in, users and roles) and the SaaS package (companies and branches, subscriptions), the interface kit and the application shell (sidebar layout, language and theme toggles). Business features arrive as modules.
+A Laravel 13 application ready for [Tessera](https://github.com/Tessera-kit/tessera-kit) modules. It contains the module engine, the base (sign-in, users and roles) and the SaaS package (tenants and branches, subscriptions), the interface kit and the application shell (sidebar layout, language and theme toggles). Business features arrive as modules.
 
 ## Create a project
 
@@ -41,7 +41,7 @@ bun run build
 | [`shifts`](https://github.com/Tessera-kit/tessera-shifts) | shift templates and rosters |
 | [`attendance`](https://github.com/Tessera-kit/tessera-attendance) | check-in and check-out, absences |
 
-Each command requires the package, migrates, and gives the roles of every company the new permissions. `php artisan module:list` shows what is installed.
+Each command requires the package, migrates, and gives the roles of every tenant the new permissions. `php artisan module:list` shows what is installed.
 
 ## Write your own module
 

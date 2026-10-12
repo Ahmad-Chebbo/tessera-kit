@@ -16,7 +16,7 @@ class CustomerGroupController extends Controller
     {
         return Inertia::render('Customers/Groups', [
             'groups' => CustomerGroup::query()
-                ->where('company_id', $request->user()->company_id)
+                ->where('tenant_id', $request->user()->tenant_id)
                 ->withCount('customers')
                 ->orderBy('name')
                 ->get(),
@@ -25,7 +25,7 @@ class CustomerGroupController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
-        CustomerGroup::create([...$this->validated($request), 'company_id' => $request->user()->company_id]);
+        CustomerGroup::create([...$this->validated($request), 'tenant_id' => $request->user()->tenant_id]);
 
         return back()->with('success', 'Customer group created.');
     }
@@ -52,13 +52,13 @@ class CustomerGroupController extends Controller
     private function validated(Request $request, ?CustomerGroup $group = null): array
     {
         return $request->validate([
-            'name' => ['required', 'string', 'max:100', Rule::unique('customer_groups', 'name')->where('company_id', $request->user()->company_id)->ignore($group?->id)],
+            'name' => ['required', 'string', 'max:100', Rule::unique('customer_groups', 'name')->where('tenant_id', $request->user()->tenant_id)->ignore($group?->id)],
             'description' => ['nullable', 'string', 'max:255'],
         ]);
     }
 
     private function ensureOwned(Request $request, CustomerGroup $group): void
     {
-        abort_unless($group->company_id === $request->user()->company_id, 403);
+        abort_unless($group->tenant_id === $request->user()->tenant_id, 403);
     }
 }

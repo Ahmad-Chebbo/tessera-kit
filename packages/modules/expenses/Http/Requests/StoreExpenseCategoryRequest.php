@@ -19,7 +19,7 @@ class StoreExpenseCategoryRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:100', Rule::unique('expense_categories', 'name')->where('company_id', $this->user()->company_id)->ignore($this->route('category')?->id)],
+            'name' => ['required', 'string', 'max:100', Rule::unique('expense_categories', 'name')->where('tenant_id', $this->user()->tenant_id)->ignore($this->route('category')?->id)],
             'description' => ['nullable', 'string', 'max:255'],
             'type' => ['required', Rule::enum(ExpenseType::class)],
             'affects_profit' => ['nullable', 'boolean'],

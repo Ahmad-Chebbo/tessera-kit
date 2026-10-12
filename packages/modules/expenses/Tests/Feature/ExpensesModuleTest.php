@@ -1,9 +1,6 @@
 <?php
 
 use App\Modules\Catalog\Models\Product;
-use App\Modules\Company\Models\Branch;
-use App\Modules\Company\Models\Company;
-use App\Modules\Company\Models\Location;
 use App\Modules\Customers\Models\Customer;
 use App\Modules\Expenses\Enums\ExpenseType;
 use App\Modules\Expenses\Models\Expense;
@@ -19,6 +16,9 @@ use App\Modules\Subscription\Enums\Module;
 use App\Modules\Subscription\Models\Plan;
 use App\Modules\Subscription\Models\Subscription;
 use App\Modules\Team\Models\User;
+use App\Modules\Tenant\Models\Branch;
+use App\Modules\Tenant\Models\Location;
+use App\Modules\Tenant\Models\Tenant;
 use Carbon\CarbonImmutable;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Http\UploadedFile;
@@ -29,7 +29,7 @@ use Spatie\Permission\Models\Permission;
 function expenseCategory(string $name, ExpenseType $type = ExpenseType::Operating, ?bool $affects = null): ExpenseCategory
 {
     return ExpenseCategory::factory()->ofType($type)->create([
-        'company_id' => test()->company->id,
+        'tenant_id' => test()->tenant->id,
         'name' => $name,
         ...($affects !== null ? ['affects_profit' => $affects] : []),
     ]);
@@ -39,7 +39,7 @@ function recordExpense(ExpenseCategory $category, float $amount, string $date, a
 {
     return Expense::factory()->create([
         'created_by' => test()->manager->id,
-        'company_id' => test()->company->id,
+        'tenant_id' => test()->tenant->id,
         'expense_category_id' => $category->id,
         'amount' => $amount,
         'expense_date' => $date,
@@ -60,7 +60,7 @@ function expensePayload(array $overrides = []): array
 
 function ledger(string $from, string $to, array $filters = []): array
 {
-    return app(ExpenseLedger::class)->breakdown(test()->company->id, CarbonImmutable::parse($from), CarbonImmutable::parse($to), $filters);
+    return app(ExpenseLedger::class)->breakdown(test()->tenant->id, CarbonImmutable::parse($from), CarbonImmutable::parse($to), $filters);
 }
 
 beforeEach(function () {
@@ -71,13 +71,13 @@ beforeEach(function () {
         Permission::findOrCreate($permission);
     }
 
-    $this->company = Company::factory()->create(['timezone' => 'UTC']);
-    $this->branch = Branch::factory()->create(['company_id' => $this->company->id, 'name' => 'Main']);
-    $this->manager = User::factory()->create(['company_id' => $this->company->id, 'branch_id' => $this->branch->id])
+    $this->tenant = Tenant::factory()->create(['timezone' => 'UTC']);
+    $this->branch = Branch::factory()->create(['tenant_id' => $this->tenant->id, 'name' => 'Main']);
+    $this->manager = User::factory()->create(['tenant_id' => $this->tenant->id, 'branch_id' => $this->branch->id])
         ->givePermissionTo(['view expenses', 'create expenses', 'edit expenses', 'delete expenses', 'view reports', 'view all branches']);
 
-    $this->other = Company::factory()->create();
-    $this->otherManager = User::factory()->create(['company_id' => $this->other->id])->givePermissionTo(['view expenses', 'create expenses', 'edit expenses', 'delete expenses']);
+    $this->other = Tenant::factory()->create();
+    $this->otherManager = User::factory()->create(['tenant_id' => $this->other->id])->givePermissionTo(['view expenses', 'create expenses', 'edit expenses', 'delete expenses']);
 
     $this->rent = expenseCategory('Rent');
     $this->salaries = expenseCategory('Salaries', ExpenseType::Salaries);
@@ -86,13 +86,13 @@ beforeEach(function () {
 });
 
 describe('categories', function () {
-    it('starts a company with sensible default categories the first time it opens expenses', function () {
-        $fresh = Company::factory()->create();
-        $user = User::factory()->create(['company_id' => $fresh->id])->givePermissionTo('view expenses');
+    it('starts a tenant with sensible default categories the first time it opens expenses', function () {
+        $fresh = Tenant::factory()->create();
+        $user = User::factory()->create(['tenant_id' => $fresh->id])->givePermissionTo('view expenses');
 
         $this->actingAs($user)->get(route('expense-categories.index'))->assertOk();
 
-        $categories = ExpenseCategory::where('company_id', $fresh->id)->get()->keyBy('name');
+        $categories = ExpenseCategory::where('tenant_id', $fresh->id)->get()->keyBy('name');
         expect($categories)->toHaveCount(9)
             ->and($categories['Salaries']->type)->toBe(ExpenseType::Salaries)->and($categories['Salaries']->affects_profit)->toBeTrue()
             ->and($categories['Stock purchases']->affects_profit)->toBeFalse()
@@ -100,14 +100,14 @@ describe('categories', function () {
             ->and($categories['Taxes & fees']->affects_profit)->toBeTrue();
 
         $this->actingAs($user)->get(route('expense-categories.index'));
-        expect(ExpenseCategory::where('company_id', $fresh->id)->count())->toBe(9);
+        expect(ExpenseCategory::where('tenant_id', $fresh->id)->count())->toBe(9);
     });
 
     it('creates and renames categories with a type and a profit switch', function () {
         $this->actingAs($this->manager)->post(route('expense-categories.store'), ['name' => 'Insurance', 'type' => 'operating', 'affects_profit' => false, 'is_active' => true])->assertSessionHasNoErrors();
 
         $category = ExpenseCategory::where('name', 'Insurance')->firstOrFail();
-        expect($category->affects_profit)->toBeFalse()->and($category->company_id)->toBe($this->company->id);
+        expect($category->affects_profit)->toBeFalse()->and($category->tenant_id)->toBe($this->tenant->id);
 
         $this->actingAs($this->manager)->put(route('expense-categories.update', $category), ['name' => 'Insurance fees', 'type' => 'tax', 'affects_profit' => true, 'is_active' => true])->assertSessionHasNoErrors();
         expect($category->fresh()->name)->toBe('Insurance fees')->and($category->fresh()->type)->toBe(ExpenseType::Tax)->and($category->fresh()->affects_profit)->toBeTrue();
@@ -121,7 +121,7 @@ describe('categories', function () {
             ->and(ExpenseCategory::where('name', 'Cleaning')->first()->affects_profit)->toBeTrue();
     });
 
-    it('keeps names unique inside a company only and validates the type', function () {
+    it('keeps names unique inside a tenant only and validates the type', function () {
         $this->actingAs($this->manager)->post(route('expense-categories.store'), ['name' => 'Rent', 'type' => 'operating'])->assertSessionHasErrors('name');
         $this->actingAs($this->manager)->post(route('expense-categories.store'), ['name' => 'Bad', 'type' => 'magic'])->assertSessionHasErrors('type');
         $this->flushSession();
@@ -138,8 +138,8 @@ describe('categories', function () {
         expect(ExpenseCategory::find($this->stock->id))->toBeNull();
     });
 
-    it('keeps categories private to their company', function () {
-        $theirs = ExpenseCategory::factory()->create(['company_id' => $this->other->id]);
+    it('keeps categories private to their tenant', function () {
+        $theirs = ExpenseCategory::factory()->create(['tenant_id' => $this->other->id]);
 
         $this->actingAs($this->manager)->put(route('expense-categories.update', $theirs), ['name' => 'Hacked', 'type' => 'other'])->assertForbidden();
         $this->actingAs($this->manager)->delete(route('expense-categories.destroy', $theirs))->assertForbidden();
@@ -147,11 +147,11 @@ describe('categories', function () {
 });
 
 describe('recording expenses', function () {
-    it('records an expense for the company and the signed-in user', function () {
+    it('records an expense for the tenant and the signed-in user', function () {
         $this->actingAs($this->manager)->post(route('expenses.store'), expensePayload(['reference' => 'INV-77', 'branch_id' => $this->branch->id]))->assertRedirect(route('expenses.index'));
 
         $expense = Expense::firstOrFail();
-        expect($expense->company_id)->toBe($this->company->id)->and($expense->created_by)->toBe($this->manager->id)
+        expect($expense->tenant_id)->toBe($this->tenant->id)->and($expense->created_by)->toBe($this->manager->id)
             ->and((float) $expense->amount)->toBe(450.0)->and($expense->reference)->toBe('INV-77')->and($expense->branch_id)->toBe($this->branch->id);
     });
 
@@ -160,11 +160,11 @@ describe('recording expenses', function () {
             ->assertSessionHasErrors(['amount', 'description', 'expense_date']);
     });
 
-    it('only accepts active categories, branches and employees of the same company', function () {
-        $foreignCategory = ExpenseCategory::factory()->create(['company_id' => $this->other->id]);
+    it('only accepts active categories, branches and employees of the same tenant', function () {
+        $foreignCategory = ExpenseCategory::factory()->create(['tenant_id' => $this->other->id]);
         $inactive = expenseCategory('Old');
         $inactive->update(['is_active' => false]);
-        $foreignBranch = Branch::factory()->create(['company_id' => $this->other->id]);
+        $foreignBranch = Branch::factory()->create(['tenant_id' => $this->other->id]);
 
         $this->actingAs($this->manager)->post(route('expenses.store'), expensePayload(['expense_category_id' => $foreignCategory->id]))->assertSessionHasErrors('expense_category_id');
         $this->actingAs($this->manager)->post(route('expenses.store'), expensePayload(['expense_category_id' => $inactive->id]))->assertSessionHasErrors('expense_category_id');
@@ -173,7 +173,7 @@ describe('recording expenses', function () {
     });
 
     it('can name the employee a salary is for', function () {
-        $employee = User::factory()->create(['company_id' => $this->company->id, 'name' => 'Layla']);
+        $employee = User::factory()->create(['tenant_id' => $this->tenant->id, 'name' => 'Layla']);
 
         $this->actingAs($this->manager)->post(route('expenses.store'), expensePayload(['expense_category_id' => $this->salaries->id, 'employee_id' => $employee->id, 'description' => 'October salary']))->assertSessionHasNoErrors();
 
@@ -205,7 +205,7 @@ describe('recording expenses', function () {
         expect(Expense::find($expense->id))->toBeNull();
     });
 
-    it('keeps expenses private to their company', function () {
+    it('keeps expenses private to their tenant', function () {
         $theirs = Expense::factory()->create(['created_by' => $this->otherManager->id]);
 
         $this->actingAs($this->manager)->get(route('expenses.edit', $theirs))->assertForbidden();
@@ -215,7 +215,7 @@ describe('recording expenses', function () {
     });
 
     it('checks each permission', function () {
-        $viewer = User::factory()->create(['company_id' => $this->company->id])->givePermissionTo('view expenses');
+        $viewer = User::factory()->create(['tenant_id' => $this->tenant->id])->givePermissionTo('view expenses');
         $expense = recordExpense($this->rent, 10, '2026-10-01');
 
         $this->actingAs($viewer)->get(route('expenses.index'))->assertOk();
@@ -224,14 +224,14 @@ describe('recording expenses', function () {
         $this->actingAs($viewer)->delete(route('expenses.destroy', $expense))->assertForbidden();
         $this->actingAs($viewer)->post(route('expense-categories.store'), ['name' => 'X', 'type' => 'other'])->assertForbidden();
 
-        $nobody = User::factory()->create(['company_id' => $this->company->id]);
+        $nobody = User::factory()->create(['tenant_id' => $this->tenant->id]);
         $this->actingAs($nobody)->get(route('expenses.index'))->assertForbidden();
     });
 
-    it('is off for companies whose plan has no expenses module', function () {
+    it('is off for tenants whose plan has no expenses module', function () {
         $plan = Plan::factory()->withModules([Module::Pos])->create();
-        $this->company->subscriptions()->delete();
-        Subscription::create(['company_id' => $this->company->id, 'plan_id' => $plan->id, 'status' => 'active', 'starts_at' => now()->subDay()]);
+        $this->tenant->subscriptions()->delete();
+        Subscription::create(['tenant_id' => $this->tenant->id, 'plan_id' => $plan->id, 'status' => 'active', 'starts_at' => now()->subDay()]);
 
         $this->actingAs($this->manager)->get(route('expenses.index'))->assertForbidden();
         $this->actingAs($this->manager)->post(route('expenses.store'), expensePayload())->assertForbidden();
@@ -239,7 +239,7 @@ describe('recording expenses', function () {
 });
 
 describe('receipts', function () {
-    it('stores a receipt privately and serves it only to the company', function () {
+    it('stores a receipt privately and serves it only to the tenant', function () {
         $this->actingAs($this->manager)->post(route('expenses.store'), expensePayload(['receipt' => UploadedFile::fake()->image('receipt.jpg')]))->assertSessionHasNoErrors();
 
         $expense = Expense::firstOrFail();
@@ -285,13 +285,13 @@ describe('recording a received purchase as an expense', function () {
             $this->markTestSkipped('Inventory is not installed');
         }
 
-        $this->supplier = Supplier::create(['company_id' => $this->company->id, 'name' => 'Acme']);
-        $this->location = Location::factory()->create(['company_id' => $this->company->id, 'branch_id' => $this->branch->id]);
-        $this->purchase = Purchase::forceCreate(['company_id' => $this->company->id, 'supplier_id' => $this->supplier->id, 'location_id' => $this->location->id, 'created_by' => $this->manager->id, 'reference_number' => 'PO-9', 'status' => 'received', 'subtotal' => 900, 'tax' => 0, 'total' => 900, 'received_at' => now()->subDay()]);
+        $this->supplier = Supplier::create(['tenant_id' => $this->tenant->id, 'name' => 'Acme']);
+        $this->location = Location::factory()->create(['tenant_id' => $this->tenant->id, 'branch_id' => $this->branch->id]);
+        $this->purchase = Purchase::forceCreate(['tenant_id' => $this->tenant->id, 'supplier_id' => $this->supplier->id, 'location_id' => $this->location->id, 'created_by' => $this->manager->id, 'reference_number' => 'PO-9', 'status' => 'received', 'subtotal' => 900, 'tax' => 0, 'total' => 900, 'received_at' => now()->subDay()]);
     });
 
     it('links a received purchase and lists only unlinked ones', function () {
-        $draft = Purchase::forceCreate(['company_id' => $this->company->id, 'supplier_id' => $this->supplier->id, 'location_id' => $this->location->id, 'created_by' => $this->manager->id, 'reference_number' => 'PO-10', 'status' => 'pending', 'subtotal' => 5, 'tax' => 0, 'total' => 5]);
+        $draft = Purchase::forceCreate(['tenant_id' => $this->tenant->id, 'supplier_id' => $this->supplier->id, 'location_id' => $this->location->id, 'created_by' => $this->manager->id, 'reference_number' => 'PO-10', 'status' => 'pending', 'subtotal' => 5, 'tax' => 0, 'total' => 5]);
 
         $this->actingAs($this->manager)->get(route('expenses.create'))
             ->assertInertia(fn (Assert $page) => $page->component('Expenses/Edit')->has('purchases', 1)->where('purchases.0.id', $this->purchase->id)->where('purchases.0.total', 900));
@@ -309,8 +309,8 @@ describe('recording a received purchase as an expense', function () {
         $this->actingAs($this->manager)->post(route('expenses.store'), expensePayload(['purchase_id' => $this->purchase->id, 'description' => 'again']))->assertSessionHasErrors('purchase_id');
     });
 
-    it('does not offer another company\'s purchases', function () {
-        $theirs = Purchase::forceCreate(['company_id' => $this->other->id, 'supplier_id' => Supplier::create(['company_id' => $this->other->id, 'name' => 'Theirs'])->id, 'location_id' => $this->location->id, 'created_by' => $this->otherManager->id, 'status' => 'received', 'subtotal' => 1, 'tax' => 0, 'total' => 1]);
+    it('does not offer another tenant\'s purchases', function () {
+        $theirs = Purchase::forceCreate(['tenant_id' => $this->other->id, 'supplier_id' => Supplier::create(['tenant_id' => $this->other->id, 'name' => 'Theirs'])->id, 'location_id' => $this->location->id, 'created_by' => $this->otherManager->id, 'status' => 'received', 'subtotal' => 1, 'tax' => 0, 'total' => 1]);
 
         $this->actingAs($this->manager)->post(route('expenses.store'), expensePayload(['purchase_id' => $theirs->id]))->assertSessionHasErrors('purchase_id');
     });
@@ -338,7 +338,7 @@ describe('the expense list', function () {
             ->assertInertia(fn (Assert $page) => $page->has('expenses.data', 1));
     });
 
-    it('never lists another company\'s expenses and ignores garbage filters', function () {
+    it('never lists another tenant\'s expenses and ignores garbage filters', function () {
         Expense::factory()->create(['created_by' => $this->otherManager->id]);
         recordExpense($this->rent, 1, '2026-10-10');
 
@@ -349,7 +349,7 @@ describe('the expense list', function () {
 
 describe('the ledger', function () {
     it('totals by category, month and branch and splits what counts toward profit', function () {
-        $second = Branch::factory()->create(['company_id' => $this->company->id, 'name' => 'Second']);
+        $second = Branch::factory()->create(['tenant_id' => $this->tenant->id, 'name' => 'Second']);
         recordExpense($this->rent, 100, '2026-09-10', ['branch_id' => $this->branch->id]);
         recordExpense($this->rent, 50, '2026-10-10', ['branch_id' => $second->id]);
         recordExpense($this->stock, 400, '2026-10-12');
@@ -364,7 +364,7 @@ describe('the ledger', function () {
     });
 
     it('filters by category, branch, type, employee and text', function () {
-        $employee = User::factory()->create(['company_id' => $this->company->id]);
+        $employee = User::factory()->create(['tenant_id' => $this->tenant->id]);
         recordExpense($this->rent, 100, '2026-10-02', ['description' => 'Shop rent']);
         recordExpense($this->salaries, 700, '2026-10-03', ['employee_id' => $employee->id]);
 
@@ -420,12 +420,12 @@ describe('net profit', function () {
             $this->markTestSkipped('Sales is not installed');
         }
 
-        $product = Product::factory()->create(['company_id' => $this->company->id, 'cost_price' => 40, 'base_price' => 100, 'unlimited_quantity' => true]);
-        $customer = Customer::create(['company_id' => $this->company->id, 'name' => 'Rana']);
+        $product = Product::factory()->create(['tenant_id' => $this->tenant->id, 'cost_price' => 40, 'base_price' => 100, 'unlimited_quantity' => true]);
+        $customer = Customer::create(['tenant_id' => $this->tenant->id, 'name' => 'Rana']);
 
         $sell = function (string $date, int $quantity, float $discount = 0, string $status = 'completed', ?Branch $branch = null) use ($product, $customer) {
             $order = Order::create([
-                'company_id' => $this->company->id, 'branch_id' => ($branch ?? $this->branch)->id, 'order_number' => 'O-'.uniqid(),
+                'tenant_id' => $this->tenant->id, 'branch_id' => ($branch ?? $this->branch)->id, 'order_number' => 'O-'.uniqid(),
                 'subtotal' => 100 * $quantity, 'discount_amount' => $discount, 'total' => 100 * $quantity - $discount, 'status' => $status,
                 'cashier_id' => $this->manager->id, 'customer_id' => $customer->id, 'payment_type' => 'cash',
             ]);
@@ -433,7 +433,7 @@ describe('net profit', function () {
             $order->forceFill(['created_at' => CarbonImmutable::parse($date)])->save();
         };
 
-        $this->second = Branch::factory()->create(['company_id' => $this->company->id]);
+        $this->second = Branch::factory()->create(['tenant_id' => $this->tenant->id]);
         $sell('2026-09-10 12:00:00', 10, 50);
         $sell('2026-10-10 12:00:00', 5, 0);
         $sell('2026-10-11 12:00:00', 2, 0, 'voided');
@@ -445,7 +445,7 @@ describe('net profit', function () {
         recordExpense($this->rent, 100, '2026-10-05');
         recordExpense($this->stock, 5000, '2026-10-06');
 
-        $statement = app(ProfitStatement::class)->forPeriod($this->company->id, CarbonImmutable::parse('2026-09-01'), CarbonImmutable::parse('2026-10-31'));
+        $statement = app(ProfitStatement::class)->forPeriod($this->tenant->id, CarbonImmutable::parse('2026-09-01'), CarbonImmutable::parse('2026-10-31'));
 
         expect($statement['months'][0])->toMatchArray(['month' => '2026-09', 'revenue' => 1000.0, 'discounts' => 50.0, 'cogs' => 400.0, 'gross_profit' => 550.0, 'expenses' => 200.0, 'net_profit' => 350.0])
             ->and($statement['months'][1])->toMatchArray(['month' => '2026-10', 'revenue' => 600.0, 'discounts' => 0.0, 'cogs' => 240.0, 'gross_profit' => 360.0, 'expenses' => 100.0, 'net_profit' => 260.0])
@@ -456,7 +456,7 @@ describe('net profit', function () {
         recordExpense($this->rent, 80, '2026-10-05', ['branch_id' => $this->second->id]);
         recordExpense($this->rent, 20, '2026-10-05', ['branch_id' => $this->branch->id]);
 
-        $statement = app(ProfitStatement::class)->forPeriod($this->company->id, CarbonImmutable::parse('2026-08-01'), CarbonImmutable::parse('2026-10-31'), $this->second->id);
+        $statement = app(ProfitStatement::class)->forPeriod($this->tenant->id, CarbonImmutable::parse('2026-08-01'), CarbonImmutable::parse('2026-10-31'), $this->second->id);
 
         expect(collect($statement['months'])->pluck('month')->all())->toBe(['2026-08', '2026-09', '2026-10'])
             ->and($statement['totals'])->toMatchArray(['revenue' => 100.0, 'cogs' => 40.0, 'expenses' => 80.0, 'net_profit' => -20.0]);
@@ -487,7 +487,7 @@ describe('net profit', function () {
 
         $this->actingAs($this->manager)->get(route('reports.profit', [...$range, 'search' => 'x']))->assertInertia(fn (Assert $page) => $page->where('net', null)->where('filters.includeExpenses', true));
 
-        $analyst = User::factory()->create(['company_id' => $this->company->id])->givePermissionTo('view reports');
+        $analyst = User::factory()->create(['tenant_id' => $this->tenant->id])->givePermissionTo('view reports');
         $this->actingAs($analyst)->get(route('reports.profit', $range))->assertInertia(fn (Assert $page) => $page->where('net', null)->where('canIncludeExpenses', false)->where('filters.includeExpenses', false));
     })->skip(fn () => ! moduleInstalled('reports'), 'Reports is not installed');
 })->skip(! moduleFolderInstalled('Sales') || ! moduleFolderInstalled('Customers'), 'Sales is not installed');
@@ -600,9 +600,9 @@ describe('recurring expenses', function () {
         $this->actingAs($this->manager)->post(route('recurring-expenses.store'), recurringPayload(['spread_months' => 6]))->assertSessionHasErrors('spread_months');
     });
 
-    it('keeps recurring expenses private to their company and behind the permission', function () {
+    it('keeps recurring expenses private to their tenant and behind the permission', function () {
         $theirs = RecurringExpense::factory()->create(['created_by' => $this->otherManager->id]);
-        $viewer = User::factory()->create(['company_id' => $this->company->id])->givePermissionTo('view expenses');
+        $viewer = User::factory()->create(['tenant_id' => $this->tenant->id])->givePermissionTo('view expenses');
 
         $this->actingAs($this->manager)->put(route('recurring-expenses.update', $theirs), recurringPayload())->assertForbidden();
         $this->actingAs($this->manager)->post(route('recurring-expenses.toggle', $theirs))->assertForbidden();

@@ -109,7 +109,7 @@ const iconComponents = {
     currency: CircleDollarSign,
     branch: Building,
     location: MapPin,
-    company: Building2,
+    tenant: Building2,
     users: Users,
     scale: Scale,
     'users-group': UsersRound,

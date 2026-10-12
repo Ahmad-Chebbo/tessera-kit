@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('shift_assignments', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('tenant_id')->constrained()->cascadeOnDelete();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->foreignId('shift_template_id')->constrained()->cascadeOnDelete();
             $table->foreignId('shift_cycle_id')->nullable()->constrained()->nullOnDelete();
@@ -18,7 +18,7 @@ return new class extends Migration
             $table->timestamps();
 
             $table->unique(['user_id', 'shift_template_id', 'date']);
-            $table->index(['company_id', 'date']);
+            $table->index(['tenant_id', 'date']);
         });
     }
 

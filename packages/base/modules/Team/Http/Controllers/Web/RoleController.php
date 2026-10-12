@@ -21,7 +21,7 @@ class RoleController extends Controller
     public function index(Request $request): Response
     {
         $roles = Role::query()
-            ->ownedBy($request->user()->company_id)
+            ->ownedBy($request->user()->tenant_id)
             ->withCount(['users', 'permissions'])
             ->orderBy('name')
             ->get()
@@ -49,7 +49,7 @@ class RoleController extends Controller
         $role = Role::query()->create([
             'name' => $request->validated('name'),
             'guard_name' => 'web',
-            'company_id' => $request->user()->company_id,
+            'tenant_id' => $request->user()->tenant_id,
         ]);
 
         $role->syncPermissions($request->validated('permissions'));
@@ -98,7 +98,7 @@ class RoleController extends Controller
 
     private function ensureOwned(Request $request, Role $role): void
     {
-        abort_unless($request->user()->can('manage roles') && $role->company_id === $request->user()->company_id, 403);
+        abort_unless($request->user()->can('manage roles') && $role->tenant_id === $request->user()->tenant_id, 403);
     }
 
     /**
@@ -109,7 +109,7 @@ class RoleController extends Controller
     private function groups(Request $request, ?Role $role = null): array
     {
         $held = $request->user()->getAllPermissions()->pluck('name');
-        $known = Permission::query()->pluck('name')->reject(fn (string $name): bool => $name === 'manage companies');
+        $known = Permission::query()->pluck('name')->reject(fn (string $name): bool => $name === 'manage tenants');
         $listed = collect(app(ModuleRegistry::class)->permissionGroups())->flatten();
         $groups = app(ModuleRegistry::class)->permissionGroups();
         $groups['other'] = $known->diff($listed)->values()->all();

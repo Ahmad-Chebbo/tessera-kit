@@ -18,7 +18,7 @@ class StoreAttendanceRecordRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'user_id' => ['required', 'integer', Rule::exists('users', 'id')->where('company_id', $this->user()->company_id)],
+            'user_id' => ['required', 'integer', Rule::exists('users', 'id')->where('tenant_id', $this->user()->tenant_id)],
             'check_in_at' => ['required', 'date', 'before_or_equal:now'],
             'check_out_at' => ['nullable', 'date', 'after:check_in_at', 'before_or_equal:now'],
             'notes' => ['nullable', 'string', 'max:1000'],

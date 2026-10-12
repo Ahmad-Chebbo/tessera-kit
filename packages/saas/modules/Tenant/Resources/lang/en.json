@@ -1,0 +1,63 @@
+{
+    "settings": {
+        "title": "Settings",
+        "language": "Language",
+        "english": "English",
+        "arabic": "Arabic",
+        "currency": "Currency",
+        "timezone": "Timezone",
+        "taxRate": "Tax Rate",
+        "receiptHeader": "Receipt Header",
+        "receiptFooter": "Receipt Footer",
+        "exchangeRates": "Exchange Rates",
+        "requireShift": "Require an open shift to sell",
+        "requireShiftHint": "Cashiers must open a shift with an opening float before they can check out."
+    },
+    "branches": {
+        "title": "Branches",
+        "addBranch": "Add Branch",
+        "editBranch": "Edit Branch",
+        "name": "Branch Name",
+        "address": "Address",
+        "phone": "Phone",
+        "users": "Users",
+        "noBranches": "No branches found",
+        "manageBranches": "Manage your tenant branches"
+    },
+    "locations": {
+        "title": "Locations",
+        "addLocation": "Add Location",
+        "editLocation": "Edit Location",
+        "name": "Location Name",
+        "branch": "Branch",
+        "type": "Type",
+        "warehouse": "Warehouse",
+        "noLocations": "No locations found",
+        "manageLocations": "Manage storage locations"
+    },
+    "tenants": {
+        "title": "Tenants",
+        "addTenant": "Add Tenant",
+        "editTenant": "Edit Tenant",
+        "createTenant": "Create Tenant",
+        "updateTenant": "Update Tenant",
+        "manageTenants": "Manage registered tenants",
+        "createNewTenant": "Register a new tenant",
+        "tenant": "Tenant",
+        "tenantName": "Tenant Name",
+        "tenantInfo": "Tenant Information",
+        "tenantDetails": "Tenant Details",
+        "currency": "Currency",
+        "taxRate": "Tax Rate (%)",
+        "branches": "Branches",
+        "users": "Users",
+        "noTenants": "No tenants found",
+        "noBranches": "No branches for this tenant",
+        "noUsers": "No users for this tenant",
+        "adminUser": "Admin User",
+        "adminName": "Admin Name",
+        "adminEmail": "Admin Email",
+        "adminPassword": "Admin Password",
+        "confirmDelete": "Are you sure you want to delete this tenant?"
+    }
+}

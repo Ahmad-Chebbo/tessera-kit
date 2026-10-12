@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { collectMessages, coreMessages, moduleMessageFiles } from '../messages';
 
-const CORE_MODULES = ['Auth', 'Company', 'Subscription', 'Team'];
+const CORE_MODULES = ['Auth', 'Tenant', 'Subscription', 'Team'];
 const isCoreModule = (path) => CORE_MODULES.some((module) => path.includes(`/modules/${module}/`) || path.includes(`/Modules/${module}/`));
 
 const moduleSources = import.meta.glob(['../../../../app/Modules/*/Resources/js/**/*.{vue,js}', '../../../../vendor/tessera/*/Resources/js/**/*.{vue,js}', '../../../../vendor/tessera/*/modules/*/Resources/js/**/*.{vue,js}', '!../../../../**/__tests__/**'], { query: '?raw', import: 'default', eager: true });

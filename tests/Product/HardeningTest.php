@@ -3,9 +3,6 @@
 use App\Modules\Catalog\Models\Category;
 use App\Modules\Catalog\Models\Product;
 use App\Modules\Catalog\Models\Unit;
-use App\Modules\Company\Models\Branch;
-use App\Modules\Company\Models\Company;
-use App\Modules\Company\Models\Location;
 use App\Modules\Customers\Models\Customer;
 use App\Modules\Inventory\Models\Purchase;
 use App\Modules\Inventory\Models\StockMovement;
@@ -14,6 +11,9 @@ use App\Modules\Sales\Enums\OrderStatus;
 use App\Modules\Sales\Models\HeldOrder;
 use App\Modules\Sales\Models\Order;
 use App\Modules\Team\Models\User;
+use App\Modules\Tenant\Models\Branch;
+use App\Modules\Tenant\Models\Location;
+use App\Modules\Tenant\Models\Tenant;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Permission;
@@ -33,24 +33,24 @@ function stockOf(Product $product, Location $location): float
 }
 
 beforeEach(function () {
-    $this->company = Company::factory()->create(['currency' => 'USD']);
-    $this->branch = Branch::factory()->create(['company_id' => $this->company->id]);
-    $this->location = Location::factory()->create(['company_id' => $this->company->id, 'branch_id' => $this->branch->id, 'type' => 'branch']);
-    $this->cashier = User::factory()->create(['company_id' => $this->company->id, 'branch_id' => $this->branch->id]);
+    $this->tenant = Tenant::factory()->create(['currency' => 'USD']);
+    $this->branch = Branch::factory()->create(['tenant_id' => $this->tenant->id]);
+    $this->location = Location::factory()->create(['tenant_id' => $this->tenant->id, 'branch_id' => $this->branch->id, 'type' => 'branch']);
+    $this->cashier = User::factory()->create(['tenant_id' => $this->tenant->id, 'branch_id' => $this->branch->id]);
     grant($this->cashier, ['access pos']);
 
-    $this->category = Category::factory()->create(['company_id' => $this->company->id]);
-    $this->product = Product::factory()->create(['company_id' => $this->company->id, 'category_id' => $this->category->id, 'base_price' => 100, 'sale_price' => null, 'currency' => 'USD']);
-    StockMovement::factory()->create(['company_id' => $this->company->id, 'product_id' => $this->product->id, 'location_id' => $this->location->id, 'quantity' => 10]);
+    $this->category = Category::factory()->create(['tenant_id' => $this->tenant->id]);
+    $this->product = Product::factory()->create(['tenant_id' => $this->tenant->id, 'category_id' => $this->category->id, 'base_price' => 100, 'sale_price' => null, 'currency' => 'USD']);
+    StockMovement::factory()->create(['tenant_id' => $this->tenant->id, 'product_id' => $this->product->id, 'location_id' => $this->location->id, 'quantity' => 10]);
 
-    $this->other = Company::factory()->create(['currency' => 'USD']);
-    $this->otherBranch = Branch::factory()->create(['company_id' => $this->other->id]);
-    $this->otherLocation = Location::factory()->create(['company_id' => $this->other->id, 'branch_id' => $this->otherBranch->id, 'type' => 'branch']);
-    $this->otherCategory = Category::factory()->create(['company_id' => $this->other->id]);
-    $this->otherProduct = Product::factory()->create(['company_id' => $this->other->id, 'category_id' => $this->otherCategory->id, 'base_price' => 100]);
-    StockMovement::factory()->create(['company_id' => $this->other->id, 'product_id' => $this->otherProduct->id, 'location_id' => $this->location->id, 'quantity' => 10]);
-    $this->otherCustomer = Customer::create(['company_id' => $this->other->id, 'name' => 'Rival customer', 'is_active' => true]);
-    $this->customer = Customer::create(['company_id' => $this->company->id, 'name' => 'My customer', 'is_active' => true]);
+    $this->other = Tenant::factory()->create(['currency' => 'USD']);
+    $this->otherBranch = Branch::factory()->create(['tenant_id' => $this->other->id]);
+    $this->otherLocation = Location::factory()->create(['tenant_id' => $this->other->id, 'branch_id' => $this->otherBranch->id, 'type' => 'branch']);
+    $this->otherCategory = Category::factory()->create(['tenant_id' => $this->other->id]);
+    $this->otherProduct = Product::factory()->create(['tenant_id' => $this->other->id, 'category_id' => $this->otherCategory->id, 'base_price' => 100]);
+    StockMovement::factory()->create(['tenant_id' => $this->other->id, 'product_id' => $this->otherProduct->id, 'location_id' => $this->location->id, 'quantity' => 10]);
+    $this->otherCustomer = Customer::create(['tenant_id' => $this->other->id, 'name' => 'Rival customer', 'is_active' => true]);
+    $this->customer = Customer::create(['tenant_id' => $this->tenant->id, 'name' => 'My customer', 'is_active' => true]);
 });
 
 function checkout($test, array $overrides = [], ?User $as = null)
@@ -64,13 +64,13 @@ function checkout($test, array $overrides = [], ?User $as = null)
 }
 
 describe('checkout', function () {
-    it('rejects a product from another company', function () {
+    it('rejects a product from another tenant', function () {
         checkout($this, ['items' => [['product_id' => $this->otherProduct->id, 'quantity' => 1]]])->assertUnprocessable();
 
         expect(Order::count())->toBe(0);
     });
 
-    it('rejects a customer from another company', function () {
+    it('rejects a customer from another tenant', function () {
         checkout($this, ['customer_id' => $this->otherCustomer->id, 'payment_type' => 'debt'])
             ->assertUnprocessable()
             ->assertJsonValidationErrors('customer_id');
@@ -113,7 +113,7 @@ describe('checkout', function () {
     });
 
     it('rejects a unit that does not belong to the product', function () {
-        $unit = Unit::create(['company_id' => $this->company->id, 'name' => 'Box', 'abbreviation' => 'bx', 'is_active' => true]);
+        $unit = Unit::create(['tenant_id' => $this->tenant->id, 'name' => 'Box', 'abbreviation' => 'bx', 'is_active' => true]);
 
         checkout($this, ['items' => [['product_id' => $this->product->id, 'quantity' => 1, 'unit_id' => $unit->id]]])
             ->assertUnprocessable();
@@ -158,7 +158,7 @@ describe('offline sync', function () {
         $this->actingAs($this->cashier)->postJson(route('pos.sync'), ['sales' => $sales])->assertUnprocessable();
     });
 
-    it('cannot sell another company product', function () use ($sale) {
+    it('cannot sell another tenant product', function () use ($sale) {
         $response = $this->actingAs($this->cashier)->postJson(route('pos.sync'), ['sales' => [
             $sale($this, ['items' => [['product_id' => $this->otherProduct->id, 'quantity' => 1]]]),
         ]])->assertSuccessful();
@@ -178,11 +178,11 @@ describe('offline sync', function () {
 
 describe('held orders', function () {
     it('can only be retrieved or deleted by the cashier who held them', function () {
-        $colleague = User::factory()->create(['company_id' => $this->company->id, 'branch_id' => $this->branch->id]);
+        $colleague = User::factory()->create(['tenant_id' => $this->tenant->id, 'branch_id' => $this->branch->id]);
         grant($colleague, ['access pos']);
 
         $held = HeldOrder::create([
-            'company_id' => $this->company->id, 'branch_id' => $this->branch->id, 'cashier_id' => $this->cashier->id,
+            'tenant_id' => $this->tenant->id, 'branch_id' => $this->branch->id, 'cashier_id' => $this->cashier->id,
             'name' => 'Mine', 'items' => [], 'total' => 5,
         ]);
 
@@ -194,9 +194,9 @@ describe('held orders', function () {
 
 describe('purchases', function () {
     beforeEach(function () {
-        $this->buyer = grant(User::factory()->create(['company_id' => $this->company->id, 'branch_id' => $this->branch->id]), ['create purchases', 'receive purchases']);
-        $this->supplier = Supplier::create(['company_id' => $this->company->id, 'name' => 'Mine', 'is_active' => true]);
-        $this->otherSupplier = Supplier::create(['company_id' => $this->other->id, 'name' => 'Theirs', 'is_active' => true]);
+        $this->buyer = grant(User::factory()->create(['tenant_id' => $this->tenant->id, 'branch_id' => $this->branch->id]), ['create purchases', 'receive purchases']);
+        $this->supplier = Supplier::create(['tenant_id' => $this->tenant->id, 'name' => 'Mine', 'is_active' => true]);
+        $this->otherSupplier = Supplier::create(['tenant_id' => $this->other->id, 'name' => 'Theirs', 'is_active' => true]);
     });
 
     $purchase = fn ($test, array $overrides = []) => array_merge([
@@ -206,7 +206,7 @@ describe('purchases', function () {
         'items' => [['product_id' => $test->product->id, 'quantity' => 5, 'unit_cost' => 10]],
     ], $overrides);
 
-    it('rejects a supplier, location or product from another company', function () use ($purchase) {
+    it('rejects a supplier, location or product from another tenant', function () use ($purchase) {
         $this->actingAs($this->buyer)->post(route('purchases.store'), $purchase($this, ['supplier_id' => $this->otherSupplier->id]))->assertSessionHasErrors('supplier_id');
         $this->actingAs($this->buyer)->post(route('purchases.store'), $purchase($this, ['location_id' => $this->otherLocation->id]))->assertSessionHasErrors('location_id');
         $this->actingAs($this->buyer)->post(route('purchases.store'), $purchase($this, ['items' => [['product_id' => $this->otherProduct->id, 'quantity' => 1, 'unit_cost' => 1]]]))->assertSessionHasErrors('items.0.product_id');
@@ -224,9 +224,9 @@ describe('purchases', function () {
         expect(stockOf($this->product, $this->location))->toBe(15.0);
     });
 
-    it('does not let another company receive the purchase', function () use ($purchase) {
+    it('does not let another tenant receive the purchase', function () use ($purchase) {
         $this->actingAs($this->buyer)->post(route('purchases.store'), $purchase($this));
-        $intruder = grant(User::factory()->create(['company_id' => $this->other->id, 'branch_id' => $this->otherBranch->id]), ['receive purchases']);
+        $intruder = grant(User::factory()->create(['tenant_id' => $this->other->id, 'branch_id' => $this->otherBranch->id]), ['receive purchases']);
 
         $this->actingAs($intruder)->post(route('purchases.receive', Purchase::first()))->assertForbidden();
     });
@@ -234,7 +234,7 @@ describe('purchases', function () {
 
 describe('voiding orders', function () {
     beforeEach(function () {
-        $this->manager = grant(User::factory()->create(['company_id' => $this->company->id, 'branch_id' => $this->branch->id]), ['void orders', 'view orders']);
+        $this->manager = grant(User::factory()->create(['tenant_id' => $this->tenant->id, 'branch_id' => $this->branch->id]), ['void orders', 'view orders']);
     });
 
     it('puts the sold stock back exactly once', function () {
@@ -258,8 +258,8 @@ describe('voiding orders', function () {
     });
 
     it('keeps a manager from voiding another branch order without the all-branches permission', function () {
-        $branch2 = Branch::factory()->create(['company_id' => $this->company->id]);
-        $elsewhere = grant(User::factory()->create(['company_id' => $this->company->id, 'branch_id' => $branch2->id]), ['void orders']);
+        $branch2 = Branch::factory()->create(['tenant_id' => $this->tenant->id]);
+        $elsewhere = grant(User::factory()->create(['tenant_id' => $this->tenant->id, 'branch_id' => $branch2->id]), ['void orders']);
         checkout($this)->assertSuccessful();
 
         $this->actingAs($elsewhere)->post(route('orders.void', Order::first()))->assertForbidden();
@@ -270,7 +270,7 @@ describe('voiding orders', function () {
 
 describe('uploads', function () {
     beforeEach(function () {
-        $this->editor = grant(User::factory()->create(['company_id' => $this->company->id, 'branch_id' => $this->branch->id]), ['create products', 'edit products', 'manage settings']);
+        $this->editor = grant(User::factory()->create(['tenant_id' => $this->tenant->id, 'branch_id' => $this->branch->id]), ['create products', 'edit products', 'manage settings']);
         $this->productData = fn (array $extra = []) => array_merge([
             'name' => 'Upload test', 'base_price' => 5, 'currency' => 'USD', 'is_active' => true, 'unlimited_quantity' => false,
         ], $extra);
@@ -292,7 +292,7 @@ describe('uploads', function () {
         'huge png' => ['big.png', 'image/png', 6000],
     ]);
 
-    it('applies the same rules to the company logo', function () {
+    it('applies the same rules to the tenant logo', function () {
         $this->actingAs($this->editor)->put(route('settings.update'), [
             'name' => 'Co', 'currency' => 'USD', 'logo' => UploadedFile::fake()->create('logo.php', 5, 'application/x-php'),
         ])->assertSessionHasErrors('logo');
@@ -300,8 +300,8 @@ describe('uploads', function () {
 });
 
 describe('catalogue references', function () {
-    it('rejects a category from another company on products and as a parent category', function () {
-        $editor = grant(User::factory()->create(['company_id' => $this->company->id, 'branch_id' => $this->branch->id]), ['create products', 'create categories']);
+    it('rejects a category from another tenant on products and as a parent category', function () {
+        $editor = grant(User::factory()->create(['tenant_id' => $this->tenant->id, 'branch_id' => $this->branch->id]), ['create products', 'create categories']);
 
         $this->actingAs($editor)->post(route('products.store'), [
             'name' => 'X', 'base_price' => 1, 'currency' => 'USD', 'is_active' => true, 'unlimited_quantity' => false,
@@ -316,8 +316,8 @@ describe('catalogue references', function () {
 
 describe('dashboard performance', function () {
     it('finds low stock products without querying once per product', function () {
-        $viewer = grant(User::factory()->create(['company_id' => $this->company->id, 'branch_id' => $this->branch->id]), ['view dashboard']);
-        Product::factory()->count(12)->create(['company_id' => $this->company->id, 'category_id' => $this->category->id]);
+        $viewer = grant(User::factory()->create(['tenant_id' => $this->tenant->id, 'branch_id' => $this->branch->id]), ['view dashboard']);
+        Product::factory()->count(12)->create(['tenant_id' => $this->tenant->id, 'category_id' => $this->category->id]);
 
         DB::enableQueryLog();
         $response = $this->actingAs($viewer)->get(route('dashboard'));

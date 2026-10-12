@@ -17,7 +17,7 @@ class StoreCategoryRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:255'],
-            'parent_id' => ['nullable', 'integer', Rule::exists('categories', 'id')->where('company_id', $this->user()->company_id)],
+            'parent_id' => ['nullable', 'integer', Rule::exists('categories', 'id')->where('tenant_id', $this->user()->tenant_id)],
             'description' => ['nullable', 'string'],
             'color' => ['nullable', 'string'],
             'icon' => ['nullable', 'string'],

@@ -89,7 +89,7 @@
     "roles": {
         "nav": "Roles",
         "title": "Roles & permissions",
-        "subtitle": "Decide what each role can do in your company",
+        "subtitle": "Decide what each role can do in your tenant",
         "addRole": "New role",
         "editRole": "Edit role",
         "name": "Role name",

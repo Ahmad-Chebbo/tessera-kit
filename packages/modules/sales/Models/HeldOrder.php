@@ -2,16 +2,16 @@
 
 namespace App\Modules\Sales\Models;
 
-use App\Modules\Company\Models\Branch;
-use App\Modules\Company\Models\Company;
 use App\Modules\Team\Models\User;
+use App\Modules\Tenant\Models\Branch;
+use App\Modules\Tenant\Models\Tenant;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class HeldOrder extends Model
 {
     protected $fillable = [
-        'company_id',
+        'tenant_id',
         'branch_id',
         'cashier_id',
         'name',
@@ -27,9 +27,9 @@ class HeldOrder extends Model
         ];
     }
 
-    public function company(): BelongsTo
+    public function tenant(): BelongsTo
     {
-        return $this->belongsTo(Company::class);
+        return $this->belongsTo(Tenant::class);
     }
 
     public function branch(): BelongsTo

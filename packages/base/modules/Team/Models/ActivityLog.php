@@ -12,7 +12,7 @@ class ActivityLog extends Model
     public const UPDATED_AT = null;
 
     protected $fillable = [
-        'company_id',
+        'tenant_id',
         'user_id',
         'subject_type',
         'subject_id',

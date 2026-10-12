@@ -46,7 +46,7 @@ class RecurringExpenseRunner
             $expense = Expense::query()->firstOrCreate(
                 ['recurring_expense_id' => $recurring->id, 'expense_date' => $due->toDateString()],
                 [
-                    'company_id' => $recurring->company_id,
+                    'tenant_id' => $recurring->tenant_id,
                     'branch_id' => $recurring->branch_id,
                     'expense_category_id' => $recurring->expense_category_id,
                     'created_by' => $recurring->created_by,

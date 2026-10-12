@@ -10,14 +10,14 @@ return new class extends Migration
     {
         Schema::table('orders', function (Blueprint $table) {
             $table->string('offline_id', 64)->nullable()->after('order_number');
-            $table->unique(['company_id', 'offline_id']);
+            $table->unique(['tenant_id', 'offline_id']);
         });
     }
 
     public function down(): void
     {
         Schema::table('orders', function (Blueprint $table) {
-            $table->dropUnique(['company_id', 'offline_id']);
+            $table->dropUnique(['tenant_id', 'offline_id']);
             $table->dropColumn('offline_id');
         });
     }

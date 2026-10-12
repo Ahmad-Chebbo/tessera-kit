@@ -50,13 +50,13 @@ class StoreDiscountRuleRequest extends FormRequest
             'action_config.get_quantity' => [Rule::requiredIf(in_array($action, [DiscountAction::BuyXGetY->value, DiscountAction::BuyGetItem->value], true)), 'nullable', 'numeric', 'min:1', 'max:100000'],
             'action_config.get_discount_percent' => ['nullable', 'numeric', 'min:0', 'max:100'],
             'action_config.buy_product_ids' => [Rule::requiredIf($action === DiscountAction::BuyGetItem->value), 'nullable', 'array', 'min:1', 'max:50'],
-            'action_config.buy_product_ids.*' => ['integer', Rule::exists('products', 'id')->where('company_id', $this->user()->company_id)],
+            'action_config.buy_product_ids.*' => ['integer', Rule::exists('products', 'id')->where('tenant_id', $this->user()->tenant_id)],
             'action_config.get_product_ids' => [Rule::requiredIf($action === DiscountAction::BuyGetItem->value), 'nullable', 'array', 'min:1', 'max:50'],
-            'action_config.get_product_ids.*' => ['integer', Rule::exists('products', 'id')->where('company_id', $this->user()->company_id)],
+            'action_config.get_product_ids.*' => ['integer', Rule::exists('products', 'id')->where('tenant_id', $this->user()->tenant_id)],
             'action_config.max_sets' => ['nullable', 'integer', 'min:1', 'max:100000'],
             'coupon_code' => [
                 'nullable', 'string', 'max:50', 'alpha_dash',
-                Rule::unique('discount_rules', 'coupon_code')->where('company_id', $this->user()->company_id)->ignore($rule?->id),
+                Rule::unique('discount_rules', 'coupon_code')->where('tenant_id', $this->user()->tenant_id)->ignore($rule?->id),
             ],
             'usage_limit' => ['nullable', 'integer', 'min:1', 'max:100000000'],
             'per_customer_limit' => ['nullable', 'integer', 'min:1', 'max:100000000'],
@@ -66,7 +66,7 @@ class StoreDiscountRuleRequest extends FormRequest
     public function after(): array
     {
         return [function (Validator $validator): void {
-            foreach (app(ConditionTreeValidator::class)->errors($this->input('conditions'), $this->user()->company_id) as $error) {
+            foreach (app(ConditionTreeValidator::class)->errors($this->input('conditions'), $this->user()->tenant_id) as $error) {
                 $validator->errors()->add('conditions', $error);
             }
 

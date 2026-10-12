@@ -2,9 +2,9 @@
 
 namespace App\Modules\Expenses\Services;
 
-use App\Modules\Company\Models\Branch;
 use App\Modules\Expenses\Models\Expense;
 use App\Modules\Expenses\Models\ExpenseCategory;
+use App\Modules\Tenant\Models\Branch;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
@@ -20,14 +20,14 @@ class ExpenseLedger
      * @param  array<string, mixed>  $filters  category_id, branch_id, type, employee_id, search
      * @return array{total: float, included: float, count: int, by_category: list<array<string, mixed>>, by_month: list<array<string, mixed>>, by_branch: list<array<string, mixed>>}
      */
-    public function breakdown(int $companyId, CarbonImmutable $from, CarbonImmutable $to, array $filters = []): array
+    public function breakdown(int $tenantId, CarbonImmutable $from, CarbonImmutable $to, array $filters = []): array
     {
-        $categories = ExpenseCategory::query()->where('company_id', $companyId)->get()->keyBy('id');
+        $categories = ExpenseCategory::query()->where('tenant_id', $tenantId)->get()->keyBy('id');
         $byCategory = [];
         $byMonth = [];
         $byBranch = [];
 
-        foreach ($this->slices($companyId, $from, $to, $filters) as [$month, $categoryId, $branchId, $amount]) {
+        foreach ($this->slices($tenantId, $from, $to, $filters) as [$month, $categoryId, $branchId, $amount]) {
             $category = $categories[$categoryId] ?? null;
             $counts = (bool) ($category?->affects_profit);
 
@@ -38,7 +38,7 @@ class ExpenseLedger
         }
 
         ksort($byMonth);
-        $branchNames = Branch::query()->where('company_id', $companyId)->pluck('name', 'id');
+        $branchNames = Branch::query()->where('tenant_id', $tenantId)->pluck('name', 'id');
 
         $categoryRows = collect($byCategory)
             ->map(fn (float $total, int $id): array => [
@@ -55,7 +55,7 @@ class ExpenseLedger
         return [
             'total' => round(array_sum($byCategory), 2),
             'included' => round(collect($categoryRows)->where('affects_profit', true)->sum('total'), 2),
-            'count' => $this->countExpenses($companyId, $from, $to, $filters),
+            'count' => $this->countExpenses($tenantId, $from, $to, $filters),
             'by_category' => $categoryRows,
             'by_month' => collect($byMonth)->map(fn (array $row, string $month): array => ['month' => $month, 'total' => round($row['total'], 2), 'included' => round($row['included'], 2)])->values()->all(),
             'by_branch' => collect($byBranch)
@@ -71,9 +71,9 @@ class ExpenseLedger
      *
      * @return array<string, float> keyed by "YYYY-MM"
      */
-    public function includedByMonth(int $companyId, CarbonImmutable $from, CarbonImmutable $to, ?int $branchId = null): array
+    public function includedByMonth(int $tenantId, CarbonImmutable $from, CarbonImmutable $to, ?int $branchId = null): array
     {
-        $rows = $this->breakdown($companyId, $from, $to, array_filter(['branch_id' => $branchId]))['by_month'];
+        $rows = $this->breakdown($tenantId, $from, $to, array_filter(['branch_id' => $branchId]))['by_month'];
 
         return collect($rows)->mapWithKeys(fn (array $row): array => [$row['month'] => $row['included']])->all();
     }
@@ -84,9 +84,9 @@ class ExpenseLedger
      * @param  array<string, mixed>  $filters
      * @return iterable<array{0: string, 1: int, 2: int|null, 3: float}>
      */
-    private function slices(int $companyId, CarbonImmutable $from, CarbonImmutable $to, array $filters): iterable
+    private function slices(int $tenantId, CarbonImmutable $from, CarbonImmutable $to, array $filters): iterable
     {
-        $plain = $this->base($companyId, $filters)
+        $plain = $this->base($tenantId, $filters)
             ->where(fn (Builder $query) => $query->whereNull('expenses.spread_months')->orWhere('expenses.spread_months', '<=', 1))
             ->whereBetween('expenses.expense_date', [$from->toDateString(), $to->toDateString()])
             ->selectRaw('expenses.expense_date as day, expenses.expense_category_id as category_id, expenses.branch_id as branch_id, SUM(expenses.amount) as amount')
@@ -98,7 +98,7 @@ class ExpenseLedger
             yield [substr((string) $row->day, 0, 7), (int) $row->category_id, $row->branch_id ? (int) $row->branch_id : null, (float) $row->amount];
         }
 
-        $spread = $this->base($companyId, $filters)
+        $spread = $this->base($tenantId, $filters)
             ->where('expenses.spread_months', '>', 1)
             ->where('expenses.expense_date', '<=', $to->toDateString())
             ->select('expenses.*')
@@ -123,9 +123,9 @@ class ExpenseLedger
     /**
      * @param  array<string, mixed>  $filters
      */
-    private function countExpenses(int $companyId, CarbonImmutable $from, CarbonImmutable $to, array $filters): int
+    private function countExpenses(int $tenantId, CarbonImmutable $from, CarbonImmutable $to, array $filters): int
     {
-        return $this->base($companyId, $filters)
+        return $this->base($tenantId, $filters)
             ->where('expenses.expense_date', '<=', $to->toDateString())
             ->get(['expenses.id', 'expenses.expense_date', 'expenses.spread_months'])
             ->filter(function (Expense $expense) use ($from, $to): bool {
@@ -140,11 +140,11 @@ class ExpenseLedger
      * @param  array<string, mixed>  $filters
      * @return Builder<Expense>
      */
-    private function base(int $companyId, array $filters): Builder
+    private function base(int $tenantId, array $filters): Builder
     {
         $query = Expense::query()
             ->join('expense_categories', 'expense_categories.id', '=', 'expenses.expense_category_id')
-            ->where('expenses.company_id', $companyId);
+            ->where('expenses.tenant_id', $tenantId);
 
         foreach (['category_id' => 'expenses.expense_category_id', 'branch_id' => 'expenses.branch_id', 'employee_id' => 'expenses.employee_id'] as $key => $column) {
             if (! empty($filters[$key])) {

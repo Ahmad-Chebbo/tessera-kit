@@ -2,9 +2,9 @@
 
 namespace Tessera\Engine\Exports;
 
-use App\Modules\Company\Models\Branch;
-use App\Modules\Company\Models\Location;
-use App\Modules\Company\Services\BranchAccess;
+use App\Modules\Tenant\Models\Branch;
+use App\Modules\Tenant\Models\Location;
+use App\Modules\Tenant\Services\BranchAccess;
 use Illuminate\Validation\Rule;
 
 /**
@@ -45,7 +45,7 @@ abstract class ReportDefinition
      *
      * @return array<string, array<int, mixed>>
      */
-    public function filterRules(int $companyId): array
+    public function filterRules(int $tenantId): array
     {
         return [];
     }
@@ -112,7 +112,7 @@ abstract class ReportDefinition
         }
 
         return Location::query()
-            ->where('company_id', $context->company->id)
+            ->where('tenant_id', $context->tenant->id)
             ->where('branch_id', $id)
             ->pluck('id')
             ->all();
@@ -126,7 +126,7 @@ abstract class ReportDefinition
             return null;
         }
 
-        return $context->t('filters.branch', ['value' => Branch::query()->where('company_id', $context->company->id)->whereKey($id)->value('name')]);
+        return $context->t('filters.branch', ['value' => Branch::query()->where('tenant_id', $context->tenant->id)->whereKey($id)->value('name')]);
     }
 
     /**
@@ -134,9 +134,9 @@ abstract class ReportDefinition
      *
      * @return array<string, array<int, mixed>>
      */
-    protected function branchRules(int $companyId): array
+    protected function branchRules(int $tenantId): array
     {
-        return ['branch_id' => ['nullable', 'integer', Rule::exists('branches', 'id')->where('company_id', $companyId)]];
+        return ['branch_id' => ['nullable', 'integer', Rule::exists('branches', 'id')->where('tenant_id', $tenantId)]];
     }
 
     /**

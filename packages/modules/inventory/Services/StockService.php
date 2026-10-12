@@ -3,8 +3,8 @@
 namespace App\Modules\Inventory\Services;
 
 use App\Modules\Catalog\Models\Product;
-use App\Modules\Company\Models\Location;
 use App\Modules\Inventory\Models\StockMovement;
+use App\Modules\Tenant\Models\Location;
 use Illuminate\Support\Collection;
 
 class StockService

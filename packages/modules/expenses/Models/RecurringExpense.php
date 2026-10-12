@@ -2,12 +2,12 @@
 
 namespace App\Modules\Expenses\Models;
 
-use App\Modules\Company\Models\Branch;
-use App\Modules\Company\Models\Company;
 use App\Modules\Expenses\Casts\DateOnly;
 use App\Modules\Expenses\Database\Factories\RecurringExpenseFactory;
 use App\Modules\Expenses\Enums\RecurrenceFrequency;
 use App\Modules\Team\Models\User;
+use App\Modules\Tenant\Models\Branch;
+use App\Modules\Tenant\Models\Tenant;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -20,7 +20,7 @@ class RecurringExpense extends Model
     use HasFactory;
 
     protected $fillable = [
-        'company_id',
+        'tenant_id',
         'branch_id',
         'expense_category_id',
         'created_by',
@@ -53,9 +53,9 @@ class RecurringExpense extends Model
         ];
     }
 
-    public function company(): BelongsTo
+    public function tenant(): BelongsTo
     {
-        return $this->belongsTo(Company::class);
+        return $this->belongsTo(Tenant::class);
     }
 
     public function branch(): BelongsTo

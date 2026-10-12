@@ -29,7 +29,7 @@ class MarkPurchaseReceivedAction
 
             foreach ($locked->items as $item) {
                 StockMovement::create([
-                    'company_id' => $locked->company_id,
+                    'tenant_id' => $locked->tenant_id,
                     'product_id' => $item->product_id,
                     'location_id' => $locked->location_id,
                     'type' => 'purchase',

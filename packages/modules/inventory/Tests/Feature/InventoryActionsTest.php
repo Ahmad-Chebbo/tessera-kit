@@ -1,15 +1,15 @@
 <?php
 
 use App\Modules\Catalog\Models\Product;
-use App\Modules\Company\Models\Branch;
-use App\Modules\Company\Models\Company;
-use App\Modules\Company\Models\Location;
 use App\Modules\Inventory\Actions\CreatePurchaseAction;
 use App\Modules\Inventory\Actions\MarkPurchaseReceivedAction;
 use App\Modules\Inventory\Actions\TransferStockAction;
 use App\Modules\Inventory\Models\StockMovement;
 use App\Modules\Inventory\Models\Supplier;
 use App\Modules\Team\Models\User;
+use App\Modules\Tenant\Models\Branch;
+use App\Modules\Tenant\Models\Location;
+use App\Modules\Tenant\Models\Tenant;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 function actionStockAt(Product $product, Location $location): float
@@ -18,17 +18,17 @@ function actionStockAt(Product $product, Location $location): float
 }
 
 beforeEach(function () {
-    $this->company = Company::factory()->create(['currency' => 'USD']);
-    $this->branch = Branch::factory()->create(['company_id' => $this->company->id]);
-    $this->shop = Location::factory()->create(['company_id' => $this->company->id, 'branch_id' => $this->branch->id, 'name' => 'Shop']);
-    $this->store = Location::factory()->create(['company_id' => $this->company->id, 'branch_id' => $this->branch->id, 'name' => 'Store']);
-    $this->user = User::factory()->create(['company_id' => $this->company->id, 'branch_id' => $this->branch->id]);
-    $this->product = Product::factory()->create(['company_id' => $this->company->id, 'is_active' => true]);
+    $this->tenant = Tenant::factory()->create(['currency' => 'USD']);
+    $this->branch = Branch::factory()->create(['tenant_id' => $this->tenant->id]);
+    $this->shop = Location::factory()->create(['tenant_id' => $this->tenant->id, 'branch_id' => $this->branch->id, 'name' => 'Shop']);
+    $this->store = Location::factory()->create(['tenant_id' => $this->tenant->id, 'branch_id' => $this->branch->id, 'name' => 'Store']);
+    $this->user = User::factory()->create(['tenant_id' => $this->tenant->id, 'branch_id' => $this->branch->id]);
+    $this->product = Product::factory()->create(['tenant_id' => $this->tenant->id, 'is_active' => true]);
 });
 
 describe('transferring stock', function () {
     it('takes stock out of one location and into the other under one reference', function () {
-        StockMovement::factory()->create(['company_id' => $this->company->id, 'product_id' => $this->product->id, 'location_id' => $this->shop->id, 'quantity' => 20]);
+        StockMovement::factory()->create(['tenant_id' => $this->tenant->id, 'product_id' => $this->product->id, 'location_id' => $this->shop->id, 'quantity' => 20]);
 
         $reference = app(TransferStockAction::class)->execute($this->user, $this->shop, $this->store, [['product_id' => $this->product->id, 'quantity' => 5]], 'restock');
 
@@ -40,8 +40,8 @@ describe('transferring stock', function () {
             ->and(StockMovement::where('reference', $reference)->pluck('notes')->unique()->all())->toBe(['restock']);
     });
 
-    it('refuses products of another company and writes nothing', function () {
-        $stranger = Product::factory()->create(['company_id' => Company::factory()->create()->id]);
+    it('refuses products of another tenant and writes nothing', function () {
+        $stranger = Product::factory()->create(['tenant_id' => Tenant::factory()->create()->id]);
 
         expect(fn () => app(TransferStockAction::class)->execute($this->user, $this->shop, $this->store, [
             ['product_id' => $this->product->id, 'quantity' => 1],
@@ -54,7 +54,7 @@ describe('transferring stock', function () {
 
 describe('purchases', function () {
     beforeEach(function () {
-        $this->supplier = Supplier::create(['company_id' => $this->company->id, 'name' => 'Acme']);
+        $this->supplier = Supplier::create(['tenant_id' => $this->tenant->id, 'name' => 'Acme']);
         $this->data = [
             'supplier_id' => $this->supplier->id, 'location_id' => $this->shop->id, 'currency' => 'USD', 'reference_number' => 'PO-7',
             'items' => [['product_id' => $this->product->id, 'quantity' => 10, 'unit_cost' => 3]],

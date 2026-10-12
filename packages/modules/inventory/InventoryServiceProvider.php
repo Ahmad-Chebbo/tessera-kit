@@ -3,13 +3,13 @@
 namespace App\Modules\Inventory;
 
 use App\Modules\Catalog\Models\Product;
-use App\Modules\Company\Models\Location;
 use App\Modules\Inventory\Dashboard\LowStockWidget;
 use App\Modules\Inventory\Exports\StockLevelsReport;
 use App\Modules\Inventory\Exports\StockMovementsReport;
 use App\Modules\Inventory\Models\StockMovement;
 use App\Modules\Inventory\Services\ReceivedPurchaseLookup;
 use App\Modules\Inventory\Services\StockLocationUsage;
+use App\Modules\Tenant\Models\Location;
 use Tessera\Core\Contracts\LocationUsage;
 use Tessera\Core\Contracts\PurchaseLookup;
 use Tessera\Engine\MenuItem;
@@ -27,7 +27,7 @@ class InventoryServiceProvider extends ModuleServiceProvider
         return new ModuleManifest(
             key: 'inventory',
             name: 'Inventory',
-            requires: ['catalog', 'company', 'team'],
+            requires: ['catalog', 'tenant', 'team'],
         );
     }
 

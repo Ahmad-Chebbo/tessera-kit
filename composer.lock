@@ -7612,7 +7612,7 @@
             "dist": {
                 "type": "path",
                 "url": "packages/modules/attendance",
-                "reference": "aee3796242094b5b1759b6c0ec3341ab6cf57ee2"
+                "reference": "9d7f0e67a5b8c399a9baf223a17a4c3ddc32b1a0"
             },
             "require": {
                 "php": "^8.4",
@@ -7654,7 +7654,7 @@
             "dist": {
                 "type": "path",
                 "url": "packages/base",
-                "reference": "90783b146f9e4d70c53572256933bfa446070b4f"
+                "reference": "8a9902178ca8503720a7a393879db9728288824b"
             },
             "require": {
                 "inertiajs/inertia-laravel": "*",
@@ -7695,7 +7695,7 @@
             "license": [
                 "proprietary"
             ],
-            "description": "The base of Tessera: sign-in, users, roles and permissions. Add tessera-saas on top for companies, branches and subscriptions.",
+            "description": "The base of Tessera: sign-in, users, roles and permissions. Add tessera-saas on top for tenants, branches and subscriptions.",
             "transport-options": {
                 "symlink": true,
                 "relative": true
@@ -7707,7 +7707,7 @@
             "dist": {
                 "type": "path",
                 "url": "packages/modules/catalog",
-                "reference": "844c94834cc3f4f1520a078e3ac651e8077bc9b6"
+                "reference": "a6dd9d55ea81ed9cb1cd21bc41334ed43ee7103c"
             },
             "require": {
                 "php": "^8.4",
@@ -7749,7 +7749,7 @@
             "dist": {
                 "type": "path",
                 "url": "packages/modules/customers",
-                "reference": "f2561156157991359d7ef813cbc6a4123660eb4a"
+                "reference": "081cca03441d0d4faf79aed3f403d9114f5abe7e"
             },
             "require": {
                 "php": "^8.4",
@@ -7790,7 +7790,7 @@
             "dist": {
                 "type": "path",
                 "url": "packages/modules/discounts",
-                "reference": "99aebba928510ec05b60b4bb79d14b2b5f3c195e"
+                "reference": "7f7dedeaf8c00c801731ff738080177a1ecf3cf1"
             },
             "require": {
                 "php": "^8.4",
@@ -7834,7 +7834,7 @@
             "dist": {
                 "type": "path",
                 "url": "packages/engine",
-                "reference": "ff052efd1d8020008923cbf587a903f345e1de31"
+                "reference": "5ec2d0c1a68b62a7374f19b4df0f6f3ac5e094be"
             },
             "require": {
                 "illuminate/support": "^13.0",
@@ -7877,7 +7877,7 @@
             "dist": {
                 "type": "path",
                 "url": "packages/modules/expenses",
-                "reference": "e65fb67a06d6d1a1930f5e4f639d4f42361b2c6e"
+                "reference": "f0af7e0cf21e74624ba1b5a3ac6c879cfe93ee99"
             },
             "require": {
                 "php": "^8.4",
@@ -7919,7 +7919,7 @@
             "dist": {
                 "type": "path",
                 "url": "packages/modules/exports",
-                "reference": "7397e4161d7454288b6086beeb358c6a9a14bef7"
+                "reference": "1442080f8c222a0cefee95a09b1d3f3e20f473bb"
             },
             "require": {
                 "mpdf/mpdf": "*",
@@ -7962,7 +7962,7 @@
             "dist": {
                 "type": "path",
                 "url": "packages/modules/inventory",
-                "reference": "13f9c2b55dfe9ba0e73b92c622fb99d5c60db9f2"
+                "reference": "7a288dc7d9edb36c062d49d74c5525d9e54cd2d3"
             },
             "require": {
                 "php": "^8.4",
@@ -8004,7 +8004,7 @@
             "dist": {
                 "type": "path",
                 "url": "packages/modules/reports",
-                "reference": "4625494700922971a68919ed7e2885b8fb32bdf8"
+                "reference": "41630336a977fac38307c84d4bf75bcff6cea1ad"
             },
             "require": {
                 "php": "^8.4",
@@ -8047,7 +8047,7 @@
             "dist": {
                 "type": "path",
                 "url": "packages/saas",
-                "reference": "a9c55c7c24397f465440d3d659e64ef26c39a770"
+                "reference": "0cf771e5092e3bc2ffa5b5b1b68f94e97990d495"
             },
             "require": {
                 "inertiajs/inertia-laravel": "*",
@@ -8067,7 +8067,7 @@
             "extra": {
                 "tessera": {
                     "modules": [
-                        "App\\Modules\\Company\\CompanyServiceProvider",
+                        "App\\Modules\\Tenant\\TenantServiceProvider",
                         "App\\Modules\\Subscription\\SubscriptionServiceProvider"
                     ]
                 },
@@ -8077,14 +8077,14 @@
             },
             "autoload": {
                 "psr-4": {
-                    "App\\Modules\\Company\\": "modules/Company/",
+                    "App\\Modules\\Tenant\\": "modules/Tenant/",
                     "App\\Modules\\Subscription\\": "modules/Subscription/"
                 }
             },
             "license": [
                 "proprietary"
             ],
-            "description": "The SaaS layer of Tessera: companies with branches and locations, subscriptions with plans and limits. Builds on tessera-base.",
+            "description": "The SaaS layer of Tessera: tenants with branches and locations, subscriptions with plans and limits. Builds on tessera-base.",
             "transport-options": {
                 "symlink": true,
                 "relative": true
@@ -8096,7 +8096,7 @@
             "dist": {
                 "type": "path",
                 "url": "packages/modules/sales",
-                "reference": "feb98eb4be441f414696115474dc976cf8a5def9"
+                "reference": "fafdf17eae8289d03e1e2cbeef80b9648e4e4258"
             },
             "require": {
                 "php": "^8.4",
@@ -8140,7 +8140,7 @@
             "dist": {
                 "type": "path",
                 "url": "packages/modules/shifts",
-                "reference": "c4eae0c0b073d8821ec64ed66d2ef19ad51b4eb4"
+                "reference": "e61a9fb0f3c94a5341663e0bca86615bd93f4708"
             },
             "require": {
                 "php": "^8.4",

@@ -3,10 +3,10 @@
 namespace App\Modules\Inventory\Actions;
 
 use App\Modules\Catalog\Models\Product;
-use App\Modules\Company\Models\Location;
 use App\Modules\Inventory\Enums\StockMovementType;
 use App\Modules\Inventory\Models\StockMovement;
 use App\Modules\Team\Models\User;
+use App\Modules\Tenant\Models\Location;
 use Illuminate\Support\Facades\DB;
 
 class ReceivePurchaseAction
@@ -26,7 +26,7 @@ class ReceivePurchaseAction
                 $product = Product::findOrFail($item['product_id']);
 
                 $movements[] = StockMovement::create([
-                    'company_id' => $location->company_id,
+                    'tenant_id' => $location->tenant_id,
                     'product_id' => $product->id,
                     'location_id' => $location->id,
                     'type' => StockMovementType::Purchase,

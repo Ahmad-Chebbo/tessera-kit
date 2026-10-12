@@ -19,7 +19,7 @@ class CustomerHistory
     private array $memo = [];
 
     public function __construct(
-        private readonly int $companyId,
+        private readonly int $tenantId,
         private readonly ?int $customerId,
         private readonly CarbonImmutable $now,
     ) {}
@@ -66,7 +66,7 @@ class CustomerHistory
         }
 
         return Order::query()
-            ->where('company_id', $this->companyId)
+            ->where('tenant_id', $this->tenantId)
             ->where('customer_id', $this->customerId)
             ->where('status', '!=', OrderStatus::Voided->value)
             ->when($days, fn (Builder $query) => $query->where('created_at', '>=', $this->now->subDays($days)));
@@ -83,7 +83,7 @@ class CustomerHistory
 
         return OrderItem::query()
             ->join('orders', 'orders.id', '=', 'order_items.order_id')
-            ->where('orders.company_id', $this->companyId)
+            ->where('orders.tenant_id', $this->tenantId)
             ->where('orders.customer_id', $this->customerId)
             ->where('orders.status', '!=', OrderStatus::Voided->value)
             ->when($days, fn (Builder $query) => $query->where('orders.created_at', '>=', $this->now->subDays($days)));

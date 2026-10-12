@@ -2,8 +2,8 @@
 
 namespace App\Modules\Customers\Models;
 
-use App\Modules\Company\Models\Company;
 use App\Modules\Customers\Database\Factories\CustomerGroupFactory;
+use App\Modules\Tenant\Models\Tenant;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -15,11 +15,11 @@ class CustomerGroup extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['company_id', 'name', 'description'];
+    protected $fillable = ['tenant_id', 'name', 'description'];
 
-    public function company(): BelongsTo
+    public function tenant(): BelongsTo
     {
-        return $this->belongsTo(Company::class);
+        return $this->belongsTo(Tenant::class);
     }
 
     public function customers(): HasMany

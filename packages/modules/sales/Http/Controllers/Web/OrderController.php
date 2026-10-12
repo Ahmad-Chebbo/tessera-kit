@@ -3,12 +3,12 @@
 namespace App\Modules\Sales\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
-use App\Modules\Company\Services\BranchAccess;
 use App\Modules\Sales\Actions\MarkOrderPaidAction;
 use App\Modules\Sales\Actions\VoidOrderAction;
 use App\Modules\Sales\Enums\OrderStatus;
 use App\Modules\Sales\Models\Order;
 use App\Modules\Sales\Services\ReceiptService;
+use App\Modules\Tenant\Services\BranchAccess;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -24,7 +24,7 @@ class OrderController extends Controller
         $user = $request->user();
 
         $query = Order::query()
-            ->where('company_id', $user->company_id)
+            ->where('tenant_id', $user->tenant_id)
             ->with(['cashier:id,name', 'branch:id,name', 'customer:id,name']);
 
         $this->access->scope($query, $user, $request->input('branch_id'));
@@ -71,7 +71,7 @@ class OrderController extends Controller
     {
         $user = $request->user();
 
-        if ($order->company_id !== $user->company_id) {
+        if ($order->tenant_id !== $user->tenant_id) {
             abort(403);
         }
 
@@ -94,7 +94,7 @@ class OrderController extends Controller
     {
         $user = $request->user();
 
-        if ($order->company_id !== $user->company_id) {
+        if ($order->tenant_id !== $user->tenant_id) {
             abort(403);
         }
 
@@ -117,7 +117,7 @@ class OrderController extends Controller
     {
         $user = $request->user();
 
-        if ($order->company_id !== $user->company_id) {
+        if ($order->tenant_id !== $user->tenant_id) {
             abort(403);
         }
 

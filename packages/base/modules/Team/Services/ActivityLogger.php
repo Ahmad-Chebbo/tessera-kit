@@ -12,7 +12,7 @@ class ActivityLogger
     public function __construct(private readonly TeamFeatures $features) {}
 
     /**
-     * Record something an employee did. The company comes from the actor, or from the subject. Nothing is recorded
+     * Record something an employee did. The tenant comes from the actor, or from the subject. Nothing is recorded
      * when the activity log is off.
      *
      * @param  array<string, mixed>  $properties
@@ -31,7 +31,7 @@ class ActivityLogger
         $actor ??= auth()->user();
 
         return ActivityLog::create([
-            'company_id' => $actor?->company_id ?? $subject?->company_id ?? null,
+            'tenant_id' => $actor?->tenant_id ?? $subject?->tenant_id ?? null,
             'user_id' => $actor?->id,
             'subject_type' => $subject?->getMorphClass(),
             'subject_id' => $subject?->getKey(),

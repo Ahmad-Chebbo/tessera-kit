@@ -23,9 +23,9 @@ class AttendanceReport extends ReportDefinition
         return 'view attendance';
     }
 
-    public function filterRules(int $companyId): array
+    public function filterRules(int $tenantId): array
     {
-        return [...$this->branchRules($companyId), 'user_id' => ['nullable', 'integer', Rule::exists('users', 'id')->where('company_id', $companyId)]];
+        return [...$this->branchRules($tenantId), 'user_id' => ['nullable', 'integer', Rule::exists('users', 'id')->where('tenant_id', $tenantId)]];
     }
 
     public function columns(ExportContext $context): array
@@ -79,7 +79,7 @@ class AttendanceReport extends ReportDefinition
         $lines = array_values(array_filter([$context->t('filters.period', ['from' => $from->toDateString(), 'to' => $to->toDateString()]), $this->branchLine($context)]));
 
         if ($userId = $context->filter('user_id')) {
-            $lines[] = $context->t('filters.employee', ['value' => $context->company->users()->whereKey($userId)->value('name')]);
+            $lines[] = $context->t('filters.employee', ['value' => $context->tenant->users()->whereKey($userId)->value('name')]);
         }
 
         return $lines;
@@ -112,7 +112,7 @@ class AttendanceReport extends ReportDefinition
         return $context->remember('attendance', function () use ($context): array {
             [$from, $to] = $this->range($context);
 
-            return $this->attendance->report($context->company->id, $from, $to, $context->filter('user_id') ? (int) $context->filter('user_id') : null, $this->branchId($context));
+            return $this->attendance->report($context->tenant->id, $from, $to, $context->filter('user_id') ? (int) $context->filter('user_id') : null, $this->branchId($context));
         });
     }
 }

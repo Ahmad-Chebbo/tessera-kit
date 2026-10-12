@@ -11,7 +11,7 @@ php artisan module:add sales
 bun run build
 ```
 
-`module:add` requires `tessera/tessera-sales`, runs the migrations and gives the roles of every company the new permissions. Without it:
+`module:add` requires `tessera/tessera-sales`, runs the migrations and gives the roles of every tenant the new permissions. Without it:
 
 ```bash
 composer config repositories.tessera composer https://tessera-kit.github.io/tessera-kit
@@ -23,7 +23,7 @@ bun run build
 
 ## What it needs
 
-- Other Tessera modules: `catalog`, `company`, `customers`, `inventory`, `subscription`, `team`. Composer installs them for you.
+- Other Tessera modules: `catalog`, `tenant`, `customers`, `inventory`, `subscription`, `team`. Composer installs them for you.
 
 ## What it adds
 

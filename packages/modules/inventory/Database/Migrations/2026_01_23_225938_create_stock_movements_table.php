@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('stock_movements', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('tenant_id')->constrained()->cascadeOnDelete();
             $table->foreignId('product_id')->constrained()->cascadeOnDelete();
             $table->foreignId('location_id')->constrained()->cascadeOnDelete();
             $table->enum('type', ['purchase', 'transfer_in', 'transfer_out', 'sale', 'adjustment']);

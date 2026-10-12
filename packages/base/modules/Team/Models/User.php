@@ -32,7 +32,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'company_id',
+        'tenant_id',
         'branch_id',
         'is_active',
     ];
@@ -55,7 +55,7 @@ class User extends Authenticatable
     }
 
     /**
-     * A permission of a module the company's plan leaves out is never granted, whatever the role says.
+     * A permission of a module the tenant's plan leaves out is never granted, whatever the role says.
      */
     public function hasPermissionTo($permission, ?string $guardName = null): bool
     {
@@ -76,7 +76,7 @@ class User extends Authenticatable
             return true;
         }
 
-        return app(PlanLimits::class)->hasModule($this->company_id, $module);
+        return app(PlanLimits::class)->hasModule($this->tenant_id, $module);
     }
 
     public function employeeProfile(): HasOne

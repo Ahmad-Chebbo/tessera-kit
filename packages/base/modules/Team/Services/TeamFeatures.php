@@ -7,7 +7,7 @@ use Tessera\Engine\ModuleRegistry;
 
 /**
  * Which of the optional parts of Team are on. A project with only users and roles gets none of them; one with the
- * Company module gets all, unless the team config says otherwise.
+ * Tenant module gets all, unless the team config says otherwise.
  */
 class TeamFeatures
 {
@@ -38,6 +38,6 @@ class TeamFeatures
 
     private function configured(string $key): bool
     {
-        return config($key) === null ? $this->registry->has('company') : (bool) config($key);
+        return config($key) === null ? $this->registry->has('tenant') : (bool) config($key);
     }
 }

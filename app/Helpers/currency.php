@@ -1,10 +1,10 @@
 <?php
 
-use App\Modules\Company\Services\CurrencyService;
+use App\Modules\Tenant\Services\CurrencyService;
 
 if (! function_exists('format_currency')) {
     /**
-     * Format a number as currency using the current user's company currency.
+     * Format a number as currency using the current user's tenant currency.
      */
     function format_currency(float|int $amount, ?string $currencyCode = null): string
     {

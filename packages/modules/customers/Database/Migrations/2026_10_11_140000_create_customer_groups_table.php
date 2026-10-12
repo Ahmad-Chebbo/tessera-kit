@@ -10,12 +10,12 @@ return new class extends Migration
     {
         Schema::create('customer_groups', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('tenant_id')->constrained()->cascadeOnDelete();
             $table->string('name', 100);
             $table->string('description', 255)->nullable();
             $table->timestamps();
 
-            $table->unique(['company_id', 'name']);
+            $table->unique(['tenant_id', 'name']);
         });
 
         Schema::table('customers', function (Blueprint $table) {

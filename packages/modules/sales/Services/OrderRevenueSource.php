@@ -9,13 +9,13 @@ use Tessera\Core\Contracts\RevenueSource;
 
 class OrderRevenueSource implements RevenueSource
 {
-    public function byMonth(int $companyId, CarbonImmutable $from, CarbonImmutable $to, ?int $branchId = null): array
+    public function byMonth(int $tenantId, CarbonImmutable $from, CarbonImmutable $to, ?int $branchId = null): array
     {
         $months = [];
 
         $sales = OrderItem::query()
             ->join('orders', 'orders.id', '=', 'order_items.order_id')
-            ->where('orders.company_id', $companyId)
+            ->where('orders.tenant_id', $tenantId)
             ->where('orders.status', 'completed')
             ->when($branchId, fn ($query) => $query->where('orders.branch_id', $branchId))
             ->whereBetween('orders.created_at', [$from->startOfDay(), $to->endOfDay()])
@@ -25,7 +25,7 @@ class OrderRevenueSource implements RevenueSource
             ->get();
 
         $discounts = Order::query()
-            ->where('company_id', $companyId)
+            ->where('tenant_id', $tenantId)
             ->where('status', 'completed')
             ->when($branchId, fn ($query) => $query->where('branch_id', $branchId))
             ->whereBetween('created_at', [$from->startOfDay(), $to->endOfDay()])

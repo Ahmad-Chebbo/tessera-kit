@@ -17,7 +17,7 @@ class RuleCartPricing implements CartPricing
     public function evaluate(PricingContext $context): DiscountResult
     {
         return $this->engine->evaluate(new EvaluationContext(
-            companyId: $context->companyId,
+            tenantId: $context->tenantId,
             branchId: $context->branchId,
             customerId: $context->customerId,
             customerGroupId: $context->customerGroupId,

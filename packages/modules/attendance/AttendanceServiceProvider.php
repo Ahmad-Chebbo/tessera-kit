@@ -60,7 +60,7 @@ class AttendanceServiceProvider extends ModuleServiceProvider
     public function sharedProps(): array
     {
         return [
-            'attendance' => fn (Request $request, ?User $user) => $user && $user->company_id
+            'attendance' => fn (Request $request, ?User $user) => $user && $user->tenant_id
                 ? app(AttendanceService::class)->current($user)?->only(['id', 'check_in_at'])
                 : null,
         ];

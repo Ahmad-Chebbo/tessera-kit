@@ -30,7 +30,7 @@ class SalesServiceProvider extends ModuleServiceProvider
         return new ModuleManifest(
             key: 'sales',
             name: 'Sales',
-            requires: ['catalog', 'company', 'customers', 'inventory', 'subscription', 'team'],
+            requires: ['catalog', 'tenant', 'customers', 'inventory', 'subscription', 'team'],
         );
     }
 
@@ -85,10 +85,10 @@ class SalesServiceProvider extends ModuleServiceProvider
     public function sharedProps(): array
     {
         return [
-            'posShift' => fn (Request $request, ?User $user) => $user && $user->company_id
+            'posShift' => fn (Request $request, ?User $user) => $user && $user->tenant_id
                 ? app(PosShiftService::class)->current($user)?->only(['id', 'opened_at'])
                 : null,
-            'requirePosShift' => fn (Request $request, ?User $user) => (bool) $user?->company?->require_pos_shift,
+            'requirePosShift' => fn (Request $request, ?User $user) => (bool) $user?->tenant?->require_pos_shift,
         ];
     }
 

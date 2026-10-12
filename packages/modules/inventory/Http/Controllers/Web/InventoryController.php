@@ -5,13 +5,13 @@ namespace App\Modules\Inventory\Http\Controllers\Web;
 use App\Http\Controllers\Controller;
 use App\Modules\Catalog\Models\Product;
 use App\Modules\Catalog\Services\UnitConversionService;
-use App\Modules\Company\Models\Location;
-use App\Modules\Company\Services\BranchAccess;
 use App\Modules\Inventory\Actions\CreateAdjustmentAction;
 use App\Modules\Inventory\Actions\TransferStockAction;
 use App\Modules\Inventory\Enums\StockMovementType;
 use App\Modules\Inventory\Models\StockMovement;
 use App\Modules\Inventory\Services\StockService;
+use App\Modules\Tenant\Models\Location;
+use App\Modules\Tenant\Services\BranchAccess;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -28,7 +28,7 @@ class InventoryController extends Controller
     ) {}
 
     /**
-     * The company's locations the user may work with, narrowed to one branch when a branch is chosen or enforced.
+     * The tenant's locations the user may work with, narrowed to one branch when a branch is chosen or enforced.
      *
      * @return Builder<Location>
      */
@@ -38,7 +38,7 @@ class InventoryController extends Controller
 
         return $this->access->scope(
             Location::query()
-                ->where('company_id', $user->company_id)
+                ->where('tenant_id', $user->tenant_id)
                 ->when($activeOnly, fn ($query) => $query->where('is_active', true)),
             $user,
             $request->input('branch_id'),
@@ -62,7 +62,7 @@ class InventoryController extends Controller
         $selectedLocationId = $request->input('location_id');
 
         $query = Product::query()
-            ->where('company_id', $user->company_id)
+            ->where('tenant_id', $user->tenant_id)
             ->where('is_active', true)
             ->with(['category:id,name']);
 
@@ -114,7 +114,7 @@ class InventoryController extends Controller
         $user = $request->user();
 
         $query = StockMovement::query()
-            ->where('company_id', $user->company_id)
+            ->where('tenant_id', $user->tenant_id)
             ->with(['product:id,name', 'location:id,name', 'creator:id,name']);
 
         if ($request->filled('product_id')) {
@@ -161,7 +161,7 @@ class InventoryController extends Controller
     {
         $user = $request->user();
 
-        $products = Product::where('company_id', $user->company_id)
+        $products = Product::where('tenant_id', $user->tenant_id)
             ->where('is_active', true)
             ->with(['productUnits.unit:id,name,abbreviation'])
             ->orderBy('name')
@@ -190,7 +190,7 @@ class InventoryController extends Controller
         $product = Product::findOrFail($validated['product_id']);
         $location = Location::findOrFail($validated['location_id']);
 
-        if ($product->company_id !== $user->company_id || $location->company_id !== $user->company_id) {
+        if ($product->tenant_id !== $user->tenant_id || $location->tenant_id !== $user->tenant_id) {
             abort(403);
         }
 
@@ -213,7 +213,7 @@ class InventoryController extends Controller
     {
         $user = $request->user();
 
-        $products = Product::where('company_id', $user->company_id)
+        $products = Product::where('tenant_id', $user->tenant_id)
             ->where('is_active', true)
             ->with(['productUnits.unit:id,name,abbreviation'])
             ->orderBy('name')
@@ -244,7 +244,7 @@ class InventoryController extends Controller
         $fromLocation = Location::findOrFail($validated['from_location_id']);
         $toLocation = Location::findOrFail($validated['to_location_id']);
 
-        if ($fromLocation->company_id !== $user->company_id || $toLocation->company_id !== $user->company_id) {
+        if ($fromLocation->tenant_id !== $user->tenant_id || $toLocation->tenant_id !== $user->tenant_id) {
             abort(403);
         }
 

@@ -3,7 +3,6 @@
 namespace App\Modules\Expenses\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
-use App\Modules\Company\Services\BranchAccess;
 use App\Modules\Expenses\Actions\SaveExpenseAction;
 use App\Modules\Expenses\Enums\ExpenseType;
 use App\Modules\Expenses\Http\Requests\ExpenseFilterRequest;
@@ -14,6 +13,7 @@ use App\Modules\Expenses\Services\ExpenseAccess;
 use App\Modules\Expenses\Services\ExpenseCategoryDefaults;
 use App\Modules\Expenses\Services\ExpenseQuery;
 use App\Modules\Team\Models\User;
+use App\Modules\Tenant\Services\BranchAccess;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -33,13 +33,13 @@ class ExpenseController extends Controller
 
     public function index(ExpenseFilterRequest $request): Response
     {
-        $companyId = $request->user()->company_id;
-        $this->defaults->ensure($companyId);
+        $tenantId = $request->user()->tenant_id;
+        $this->defaults->ensure($tenantId);
 
         [$from, $to] = $request->dateRange();
         $filters = $request->filters();
 
-        $query = fn (): Builder => $this->expenses->filtered($companyId, $from->toDateString(), $to->toDateString(), $filters);
+        $query = fn (): Builder => $this->expenses->filtered($tenantId, $from->toDateString(), $to->toDateString(), $filters);
 
         $expenses = $query()
             ->with(['category:id,name,type,affects_profit', 'branch:id,name', 'employee:id,name', 'creator:id,name'])
@@ -61,13 +61,13 @@ class ExpenseController extends Controller
 
     public function create(Request $request): Response
     {
-        $companyId = $request->user()->company_id;
-        $this->defaults->ensure($companyId);
+        $tenantId = $request->user()->tenant_id;
+        $this->defaults->ensure($tenantId);
 
         return Inertia::render('Expenses/Edit', [
             'expense' => null,
             'lookups' => $this->lookups($request->user()),
-            'purchases' => $this->linkablePurchases($companyId),
+            'purchases' => $this->linkablePurchases($tenantId),
         ]);
     }
 
@@ -85,7 +85,7 @@ class ExpenseController extends Controller
         return Inertia::render('Expenses/Edit', [
             'expense' => [...$this->payload($expense), 'branch_id' => $expense->branch_id, 'employee_id' => $expense->employee_id, 'purchase_id' => $expense->purchase_id, 'notes' => $expense->notes],
             'lookups' => $this->lookups($request->user()),
-            'purchases' => $this->linkablePurchases($request->user()->company_id, $expense->purchase_id),
+            'purchases' => $this->linkablePurchases($request->user()->tenant_id, $expense->purchase_id),
         ]);
     }
 
@@ -151,13 +151,13 @@ class ExpenseController extends Controller
      */
     private function lookups(User $user): array
     {
-        $companyId = $user->company_id;
+        $tenantId = $user->tenant_id;
 
         return [
-            'categories' => ExpenseCategory::query()->where('company_id', $companyId)->orderBy('name')->get(['id', 'name', 'type', 'affects_profit', 'is_active'])
+            'categories' => ExpenseCategory::query()->where('tenant_id', $tenantId)->orderBy('name')->get(['id', 'name', 'type', 'affects_profit', 'is_active'])
                 ->map(fn (ExpenseCategory $category): array => ['id' => $category->id, 'name' => $category->name, 'type' => $category->type->value, 'affects_profit' => $category->affects_profit, 'is_active' => $category->is_active]),
             'branches' => $this->branches->branches($user),
-            'employees' => $this->branches->scope(User::query()->where('company_id', $companyId), $user)->orderBy('name')->get(['id', 'name']),
+            'employees' => $this->branches->scope(User::query()->where('tenant_id', $tenantId), $user)->orderBy('name')->get(['id', 'name']),
             'types' => ExpenseType::values(),
         ];
     }
@@ -167,8 +167,8 @@ class ExpenseController extends Controller
      *
      * @return list<array<string, mixed>>
      */
-    private function linkablePurchases(int $companyId, ?int $current = null): array
+    private function linkablePurchases(int $tenantId, ?int $current = null): array
     {
-        return app(PurchaseLookup::class)->linkable($companyId, Expense::query()->whereNotNull('purchase_id')->pluck('purchase_id')->all(), $current);
+        return app(PurchaseLookup::class)->linkable($tenantId, Expense::query()->whereNotNull('purchase_id')->pluck('purchase_id')->all(), $current);
     }
 }

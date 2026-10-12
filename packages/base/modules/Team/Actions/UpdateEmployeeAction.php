@@ -40,7 +40,7 @@ class UpdateEmployeeAction
                 $employee->update(['password' => Hash::make($data['password'])]);
             }
 
-            $employee->syncRoles([Role::resolveFor($employee->company_id, $data['role'])]);
+            $employee->syncRoles([Role::resolveFor($employee->tenant_id, $data['role'])]);
 
             if ($this->features->employeeProfiles()) {
                 $this->profiles->save($employee, $data);

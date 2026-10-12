@@ -153,16 +153,16 @@ const deleteUnit = async (unit) => {
                 <span
                     :class="[
                         'inline-flex rounded-full px-2 py-1 text-xs font-semibold',
-                        unit.company_id === null
+                        unit.tenant_id === null
                             ? 'bg-status-info-wash text-status-info'
                             : 'bg-hover-wash text-fg'
                     ]"
                 >
-                    {{ unit.company_id === null ? t('units.system') : t('units.custom') }}
+                    {{ unit.tenant_id === null ? t('units.system') : t('units.custom') }}
                 </span>
             </template>
             <template #cell-actions="{ row: unit }">
-                <template v-if="unit.company_id !== null">
+                <template v-if="unit.tenant_id !== null">
                     <IconButton :icon="Pencil" :label="t('common.edit')" type="button" @click="startEdit(unit)" />
                     <IconButton :icon="Trash2" :label="t('common.delete')" variant="danger" type="button" @click="deleteUnit(unit)" />
                 </template>
@@ -178,11 +178,11 @@ const deleteUnit = async (unit) => {
                     <template #title>{{ unit.name }}</template>
                     <template #subtitle>{{ unit.abbreviation }}</template>
                     <template #badge>
-                        <StatusBadge :status="unit.company_id === null ? 'info' : 'neutral'">
-                            {{ unit.company_id === null ? t('units.system') : t('units.custom') }}
+                        <StatusBadge :status="unit.tenant_id === null ? 'info' : 'neutral'">
+                            {{ unit.tenant_id === null ? t('units.system') : t('units.custom') }}
                         </StatusBadge>
                     </template>
-                    <template v-if="unit.company_id !== null" #actions>
+                    <template v-if="unit.tenant_id !== null" #actions>
                         <IconButton :icon="Pencil" :label="t('common.edit')" type="button" @click="startEdit(unit)" />
                         <IconButton :icon="Trash2" :label="t('common.delete')" variant="danger" type="button" @click="deleteUnit(unit)" />
                     </template>

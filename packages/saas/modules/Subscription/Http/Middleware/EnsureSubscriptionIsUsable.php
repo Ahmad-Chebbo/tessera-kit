@@ -15,7 +15,7 @@ class EnsureSubscriptionIsUsable
     {
         $user = $request->user();
 
-        if ($user === null || $user->company_id === null || $user->isSuperAdmin() || $this->entitlements->isUsable($user->company_id)) {
+        if ($user === null || $user->tenant_id === null || $user->isSuperAdmin() || $this->entitlements->isUsable($user->tenant_id)) {
             return $next($request);
         }
 

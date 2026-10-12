@@ -2,9 +2,9 @@
 
 namespace App\Modules\Sales\Actions;
 
-use App\Modules\Company\Models\Branch;
 use App\Modules\Sales\Models\HeldOrder;
 use App\Modules\Team\Models\User;
+use App\Modules\Tenant\Models\Branch;
 
 class HoldOrderAction
 {
@@ -16,7 +16,7 @@ class HoldOrderAction
     public function execute(User $cashier, Branch $branch, array $data): HeldOrder
     {
         return HeldOrder::create([
-            'company_id' => $cashier->company_id,
+            'tenant_id' => $cashier->tenant_id,
             'branch_id' => $branch->id,
             'cashier_id' => $cashier->id,
             'name' => ($data['name'] ?? null) ?: 'Order #'.now()->format('His'),

@@ -18,7 +18,7 @@ class AttendanceExcuseFactory extends Factory
     {
         return [
             'user_id' => User::factory(),
-            'company_id' => fn (array $attributes) => User::find($attributes['user_id'])->company_id,
+            'tenant_id' => fn (array $attributes) => User::find($attributes['user_id'])->tenant_id,
             'date' => now()->subDay()->toDateString(),
             'reason' => 'Sick leave',
         ];

@@ -16,11 +16,11 @@ class ExpenseCategoryController extends Controller
 {
     public function index(Request $request, ExpenseCategoryDefaults $defaults): Response
     {
-        $companyId = $request->user()->company_id;
-        $defaults->ensure($companyId);
+        $tenantId = $request->user()->tenant_id;
+        $defaults->ensure($tenantId);
 
         return Inertia::render('Expenses/Categories', [
-            'categories' => ExpenseCategory::query()->where('company_id', $companyId)->withCount('expenses')->orderBy('name')->get()
+            'categories' => ExpenseCategory::query()->where('tenant_id', $tenantId)->withCount('expenses')->orderBy('name')->get()
                 ->map(fn (ExpenseCategory $category): array => [
                     'id' => $category->id,
                     'name' => $category->name,
@@ -37,7 +37,7 @@ class ExpenseCategoryController extends Controller
 
     public function store(StoreExpenseCategoryRequest $request): RedirectResponse
     {
-        ExpenseCategory::create([...$request->attributesToSave(), 'company_id' => $request->user()->company_id]);
+        ExpenseCategory::create([...$request->attributesToSave(), 'tenant_id' => $request->user()->tenant_id]);
 
         return back()->with('success', 'Category created.');
     }
@@ -66,6 +66,6 @@ class ExpenseCategoryController extends Controller
 
     private function ensureOwned(Request $request, ExpenseCategory $category): void
     {
-        abort_unless($category->company_id === $request->user()->company_id, 403);
+        abort_unless($category->tenant_id === $request->user()->tenant_id, 403);
     }
 }

@@ -21,16 +21,16 @@ class StoreRecurringExpenseRequest extends FormRequest
      */
     public function rules(): array
     {
-        $companyId = $this->user()->company_id;
+        $tenantId = $this->user()->tenant_id;
         $existing = $this->route('recurring');
-        $inCompany = fn (string $table) => Rule::exists($table, 'id')->where('company_id', $companyId);
+        $inTenant = fn (string $table) => Rule::exists($table, 'id')->where('tenant_id', $tenantId);
 
         return [
-            'expense_category_id' => ['required', 'integer', $inCompany('expense_categories')->where('is_active', true)],
+            'expense_category_id' => ['required', 'integer', $inTenant('expense_categories')->where('is_active', true)],
             'amount' => ['required', 'numeric', 'gt:0', 'max:99999999'],
             'description' => ['required', 'string', 'max:255'],
-            'branch_id' => ['nullable', 'integer', $inCompany('branches')],
-            'employee_id' => ['nullable', 'integer', $inCompany('users')],
+            'branch_id' => ['nullable', 'integer', $inTenant('branches')],
+            'employee_id' => ['nullable', 'integer', $inTenant('users')],
             'frequency' => [$existing ? 'nullable' : 'required', Rule::enum(RecurrenceFrequency::class)],
             'starts_on' => [$existing ? 'nullable' : 'required', 'date_format:Y-m-d'],
             'ends_on' => ['nullable', 'date_format:Y-m-d', 'after_or_equal:'.($existing ? $existing->starts_on->toDateString() : 'starts_on')],
@@ -43,7 +43,7 @@ class StoreRecurringExpenseRequest extends FormRequest
     public function after(): array
     {
         return [function (Validator $validator): void {
-            $category = ExpenseCategory::query()->where('company_id', $this->user()->company_id)->find($this->input('expense_category_id'));
+            $category = ExpenseCategory::query()->where('tenant_id', $this->user()->tenant_id)->find($this->input('expense_category_id'));
 
             if ($this->filled('spread_months') && $category?->type !== ExpenseType::Assets) {
                 $validator->errors()->add('spread_months', 'Only asset expenses can be spread over months.');

@@ -36,7 +36,7 @@ class CompleteTransferAction
 
                 // Deduct from source
                 StockMovement::create([
-                    'company_id' => $transfer->company_id,
+                    'tenant_id' => $transfer->tenant_id,
                     'product_id' => $item->product_id,
                     'location_id' => $transfer->from_location_id,
                     'type' => StockMovementType::TransferOut,
@@ -48,7 +48,7 @@ class CompleteTransferAction
 
                 // Add to destination
                 StockMovement::create([
-                    'company_id' => $transfer->company_id,
+                    'tenant_id' => $transfer->tenant_id,
                     'product_id' => $item->product_id,
                     'location_id' => $transfer->to_location_id,
                     'type' => StockMovementType::TransferIn,

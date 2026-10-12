@@ -10,7 +10,7 @@ use Tessera\Engine\ModuleServiceProvider;
 use Tessera\Engine\PlanFeature;
 
 /**
- * Users, roles and permissions, plus employee profiles and the activity log. Works on its own; the Company and Subscription modules add branches and plan limits.
+ * Users, roles and permissions, plus employee profiles and the activity log. Works on its own; the Tenant and Subscription modules add branches and plan limits.
  */
 class TeamServiceProvider extends ModuleServiceProvider
 {

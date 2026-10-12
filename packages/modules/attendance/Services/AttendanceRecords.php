@@ -3,8 +3,8 @@
 namespace App\Modules\Attendance\Services;
 
 use App\Modules\Attendance\Models\AttendanceRecord;
-use App\Modules\Company\Services\BranchAccess;
 use App\Modules\Team\Models\User;
+use App\Modules\Tenant\Services\BranchAccess;
 use Carbon\CarbonInterface;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -25,7 +25,7 @@ class AttendanceRecords
 
         return AttendanceRecord::query()
             ->with(['user:id,name', 'shiftTemplate:id,name'])
-            ->where('company_id', $actor->company_id)
+            ->where('tenant_id', $actor->tenant_id)
             ->when(! $seesEveryone, fn (Builder $query) => $query->where('user_id', $actor->id))
             ->when($seesEveryone, fn (Builder $query) => $this->access->scopeThroughUser($query, $actor, $branchId))
             ->when($seesEveryone && $userId, fn (Builder $query) => $query->where('user_id', $userId))

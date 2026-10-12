@@ -2,8 +2,6 @@
 
 use App\Modules\Catalog\Models\Category;
 use App\Modules\Catalog\Models\Product;
-use App\Modules\Company\Models\Branch;
-use App\Modules\Company\Models\Company;
 use App\Modules\Customers\Models\Customer;
 use App\Modules\Customers\Models\CustomerGroup;
 use App\Modules\Discounts\Models\DiscountApplication;
@@ -13,6 +11,8 @@ use App\Modules\Subscription\Enums\Module;
 use App\Modules\Subscription\Models\Plan;
 use App\Modules\Subscription\Models\Subscription;
 use App\Modules\Team\Models\User;
+use App\Modules\Tenant\Models\Branch;
+use App\Modules\Tenant\Models\Tenant;
 use Inertia\Testing\AssertableInertia as Assert;
 use Spatie\Permission\Models\Permission;
 
@@ -38,12 +38,12 @@ beforeEach(function () {
         Permission::findOrCreate($permission);
     }
 
-    $this->company = Company::factory()->create();
-    $this->branch = Branch::factory()->create(['company_id' => $this->company->id]);
-    $this->manager = User::factory()->create(['company_id' => $this->company->id, 'branch_id' => $this->branch->id])->givePermissionTo(['manage discounts', 'edit customers', 'create customers']);
+    $this->tenant = Tenant::factory()->create();
+    $this->branch = Branch::factory()->create(['tenant_id' => $this->tenant->id]);
+    $this->manager = User::factory()->create(['tenant_id' => $this->tenant->id, 'branch_id' => $this->branch->id])->givePermissionTo(['manage discounts', 'edit customers', 'create customers']);
 
-    $this->other = Company::factory()->create();
-    $this->otherManager = User::factory()->create(['company_id' => $this->other->id])->givePermissionTo(['manage discounts', 'edit customers', 'create customers']);
+    $this->other = Tenant::factory()->create();
+    $this->otherManager = User::factory()->create(['tenant_id' => $this->other->id])->givePermissionTo(['manage discounts', 'edit customers', 'create customers']);
 });
 
 describe('rules', function () {
@@ -54,7 +54,7 @@ describe('rules', function () {
         ]))->assertRedirect(route('discounts.index'));
 
         $rule = DiscountRule::firstOrFail();
-        expect($rule->company_id)->toBe($this->company->id)
+        expect($rule->tenant_id)->toBe($this->tenant->id)
             ->and($rule->coupon_code)->toBe('SPRING-25')
             ->and($rule->conditions['children'][0]['params']['window_days'])->toBe(90)
             ->and($rule->config('cap_amount'))->toEqual(50)
@@ -94,9 +94,9 @@ describe('rules', function () {
         $bad(['type' => 'group', 'logic' => 'all', 'children' => [['type' => 'condition', 'field' => 'item.quantity', 'operator' => 'between', 'value' => [1]]]]);
     });
 
-    it('only accepts records of the same company in conditions', function () {
-        $foreign = Category::factory()->create(['company_id' => $this->other->id]);
-        $own = Category::factory()->create(['company_id' => $this->company->id]);
+    it('only accepts records of the same tenant in conditions', function () {
+        $foreign = Category::factory()->create(['tenant_id' => $this->other->id]);
+        $own = Category::factory()->create(['tenant_id' => $this->tenant->id]);
 
         $this->actingAs($this->manager)->post(route('discounts.store'), rulePayload(['conditions' => ['type' => 'group', 'logic' => 'all', 'children' => [
             ['type' => 'condition', 'field' => 'item.category_id', 'operator' => 'in', 'value' => [$foreign->id]],
@@ -114,14 +114,14 @@ describe('rules', function () {
         $this->actingAs($this->manager)->post(route('discounts.store'), rulePayload(['expression' => 'customer.orders_count >= 10 and customer_spent(90) > 100']))->assertSessionHasNoErrors();
     });
 
-    it('keeps coupon codes unique inside a company only', function () {
+    it('keeps coupon codes unique inside a tenant only', function () {
         $this->actingAs($this->manager)->post(route('discounts.store'), rulePayload(['coupon_code' => 'SAVE']))->assertSessionHasNoErrors();
         $this->actingAs($this->manager)->post(route('discounts.store'), rulePayload(['coupon_code' => 'save']))->assertSessionHasErrors('coupon_code');
         $this->actingAs($this->otherManager)->post(route('discounts.store'), rulePayload(['coupon_code' => 'SAVE']))->assertSessionHasNoErrors();
     });
 
     it('updates, pauses, duplicates and deletes a rule', function () {
-        $rule = DiscountRule::factory()->create(['company_id' => $this->company->id, 'coupon_code' => 'KEEP', 'name' => 'Base']);
+        $rule = DiscountRule::factory()->create(['tenant_id' => $this->tenant->id, 'coupon_code' => 'KEEP', 'name' => 'Base']);
 
         $this->actingAs($this->manager)->put(route('discounts.update', $rule), rulePayload(['name' => 'Renamed', 'coupon_code' => 'KEEP']))->assertRedirect(route('discounts.index'));
         expect($rule->fresh()->name)->toBe('Renamed');
@@ -137,8 +137,8 @@ describe('rules', function () {
         expect(DiscountRule::find($rule->id))->toBeNull();
     });
 
-    it('keeps rules private to their company', function () {
-        $theirs = DiscountRule::factory()->create(['company_id' => $this->other->id]);
+    it('keeps rules private to their tenant', function () {
+        $theirs = DiscountRule::factory()->create(['tenant_id' => $this->other->id]);
 
         $this->actingAs($this->manager)->get(route('discounts.edit', $theirs))->assertForbidden();
         $this->actingAs($this->manager)->put(route('discounts.update', $theirs), rulePayload())->assertForbidden();
@@ -148,23 +148,23 @@ describe('rules', function () {
     });
 
     it('requires the manage discounts permission and the discounts module', function () {
-        $clerk = User::factory()->create(['company_id' => $this->company->id]);
+        $clerk = User::factory()->create(['tenant_id' => $this->tenant->id]);
         $this->actingAs($clerk)->get(route('discounts.index'))->assertForbidden();
 
         $plan = Plan::factory()->withModules([Module::Pos])->create();
-        $this->company->subscriptions()->delete();
-        Subscription::create(['company_id' => $this->company->id, 'plan_id' => $plan->id, 'status' => 'active', 'starts_at' => now()->subDay()]);
+        $this->tenant->subscriptions()->delete();
+        Subscription::create(['tenant_id' => $this->tenant->id, 'plan_id' => $plan->id, 'status' => 'active', 'starts_at' => now()->subDay()]);
 
         $this->actingAs($this->manager)->get(route('discounts.index'))->assertForbidden();
     });
 
     it('lists rules with status and usage, ignoring voided orders', function () {
-        $rule = DiscountRule::factory()->create(['company_id' => $this->company->id, 'name' => 'Busy']);
-        DiscountRule::factory()->create(['company_id' => $this->company->id, 'name' => 'Old', 'ends_at' => now()->subDay()]);
-        DiscountRule::factory()->create(['company_id' => $this->company->id, 'is_active' => false]);
+        $rule = DiscountRule::factory()->create(['tenant_id' => $this->tenant->id, 'name' => 'Busy']);
+        DiscountRule::factory()->create(['tenant_id' => $this->tenant->id, 'name' => 'Old', 'ends_at' => now()->subDay()]);
+        DiscountRule::factory()->create(['tenant_id' => $this->tenant->id, 'is_active' => false]);
 
         foreach (['completed', 'completed', 'voided'] as $i => $status) {
-            $order = Order::create(['company_id' => $this->company->id, 'branch_id' => $this->branch->id, 'order_number' => "T-$i", 'subtotal' => 100, 'total' => 90, 'status' => $status, 'cashier_id' => $this->manager->id, 'payment_type' => 'cash']);
+            $order = Order::create(['tenant_id' => $this->tenant->id, 'branch_id' => $this->branch->id, 'order_number' => "T-$i", 'subtotal' => 100, 'total' => 90, 'status' => $status, 'cashier_id' => $this->manager->id, 'payment_type' => 'cash']);
             DiscountApplication::create(['order_id' => $order->id, 'discount_rule_id' => $rule->id, 'rule_name' => 'Busy', 'amount' => 10]);
         }
 
@@ -178,9 +178,9 @@ describe('rules', function () {
                 ->where('rules.0.status', 'active'));
     });
 
-    it('offers the builder its facts and company records', function () {
-        Category::factory()->create(['company_id' => $this->company->id, 'name' => 'Drinks']);
-        Category::factory()->create(['company_id' => $this->other->id, 'name' => 'Hidden']);
+    it('offers the builder its facts and tenant records', function () {
+        Category::factory()->create(['tenant_id' => $this->tenant->id, 'name' => 'Drinks']);
+        Category::factory()->create(['tenant_id' => $this->other->id, 'name' => 'Hidden']);
 
         $this->actingAs($this->manager)->get(route('discounts.create'))
             ->assertInertia(fn (Assert $page) => $page
@@ -193,9 +193,9 @@ describe('rules', function () {
 
 describe('simulator', function () {
     it('runs rules on a cart without saving anything', function () {
-        $product = Product::factory()->create(['company_id' => $this->company->id, 'base_price' => 100, 'is_active' => true]);
-        $customer = Customer::create(['company_id' => $this->company->id, 'name' => 'Sim']);
-        DiscountRule::factory()->create(['company_id' => $this->company->id, 'action_value' => 10, 'coupon_code' => 'TRY']);
+        $product = Product::factory()->create(['tenant_id' => $this->tenant->id, 'base_price' => 100, 'is_active' => true]);
+        $customer = Customer::create(['tenant_id' => $this->tenant->id, 'name' => 'Sim']);
+        DiscountRule::factory()->create(['tenant_id' => $this->tenant->id, 'action_value' => 10, 'coupon_code' => 'TRY']);
 
         $this->actingAs($this->manager)->postJson(route('discounts.simulate'), [
             'items' => [['product_id' => $product->id, 'quantity' => 3]], 'customer_id' => $customer->id, 'coupon_code' => 'try',
@@ -209,8 +209,8 @@ describe('simulator', function () {
         expect(Order::count())->toBe(0)->and(DiscountApplication::count())->toBe(0);
     });
 
-    it('rejects products and customers from other companies', function () {
-        $foreign = Product::factory()->create(['company_id' => $this->other->id]);
+    it('rejects products and customers from other tenants', function () {
+        $foreign = Product::factory()->create(['tenant_id' => $this->other->id]);
 
         $this->actingAs($this->manager)->postJson(route('discounts.simulate'), ['items' => [['product_id' => $foreign->id, 'quantity' => 1]]])
             ->assertUnprocessable()->assertJsonValidationErrors('items.0.product_id');
@@ -235,7 +235,7 @@ describe('customer groups', function () {
         $this->actingAs($this->manager)->post(route('customers.store'), ['name' => 'Rana', 'customer_group_id' => $group->id, 'is_active' => true])->assertSessionHasNoErrors();
         expect(Customer::firstOrFail()->customer_group_id)->toBe($group->id);
 
-        $foreign = CustomerGroup::where('company_id', $this->other->id)->firstOrFail();
+        $foreign = CustomerGroup::where('tenant_id', $this->other->id)->firstOrFail();
         $this->actingAs($this->manager)->post(route('customers.store'), ['name' => 'Bad', 'customer_group_id' => $foreign->id])->assertSessionHasErrors('customer_group_id');
         $this->actingAs($this->manager)->delete(route('customer-groups.destroy', $foreign))->assertForbidden();
 
@@ -244,8 +244,8 @@ describe('customer groups', function () {
     });
 
     it('lists groups with their customer counts', function () {
-        $group = CustomerGroup::factory()->create(['company_id' => $this->company->id]);
-        Customer::create(['company_id' => $this->company->id, 'name' => 'A', 'customer_group_id' => $group->id]);
+        $group = CustomerGroup::factory()->create(['tenant_id' => $this->tenant->id]);
+        Customer::create(['tenant_id' => $this->tenant->id, 'name' => 'A', 'customer_group_id' => $group->id]);
 
         $this->actingAs($this->manager)->get(route('customer-groups.index'))
             ->assertInertia(fn (Assert $page) => $page->component('Customers/Groups')->where('groups.0.customers_count', 1));

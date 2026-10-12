@@ -1,24 +1,24 @@
 <?php
 
 use App\Modules\Catalog\Models\Product;
-use App\Modules\Company\Models\Branch;
-use App\Modules\Company\Models\Company;
-use App\Modules\Company\Models\Location;
 use App\Modules\Inventory\Models\StockMovement;
 use App\Modules\Sales\Models\Order;
 use App\Modules\Team\Models\ActivityLog;
 use App\Modules\Team\Models\EmployeeProfile;
 use App\Modules\Team\Models\User;
+use App\Modules\Tenant\Models\Branch;
+use App\Modules\Tenant\Models\Location;
+use App\Modules\Tenant\Models\Tenant;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
-function managerWith(Company $company, Branch $branch, array $permissions): User
+function managerWith(Tenant $tenant, Branch $branch, array $permissions): User
 {
     foreach ($permissions as $permission) {
         Permission::findOrCreate($permission);
     }
 
-    return User::factory()->create(['company_id' => $company->id, 'branch_id' => $branch->id])->givePermissionTo($permissions);
+    return User::factory()->create(['tenant_id' => $tenant->id, 'branch_id' => $branch->id])->givePermissionTo($permissions);
 }
 
 function employeePayload(array $overrides = []): array
@@ -43,12 +43,12 @@ function employeePayload(array $overrides = []): array
 beforeEach(function () {
     Role::findOrCreate('Cashier');
 
-    $this->company = Company::factory()->create();
-    $this->branch = Branch::factory()->create(['company_id' => $this->company->id]);
-    $this->manager = managerWith($this->company, $this->branch, ['view users', 'create users', 'edit users', 'delete users', 'view activity log']);
+    $this->tenant = Tenant::factory()->create();
+    $this->branch = Branch::factory()->create(['tenant_id' => $this->tenant->id]);
+    $this->manager = managerWith($this->tenant, $this->branch, ['view users', 'create users', 'edit users', 'delete users', 'view activity log']);
 
-    $this->other = Company::factory()->create();
-    $this->otherBranch = Branch::factory()->create(['company_id' => $this->other->id]);
+    $this->other = Tenant::factory()->create();
+    $this->otherBranch = Branch::factory()->create(['tenant_id' => $this->other->id]);
     $this->otherManager = managerWith($this->other, $this->otherBranch, ['view users', 'create users', 'edit users', 'view activity log']);
 });
 
@@ -61,28 +61,28 @@ describe('employee profiles', function () {
         $profile = User::where('email', 'layla@example.com')->first()->employeeProfile;
 
         expect($profile)->not->toBeNull()
-            ->and($profile->company_id)->toBe($this->company->id)
+            ->and($profile->tenant_id)->toBe($this->tenant->id)
             ->and($profile->phone)->toBe('+961 70 123 456')
             ->and($profile->job_title)->toBe('Senior cashier')
             ->and($profile->hire_date->toDateString())->toBe('2024-03-01')
             ->and($profile->emergency_contact_name)->toBe('Karim Haddad');
     });
 
-    it('generates sequential employee numbers per company', function () {
+    it('generates sequential employee numbers per tenant', function () {
         $this->actingAs($this->manager);
 
         $this->post(route('users.store'), employeePayload(['branch_id' => $this->branch->id]));
         $this->post(route('users.store'), employeePayload(['branch_id' => $this->branch->id]));
         $this->actingAs($this->otherManager)->post(route('users.store'), employeePayload(['branch_id' => $this->otherBranch->id]));
 
-        $numbers = EmployeeProfile::where('company_id', $this->company->id)->orderBy('id')->pluck('employee_number')->all();
-        $otherNumbers = EmployeeProfile::where('company_id', $this->other->id)->orderBy('id')->pluck('employee_number')->all();
+        $numbers = EmployeeProfile::where('tenant_id', $this->tenant->id)->orderBy('id')->pluck('employee_number')->all();
+        $otherNumbers = EmployeeProfile::where('tenant_id', $this->other->id)->orderBy('id')->pluck('employee_number')->all();
 
         expect($numbers)->toContain('EMP-0001', 'EMP-0002')
             ->and($otherNumbers)->toContain('EMP-0001');
     });
 
-    it('rejects a duplicate employee number inside a company but allows it in another', function () {
+    it('rejects a duplicate employee number inside a tenant but allows it in another', function () {
         $this->actingAs($this->manager)->post(route('users.store'), employeePayload(['branch_id' => $this->branch->id, 'employee_number' => 'A-100']))->assertRedirect();
 
         $this->actingAs($this->manager)->post(route('users.store'), employeePayload(['branch_id' => $this->branch->id, 'employee_number' => 'A-100']))
@@ -108,7 +108,7 @@ describe('employee profiles', function () {
     });
 
     it('creates a profile for an employee who does not have one yet when edited', function () {
-        $employee = User::factory()->create(['company_id' => $this->company->id, 'branch_id' => $this->branch->id]);
+        $employee = User::factory()->create(['tenant_id' => $this->tenant->id, 'branch_id' => $this->branch->id]);
 
         $this->actingAs($this->manager)->put(route('users.update', $employee), [
             'name' => $employee->name, 'email' => $employee->email, 'branch_id' => $this->branch->id, 'role' => 'Cashier',
@@ -154,14 +154,14 @@ describe('employee profiles', function () {
             );
     });
 
-    it('keeps profiles of other companies private', function () {
-        $stranger = User::factory()->create(['company_id' => $this->other->id, 'branch_id' => $this->otherBranch->id]);
+    it('keeps profiles of other tenants private', function () {
+        $stranger = User::factory()->create(['tenant_id' => $this->other->id, 'branch_id' => $this->otherBranch->id]);
 
         $this->actingAs($this->manager)->get(route('users.show', $stranger))->assertForbidden();
     });
 
     it('requires the view permission for the profile page', function () {
-        $nobody = User::factory()->create(['company_id' => $this->company->id, 'branch_id' => $this->branch->id]);
+        $nobody = User::factory()->create(['tenant_id' => $this->tenant->id, 'branch_id' => $this->branch->id]);
 
         $this->actingAs($nobody)->get(route('users.show', $this->manager))->assertForbidden();
     });
@@ -183,7 +183,7 @@ describe('employee profiles', function () {
 
 describe('activity log', function () {
     it('records sign-ins and sign-outs', function () {
-        $user = User::factory()->create(['email' => 'log@example.com', 'password' => bcrypt('Str0ng!Passw0rd#2026'), 'company_id' => $this->company->id, 'branch_id' => $this->branch->id]);
+        $user = User::factory()->create(['email' => 'log@example.com', 'password' => bcrypt('Str0ng!Passw0rd#2026'), 'tenant_id' => $this->tenant->id, 'branch_id' => $this->branch->id]);
 
         $this->post('/login', ['email' => 'log@example.com', 'password' => 'Str0ng!Passw0rd#2026']);
         $this->post('/logout');
@@ -191,14 +191,14 @@ describe('activity log', function () {
         $events = ActivityLog::where('user_id', $user->id)->orderBy('id')->pluck('event')->all();
 
         expect($events)->toBe(['auth.login', 'auth.logout']);
-        expect(ActivityLog::where('event', 'auth.login')->first())->company_id->toBe($this->company->id);
+        expect(ActivityLog::where('event', 'auth.login')->first())->tenant_id->toBe($this->tenant->id);
     });
 
     it('records sales and voids with the cashier as the actor', function () {
-        $location = Location::factory()->create(['company_id' => $this->company->id, 'branch_id' => $this->branch->id, 'type' => 'branch']);
-        $product = Product::factory()->create(['company_id' => $this->company->id, 'base_price' => 20]);
-        StockMovement::factory()->create(['company_id' => $this->company->id, 'product_id' => $product->id, 'location_id' => $location->id, 'quantity' => 5]);
-        $cashier = managerWith($this->company, $this->branch, ['access pos', 'void orders', 'view orders']);
+        $location = Location::factory()->create(['tenant_id' => $this->tenant->id, 'branch_id' => $this->branch->id, 'type' => 'branch']);
+        $product = Product::factory()->create(['tenant_id' => $this->tenant->id, 'base_price' => 20]);
+        StockMovement::factory()->create(['tenant_id' => $this->tenant->id, 'product_id' => $product->id, 'location_id' => $location->id, 'quantity' => 5]);
+        $cashier = managerWith($this->tenant, $this->branch, ['access pos', 'void orders', 'view orders']);
 
         $this->actingAs($cashier)->postJson(route('pos.checkout'), ['items' => [['product_id' => $product->id, 'quantity' => 1]], 'cash_received' => 50])->assertSuccessful();
         $order = Order::first();
@@ -223,24 +223,24 @@ describe('activity log', function () {
         expect($events)->toBe(['employee.created', 'employee.updated', 'employee.deleted']);
     });
 
-    it('shows the activity page only to permitted users and only for their company', function () {
-        ActivityLog::create(['company_id' => $this->company->id, 'user_id' => $this->manager->id, 'event' => 'auth.login', 'description' => 'Mine']);
-        ActivityLog::create(['company_id' => $this->other->id, 'user_id' => $this->otherManager->id, 'event' => 'auth.login', 'description' => 'Theirs']);
+    it('shows the activity page only to permitted users and only for their tenant', function () {
+        ActivityLog::create(['tenant_id' => $this->tenant->id, 'user_id' => $this->manager->id, 'event' => 'auth.login', 'description' => 'Mine']);
+        ActivityLog::create(['tenant_id' => $this->other->id, 'user_id' => $this->otherManager->id, 'event' => 'auth.login', 'description' => 'Theirs']);
 
         $this->actingAs($this->manager)->get(route('activity.index'))
             ->assertSuccessful()
             ->assertInertia(fn ($page) => $page->component('Activity/Index')->has('logs.data', 1)->where('logs.data.0.description', 'Mine'));
 
-        $nobody = User::factory()->create(['company_id' => $this->company->id, 'branch_id' => $this->branch->id]);
+        $nobody = User::factory()->create(['tenant_id' => $this->tenant->id, 'branch_id' => $this->branch->id]);
         $this->actingAs($nobody)->get(route('activity.index'))->assertForbidden();
     });
 
     it('filters the activity page by employee, event, date and text', function () {
-        $other = User::factory()->create(['company_id' => $this->company->id, 'branch_id' => $this->branch->id]);
-        $old = ActivityLog::create(['company_id' => $this->company->id, 'user_id' => $this->manager->id, 'event' => 'order.created', 'description' => 'Sale ORD-1']);
+        $other = User::factory()->create(['tenant_id' => $this->tenant->id, 'branch_id' => $this->branch->id]);
+        $old = ActivityLog::create(['tenant_id' => $this->tenant->id, 'user_id' => $this->manager->id, 'event' => 'order.created', 'description' => 'Sale ORD-1']);
         $old->forceFill(['created_at' => '2026-01-10 10:00:00'])->save();
-        ActivityLog::create(['company_id' => $this->company->id, 'user_id' => $other->id, 'event' => 'order.voided', 'description' => 'Void ORD-2']);
-        ActivityLog::create(['company_id' => $this->company->id, 'user_id' => $this->manager->id, 'event' => 'auth.login', 'description' => 'Signed in']);
+        ActivityLog::create(['tenant_id' => $this->tenant->id, 'user_id' => $other->id, 'event' => 'order.voided', 'description' => 'Void ORD-2']);
+        ActivityLog::create(['tenant_id' => $this->tenant->id, 'user_id' => $this->manager->id, 'event' => 'auth.login', 'description' => 'Signed in']);
 
         $this->actingAs($this->manager);
 
@@ -253,7 +253,7 @@ describe('activity log', function () {
     it('limits the profile activity to that employee', function () {
         $this->actingAs($this->manager)->post(route('users.store'), employeePayload(['branch_id' => $this->branch->id, 'email' => 'only@example.com']));
         $employee = User::where('email', 'only@example.com')->first();
-        ActivityLog::create(['company_id' => $this->company->id, 'user_id' => $employee->id, 'event' => 'auth.login', 'description' => 'Signed in']);
+        ActivityLog::create(['tenant_id' => $this->tenant->id, 'user_id' => $employee->id, 'event' => 'auth.login', 'description' => 'Signed in']);
 
         $this->actingAs($this->manager)->get(route('users.show', $employee))
             ->assertInertia(fn ($page) => $page->has('activity.data', 1)->where('activity.data.0.user_id', $employee->id));

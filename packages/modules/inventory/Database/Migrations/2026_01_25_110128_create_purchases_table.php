@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('purchases', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('tenant_id')->constrained()->cascadeOnDelete();
             $table->foreignId('supplier_id')->constrained()->cascadeOnDelete();
             $table->foreignId('location_id')->constrained()->cascadeOnDelete();
             $table->foreignId('created_by')->constrained('users')->cascadeOnDelete();

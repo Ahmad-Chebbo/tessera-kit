@@ -1,9 +1,6 @@
 <?php
 
 use App\Modules\Catalog\Models\Product;
-use App\Modules\Company\Models\Branch;
-use App\Modules\Company\Models\Company;
-use App\Modules\Company\Models\Location;
 use App\Modules\Customers\Models\Customer;
 use App\Modules\Inventory\Models\StockMovement;
 use App\Modules\Sales\Actions\CheckoutAction;
@@ -12,16 +9,19 @@ use App\Modules\Sales\Models\Order;
 use App\Modules\Sales\Models\PosShift;
 use App\Modules\Team\Models\ActivityLog;
 use App\Modules\Team\Models\User;
+use App\Modules\Tenant\Models\Branch;
+use App\Modules\Tenant\Models\Location;
+use App\Modules\Tenant\Models\Tenant;
 use Inertia\Testing\AssertableInertia as Assert;
 use Spatie\Permission\Models\Permission;
 
-function cashDrawerStaff(Company $company, Branch $branch, array $permissions): User
+function cashDrawerStaff(Tenant $tenant, Branch $branch, array $permissions): User
 {
     foreach ($permissions as $permission) {
         Permission::findOrCreate($permission);
     }
 
-    return User::factory()->create(['company_id' => $company->id, 'branch_id' => $branch->id])->givePermissionTo($permissions);
+    return User::factory()->create(['tenant_id' => $tenant->id, 'branch_id' => $branch->id])->givePermissionTo($permissions);
 }
 
 function cashDrawerSale(User $cashier, Branch $branch, Product $product, string $paymentType = 'cash', ?int $customerId = null): Order
@@ -37,18 +37,18 @@ function cashDrawerSale(User $cashier, Branch $branch, Product $product, string 
 }
 
 beforeEach(function () {
-    $this->company = Company::factory()->create();
-    $this->branch = Branch::factory()->create(['company_id' => $this->company->id]);
-    $this->location = Location::factory()->create(['company_id' => $this->company->id, 'branch_id' => $this->branch->id, 'type' => 'branch']);
-    $this->manager = cashDrawerStaff($this->company, $this->branch, ['view shifts', 'manage shifts', 'view shift reports', 'open pos shift', 'view activity log']);
-    $this->cashier = cashDrawerStaff($this->company, $this->branch, ['open pos shift', 'access pos']);
+    $this->tenant = Tenant::factory()->create();
+    $this->branch = Branch::factory()->create(['tenant_id' => $this->tenant->id]);
+    $this->location = Location::factory()->create(['tenant_id' => $this->tenant->id, 'branch_id' => $this->branch->id, 'type' => 'branch']);
+    $this->manager = cashDrawerStaff($this->tenant, $this->branch, ['view shifts', 'manage shifts', 'view shift reports', 'open pos shift', 'view activity log']);
+    $this->cashier = cashDrawerStaff($this->tenant, $this->branch, ['open pos shift', 'access pos']);
 
-    $this->other = Company::factory()->create();
-    $this->otherBranch = Branch::factory()->create(['company_id' => $this->other->id]);
+    $this->other = Tenant::factory()->create();
+    $this->otherBranch = Branch::factory()->create(['tenant_id' => $this->other->id]);
     $this->otherManager = cashDrawerStaff($this->other, $this->otherBranch, ['view shifts', 'manage shifts', 'view shift reports']);
 
-    $this->product = Product::factory()->create(['company_id' => $this->company->id, 'base_price' => 25, 'cost_price' => 10, 'is_active' => true]);
-    StockMovement::factory()->create(['company_id' => $this->company->id, 'product_id' => $this->product->id, 'location_id' => $this->location->id, 'quantity' => 100]);
+    $this->product = Product::factory()->create(['tenant_id' => $this->tenant->id, 'base_price' => 25, 'cost_price' => 10, 'is_active' => true]);
+    StockMovement::factory()->create(['tenant_id' => $this->tenant->id, 'product_id' => $this->product->id, 'location_id' => $this->location->id, 'quantity' => 100]);
 });
 
 describe('pos shifts', function () {
@@ -71,7 +71,7 @@ describe('pos shifts', function () {
     });
 
     it('needs the open permission', function () {
-        $viewer = cashDrawerStaff($this->company, $this->branch, ['view shifts']);
+        $viewer = cashDrawerStaff($this->tenant, $this->branch, ['view shifts']);
 
         $this->actingAs($viewer)->post(route('pos-shifts.open'), ['opening_float' => 5])->assertForbidden();
     });
@@ -90,8 +90,8 @@ describe('pos shifts', function () {
         expect($order->pos_shift_id)->toBeNull();
     });
 
-    it('blocks checkout without an open shift when the company requires one', function () {
-        $this->company->update(['require_pos_shift' => true]);
+    it('blocks checkout without an open shift when the tenant requires one', function () {
+        $this->tenant->update(['require_pos_shift' => true]);
 
         $this->actingAs($this->cashier)->postJson(route('pos.checkout'), [
             'items' => [['product_id' => $this->product->id, 'quantity' => 1]],
@@ -107,7 +107,7 @@ describe('pos shifts', function () {
     });
 
     it('does not block offline syncs when a shift is required', function () {
-        $this->company->update(['require_pos_shift' => true]);
+        $this->tenant->update(['require_pos_shift' => true]);
 
         $this->actingAs($this->cashier)->postJson(route('pos.sync'), ['sales' => [[
             'offline_id' => 'sale-1',
@@ -122,7 +122,7 @@ describe('pos shifts', function () {
         $cash = cashDrawerSale($this->cashier, $this->branch, $this->product);
         $voided = cashDrawerSale($this->cashier, $this->branch, $this->product);
         $voided->update(['status' => OrderStatus::Voided]);
-        $customer = Customer::create(['company_id' => $this->company->id, 'name' => 'Debtor']);
+        $customer = Customer::create(['tenant_id' => $this->tenant->id, 'name' => 'Debtor']);
         cashDrawerSale($this->cashier, $this->branch, $this->product, 'debt', $customer->id);
 
         $this->actingAs($this->cashier)
@@ -146,7 +146,7 @@ describe('pos shifts', function () {
 
     it('cannot close a shift twice or close someone else\'s without permission', function () {
         $shift = PosShift::factory()->create(['user_id' => $this->cashier->id]);
-        $coworker = cashDrawerStaff($this->company, $this->branch, ['open pos shift']);
+        $coworker = cashDrawerStaff($this->tenant, $this->branch, ['open pos shift']);
 
         $this->actingAs($coworker)->post(route('pos-shifts.close', $shift), ['counted_cash' => 1])->assertForbidden();
         $this->actingAs($this->manager)->post(route('pos-shifts.close', $shift), ['counted_cash' => 100])->assertRedirect();
@@ -163,7 +163,7 @@ describe('pos shifts', function () {
 
     it('shows the closing report to the owner and managers only', function () {
         $shift = PosShift::factory()->closed()->create(['user_id' => $this->cashier->id, 'summary' => ['orders' => 0]]);
-        $coworker = cashDrawerStaff($this->company, $this->branch, ['open pos shift']);
+        $coworker = cashDrawerStaff($this->tenant, $this->branch, ['open pos shift']);
 
         $this->actingAs($this->cashier)->get(route('pos-shifts.show', $shift))
             ->assertInertia(fn (Assert $page) => $page->component('PosShifts/Show')->where('shift.status', 'closed')->where('can.close', false));
@@ -191,12 +191,12 @@ describe('pos shifts', function () {
     });
 
     it('stores the shift requirement in settings', function () {
-        $owner = cashDrawerStaff($this->company, $this->branch, ['manage settings']);
+        $owner = cashDrawerStaff($this->tenant, $this->branch, ['manage settings']);
 
         $this->actingAs($owner)->put(route('settings.update'), [
-            'name' => $this->company->name, 'currency' => 'USD', 'require_pos_shift' => true,
+            'name' => $this->tenant->name, 'currency' => 'USD', 'require_pos_shift' => true,
         ])->assertSessionHasNoErrors();
 
-        expect($this->company->fresh()->require_pos_shift)->toBeTrue();
+        expect($this->tenant->fresh()->require_pos_shift)->toBeTrue();
     });
 });

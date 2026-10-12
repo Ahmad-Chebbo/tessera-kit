@@ -4,11 +4,11 @@ namespace App\Modules\Attendance\Services;
 
 use App\Modules\Attendance\Models\AttendanceExcuse;
 use App\Modules\Attendance\Models\AttendanceRecord;
-use App\Modules\Company\Services\BranchAccess;
 use App\Modules\Shifts\Models\ShiftAssignment;
 use App\Modules\Team\Enums\ActivityEvent;
 use App\Modules\Team\Models\User;
 use App\Modules\Team\Services\ActivityLogger;
+use App\Modules\Tenant\Services\BranchAccess;
 use Carbon\CarbonImmutable;
 use Carbon\CarbonInterface;
 use Illuminate\Database\QueryException;
@@ -26,13 +26,13 @@ class AttendanceService
 
     public function timezone(User $user): string
     {
-        return $user->company?->timezone ?: config('app.timezone');
+        return $user->tenant?->timezone ?: config('app.timezone');
     }
 
     public function checkIn(User $user): AttendanceRecord
     {
         $record = new AttendanceRecord([
-            'company_id' => $user->company_id,
+            'tenant_id' => $user->tenant_id,
             'user_id' => $user->id,
             'open_user_id' => $user->id,
             'check_in_at' => now(),
@@ -71,7 +71,7 @@ class AttendanceService
      */
     public function save(User $employee, User $actor, CarbonInterface $checkIn, ?CarbonInterface $checkOut, ?string $notes, ?AttendanceRecord $record = null): AttendanceRecord
     {
-        $record ??= new AttendanceRecord(['company_id' => $employee->company_id, 'user_id' => $employee->id, 'created_by' => $actor->id]);
+        $record ??= new AttendanceRecord(['tenant_id' => $employee->tenant_id, 'user_id' => $employee->id, 'created_by' => $actor->id]);
 
         $storedZone = config('app.timezone');
 
@@ -100,13 +100,13 @@ class AttendanceService
      * Fill the derived fields: work date, matched shift, lateness, early leave and worked time.
      */
     /**
-     * Adds or corrects an attendance record for an employee of the actor's company, with times in the company's timezone.
+     * Adds or corrects an attendance record for an employee of the actor's tenant, with times in the tenant's timezone.
      *
      * @throws InvalidArgumentException when the times do not make a valid record.
      */
     public function saveFor(User $actor, int $employeeId, string $checkIn, ?string $checkOut, ?string $notes, ?AttendanceRecord $record = null): AttendanceRecord
     {
-        $employee = User::query()->where('company_id', $actor->company_id)->findOrFail($employeeId);
+        $employee = User::query()->where('tenant_id', $actor->tenant_id)->findOrFail($employeeId);
         $this->access->ensure($actor, $employee->branch_id);
         $timezone = $this->timezone($actor);
 
@@ -129,7 +129,7 @@ class AttendanceService
 
         return AttendanceExcuse::updateOrCreate(
             ['user_id' => $employeeId, 'date' => $date],
-            ['company_id' => $actor->company_id, 'reason' => $reason, 'created_by' => $actor->id],
+            ['tenant_id' => $actor->tenant_id, 'reason' => $reason, 'created_by' => $actor->id],
         );
     }
 
@@ -174,7 +174,7 @@ class AttendanceService
      *
      * @return Collection<int, array{user_id: int, user: string, date: string, shift: string, excused: bool, reason: ?string, excuse_id: ?int}>
      */
-    public function absences(int $companyId, CarbonInterface $from, CarbonInterface $to, ?int $userId = null, ?int $branchId = null): Collection
+    public function absences(int $tenantId, CarbonInterface $from, CarbonInterface $to, ?int $userId = null, ?int $branchId = null): Collection
     {
         $lastDay = CarbonImmutable::yesterday()->min($to);
 
@@ -184,20 +184,20 @@ class AttendanceService
 
         $assignments = ShiftAssignment::query()
             ->with(['user:id,name', 'template:id,name'])
-            ->where('company_id', $companyId)
+            ->where('tenant_id', $tenantId)
             ->when($userId, fn ($query) => $query->where('user_id', $userId))
             ->when($branchId !== null, fn ($query) => $query->whereHas('user', fn ($user) => $user->where('branch_id', $branchId)))
             ->whereBetween('date', [$from->toDateString(), $lastDay->toDateString()])
             ->get();
 
         $present = AttendanceRecord::query()
-            ->where('company_id', $companyId)
+            ->where('tenant_id', $tenantId)
             ->whereBetween('work_date', [$from->toDateString(), $lastDay->toDateString()])
             ->get(['user_id', 'work_date'])
             ->mapWithKeys(fn (AttendanceRecord $record): array => [$record->user_id.'|'.$record->work_date => true]);
 
         $excuses = AttendanceExcuse::query()
-            ->where('company_id', $companyId)
+            ->where('tenant_id', $tenantId)
             ->whereBetween('date', [$from->toDateString(), $lastDay->toDateString()])
             ->get()
             ->keyBy(fn (AttendanceExcuse $excuse): string => $excuse->user_id.'|'.$excuse->date);
@@ -228,17 +228,17 @@ class AttendanceService
      *
      * @return array{employees: list<array<string, mixed>>, daily: list<array{date: string, headcount: int, hours: float}>, totals: array<string, mixed>}
      */
-    public function report(int $companyId, CarbonInterface $from, CarbonInterface $to, ?int $userId = null, ?int $branchId = null): array
+    public function report(int $tenantId, CarbonInterface $from, CarbonInterface $to, ?int $userId = null, ?int $branchId = null): array
     {
         $records = AttendanceRecord::query()
             ->with('user:id,name')
-            ->where('company_id', $companyId)
+            ->where('tenant_id', $tenantId)
             ->when($userId, fn ($query) => $query->where('user_id', $userId))
             ->when($branchId !== null, fn ($query) => $query->whereHas('user', fn ($user) => $user->where('branch_id', $branchId)))
             ->whereBetween('work_date', [$from->toDateString(), $to->toDateString()])
             ->get();
 
-        $absences = $this->absences($companyId, $from, $to, $userId, $branchId);
+        $absences = $this->absences($tenantId, $from, $to, $userId, $branchId);
 
         $employees = $records->groupBy('user_id')->map(function (Collection $group, int $id) use ($absences): array {
             $mine = $absences->where('user_id', $id);

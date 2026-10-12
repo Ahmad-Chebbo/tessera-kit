@@ -21,12 +21,12 @@ class PosShiftsReport extends ReportDefinition
         return 'view shift reports';
     }
 
-    public function filterRules(int $companyId): array
+    public function filterRules(int $tenantId): array
     {
         return [
-            ...$this->branchRules($companyId),
+            ...$this->branchRules($tenantId),
             'status' => ['nullable', Rule::in([PosShift::OPEN, PosShift::CLOSED])],
-            'user_id' => ['nullable', 'integer', Rule::exists('users', 'id')->where('company_id', $companyId)],
+            'user_id' => ['nullable', 'integer', Rule::exists('users', 'id')->where('tenant_id', $tenantId)],
         ];
     }
 
@@ -98,7 +98,7 @@ class PosShiftsReport extends ReportDefinition
         }
 
         if ($userId = $context->filter('user_id')) {
-            $lines[] = $context->t('filters.employee', ['value' => $context->company->users()->whereKey($userId)->value('name')]);
+            $lines[] = $context->t('filters.employee', ['value' => $context->tenant->users()->whereKey($userId)->value('name')]);
         }
 
         return array_values($lines);
@@ -110,7 +110,7 @@ class PosShiftsReport extends ReportDefinition
     private function query(ExportContext $context): Builder
     {
         $query = PosShift::query()
-            ->where('company_id', $context->company->id)
+            ->where('tenant_id', $context->tenant->id)
             ->when($this->branchId($context), fn ($inner, $branchId) => $inner->where('branch_id', $branchId));
 
         foreach (['status', 'user_id'] as $column) {

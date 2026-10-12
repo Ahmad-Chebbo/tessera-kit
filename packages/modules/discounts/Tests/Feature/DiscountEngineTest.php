@@ -2,9 +2,6 @@
 
 use App\Modules\Catalog\Models\Category;
 use App\Modules\Catalog\Models\Product;
-use App\Modules\Company\Models\Branch;
-use App\Modules\Company\Models\Company;
-use App\Modules\Company\Models\Location;
 use App\Modules\Customers\Models\Customer;
 use App\Modules\Customers\Models\CustomerGroup;
 use App\Modules\Discounts\Engine\RuleExpression;
@@ -16,6 +13,9 @@ use App\Modules\Sales\Enums\OrderStatus;
 use App\Modules\Sales\Models\Order;
 use App\Modules\Sales\Models\OrderItem;
 use App\Modules\Team\Models\User;
+use App\Modules\Tenant\Models\Branch;
+use App\Modules\Tenant\Models\Location;
+use App\Modules\Tenant\Models\Tenant;
 use Carbon\CarbonImmutable;
 
 function sellItems(array $items, ?Customer $customer = null, array $options = []): Order
@@ -37,14 +37,14 @@ function sellItems(array $items, ?Customer $customer = null, array $options = []
 
 function makeRule(array $attributes = []): DiscountRule
 {
-    return DiscountRule::factory()->create(['company_id' => test()->company->id, ...$attributes]);
+    return DiscountRule::factory()->create(['tenant_id' => test()->tenant->id, ...$attributes]);
 }
 
 function pastPurchase(Customer $customer, Product $product, float $quantity, int $daysAgo = 0, OrderStatus $status = OrderStatus::Completed): Order
 {
     $test = test();
     $order = Order::create([
-        'company_id' => $test->company->id, 'branch_id' => $test->branch->id, 'order_number' => 'OLD-'.uniqid(),
+        'tenant_id' => $test->tenant->id, 'branch_id' => $test->branch->id, 'order_number' => 'OLD-'.uniqid(),
         'subtotal' => 100, 'total' => 100, 'status' => $status, 'cashier_id' => $test->cashier->id,
         'customer_id' => $customer->id, 'payment_type' => 'cash',
     ]);
@@ -55,15 +55,15 @@ function pastPurchase(Customer $customer, Product $product, float $quantity, int
 }
 
 beforeEach(function () {
-    $this->company = Company::factory()->create(['timezone' => 'UTC']);
-    $this->branch = Branch::factory()->create(['company_id' => $this->company->id]);
-    Location::factory()->create(['company_id' => $this->company->id, 'branch_id' => $this->branch->id, 'type' => 'branch']);
-    $this->cashier = User::factory()->create(['company_id' => $this->company->id, 'branch_id' => $this->branch->id]);
-    $this->drinks = Category::factory()->create(['company_id' => $this->company->id]);
-    $this->snacks = Category::factory()->create(['company_id' => $this->company->id]);
-    $this->cola = Product::factory()->create(['company_id' => $this->company->id, 'category_id' => $this->drinks->id, 'base_price' => 100, 'cost_price' => 50, 'unlimited_quantity' => true, 'is_active' => true]);
-    $this->chips = Product::factory()->create(['company_id' => $this->company->id, 'category_id' => $this->snacks->id, 'base_price' => 50, 'cost_price' => 20, 'unlimited_quantity' => true, 'is_active' => true]);
-    $this->customer = Customer::create(['company_id' => $this->company->id, 'name' => 'Rana']);
+    $this->tenant = Tenant::factory()->create(['timezone' => 'UTC']);
+    $this->branch = Branch::factory()->create(['tenant_id' => $this->tenant->id]);
+    Location::factory()->create(['tenant_id' => $this->tenant->id, 'branch_id' => $this->branch->id, 'type' => 'branch']);
+    $this->cashier = User::factory()->create(['tenant_id' => $this->tenant->id, 'branch_id' => $this->branch->id]);
+    $this->drinks = Category::factory()->create(['tenant_id' => $this->tenant->id]);
+    $this->snacks = Category::factory()->create(['tenant_id' => $this->tenant->id]);
+    $this->cola = Product::factory()->create(['tenant_id' => $this->tenant->id, 'category_id' => $this->drinks->id, 'base_price' => 100, 'cost_price' => 50, 'unlimited_quantity' => true, 'is_active' => true]);
+    $this->chips = Product::factory()->create(['tenant_id' => $this->tenant->id, 'category_id' => $this->snacks->id, 'base_price' => 50, 'cost_price' => 20, 'unlimited_quantity' => true, 'is_active' => true]);
+    $this->customer = Customer::create(['tenant_id' => $this->tenant->id, 'name' => 'Rana']);
 });
 
 describe('actions', function () {
@@ -120,7 +120,7 @@ describe('actions', function () {
 
         expect((float) $order->rules_discount_amount)->toBe(60.0)->and((float) $order->total)->toBe(290.0);
 
-        $cheap = Product::factory()->create(['company_id' => $this->company->id, 'base_price' => 60, 'unlimited_quantity' => true, 'is_active' => true]);
+        $cheap = Product::factory()->create(['tenant_id' => $this->tenant->id, 'base_price' => 60, 'unlimited_quantity' => true, 'is_active' => true]);
         DiscountRule::query()->update(['conditions' => null]);
         expect((float) sellItems([[$cheap, 2]])->rules_discount_amount)->toBe(0.0);
     });
@@ -147,8 +147,8 @@ describe('actions', function () {
 
 describe('conditions', function () {
     it('targets one customer, a customer group, or nobody in particular', function () {
-        $vip = CustomerGroup::factory()->create(['company_id' => $this->company->id]);
-        $member = Customer::create(['company_id' => $this->company->id, 'name' => 'Member', 'customer_group_id' => $vip->id]);
+        $vip = CustomerGroup::factory()->create(['tenant_id' => $this->tenant->id]);
+        $member = Customer::create(['tenant_id' => $this->tenant->id, 'name' => 'Member', 'customer_group_id' => $vip->id]);
 
         makeRule(['name' => 'VIP', 'action_value' => 10])->update(['conditions' => ['type' => 'group', 'logic' => 'all', 'children' => [
             ['type' => 'condition', 'field' => 'customer.group_id', 'operator' => 'eq', 'value' => $vip->id],
@@ -229,8 +229,8 @@ describe('conditions', function () {
             ->and((float) sellItems([[$this->cola, 5]], $this->customer)->rules_discount_amount)->toBe(0.0);
     });
 
-    it('matches on weekday, time and date in the company timezone', function () {
-        $this->company->update(['timezone' => 'Asia/Beirut']);
+    it('matches on weekday, time and date in the tenant timezone', function () {
+        $this->tenant->update(['timezone' => 'Asia/Beirut']);
         $this->travelTo(CarbonImmutable::parse('2026-10-14 08:30:00', 'UTC'));
 
         makeRule(['name' => 'Happy hour', 'action_value' => 10])->update(['conditions' => ['type' => 'group', 'logic' => 'all', 'children' => [
@@ -348,7 +348,7 @@ describe('stacking and priority', function () {
 });
 
 describe('availability', function () {
-    it('ignores inactive, not-yet-started and expired rules and other companies', function () {
+    it('ignores inactive, not-yet-started and expired rules and other tenants', function () {
         makeRule(['is_active' => false]);
         makeRule(['starts_at' => now()->addDay()]);
         makeRule(['ends_at' => now()->subDay()]);
@@ -383,20 +383,20 @@ describe('coupons', function () {
 
     it('enforces total and per-customer usage limits and frees voided uses', function () {
         makeRule(['coupon_code' => 'ONCE', 'usage_limit' => 2, 'per_customer_limit' => 1]);
-        $other = Customer::create(['company_id' => $this->company->id, 'name' => 'Other']);
+        $other = Customer::create(['tenant_id' => $this->tenant->id, 'name' => 'Other']);
 
         $first = sellItems([[$this->cola, 1]], $this->customer, ['coupon' => 'ONCE']);
         expect(fn () => sellItems([[$this->cola, 1]], $this->customer, ['coupon' => 'ONCE']))->toThrow(InvalidArgumentException::class, 'usage limit')
             ->and(fn () => sellItems([[$this->cola, 1]], null, ['coupon' => 'ONCE']))->toThrow(InvalidArgumentException::class, 'usage limit');
 
         sellItems([[$this->cola, 1]], $other, ['coupon' => 'ONCE']);
-        expect(fn () => sellItems([[$this->cola, 1]], Customer::create(['company_id' => $this->company->id, 'name' => 'Third']), ['coupon' => 'ONCE']))->toThrow(InvalidArgumentException::class, 'usage limit');
+        expect(fn () => sellItems([[$this->cola, 1]], Customer::create(['tenant_id' => $this->tenant->id, 'name' => 'Third']), ['coupon' => 'ONCE']))->toThrow(InvalidArgumentException::class, 'usage limit');
 
         $first->update(['status' => OrderStatus::Voided]);
-        expect((float) sellItems([[$this->cola, 1]], Customer::create(['company_id' => $this->company->id, 'name' => 'Fourth']), ['coupon' => 'ONCE'])->rules_discount_amount)->toBe(10.0);
+        expect((float) sellItems([[$this->cola, 1]], Customer::create(['tenant_id' => $this->tenant->id, 'name' => 'Fourth']), ['coupon' => 'ONCE'])->rules_discount_amount)->toBe(10.0);
     });
 
-    it('does not let coupon codes from other companies in', function () {
+    it('does not let coupon codes from other tenants in', function () {
         DiscountRule::factory()->create(['coupon_code' => 'THEIRS']);
 
         expect(fn () => sellItems([[$this->cola, 1]], null, ['coupon' => 'THEIRS']))->toThrow(InvalidArgumentException::class);

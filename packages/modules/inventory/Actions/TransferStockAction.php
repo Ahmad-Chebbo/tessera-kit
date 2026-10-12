@@ -4,9 +4,9 @@ namespace App\Modules\Inventory\Actions;
 
 use App\Modules\Catalog\Models\Product;
 use App\Modules\Catalog\Services\UnitConversionService;
-use App\Modules\Company\Models\Location;
 use App\Modules\Inventory\Models\StockMovement;
 use App\Modules\Team\Models\User;
+use App\Modules\Tenant\Models\Location;
 use Illuminate\Support\Facades\DB;
 
 class TransferStockAction
@@ -27,7 +27,7 @@ class TransferStockAction
             foreach ($items as $item) {
                 $product = Product::findOrFail($item['product_id']);
 
-                if ($product->company_id !== $user->company_id) {
+                if ($product->tenant_id !== $user->tenant_id) {
                     abort(403);
                 }
 
@@ -46,7 +46,7 @@ class TransferStockAction
 
                 foreach ([[$from, 'transfer_out', -$baseQuantity], [$to, 'transfer_in', $baseQuantity]] as [$location, $type, $quantity]) {
                     StockMovement::create([
-                        'company_id' => $user->company_id,
+                        'tenant_id' => $user->tenant_id,
                         'product_id' => $product->id,
                         'location_id' => $location->id,
                         'type' => $type,

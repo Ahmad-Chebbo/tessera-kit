@@ -2,8 +2,8 @@
 
 namespace App\Modules\Expenses\Http\Requests;
 
-use App\Modules\Company\Services\BranchAccess;
 use App\Modules\Expenses\Enums\ExpenseType;
+use App\Modules\Tenant\Services\BranchAccess;
 use Tessera\Core\Http\PeriodRequest;
 
 /**

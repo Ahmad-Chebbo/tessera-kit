@@ -5,7 +5,6 @@ namespace App\Modules\Discounts\Http\Controllers\Web;
 use App\Http\Controllers\Controller;
 use App\Modules\Catalog\Models\Category;
 use App\Modules\Catalog\Models\Product;
-use App\Modules\Company\Models\Branch;
 use App\Modules\Customers\Models\Customer;
 use App\Modules\Customers\Models\CustomerGroup;
 use App\Modules\Discounts\Engine\FactRegistry;
@@ -16,6 +15,7 @@ use App\Modules\Discounts\Models\DiscountRule;
 use App\Modules\Discounts\Services\DiscountPreview;
 use App\Modules\Discounts\Templates\DiscountTemplates;
 use App\Modules\Sales\Enums\OrderStatus;
+use App\Modules\Tenant\Models\Branch;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -28,11 +28,11 @@ class DiscountRuleController extends Controller
 
     public function index(Request $request): Response
     {
-        $companyId = $request->user()->company_id;
+        $tenantId = $request->user()->tenant_id;
 
         $usage = DiscountApplication::query()
             ->join('orders', 'orders.id', '=', 'discount_applications.order_id')
-            ->where('orders.company_id', $companyId)
+            ->where('orders.tenant_id', $tenantId)
             ->where('orders.status', '!=', OrderStatus::Voided->value)
             ->groupBy('discount_applications.discount_rule_id')
             ->selectRaw('discount_applications.discount_rule_id as rule_id, COUNT(DISTINCT orders.id) as uses, SUM(discount_applications.amount) as total')
@@ -40,7 +40,7 @@ class DiscountRuleController extends Controller
             ->keyBy('rule_id');
 
         $rules = DiscountRule::query()
-            ->where('company_id', $companyId)
+            ->where('tenant_id', $tenantId)
             ->orderBy('priority')
             ->orderBy('id')
             ->get()
@@ -51,7 +51,7 @@ class DiscountRuleController extends Controller
                 'total_discounted' => round((float) ($usage[$rule->id]->total ?? 0), 2),
             ]);
 
-        $lookup = fn (string $model) => $model::query()->where('company_id', $companyId)->orderBy('name')->limit(self::LOOKUP_LIMIT)->get(['id', 'name']);
+        $lookup = fn (string $model) => $model::query()->where('tenant_id', $tenantId)->orderBy('name')->limit(self::LOOKUP_LIMIT)->get(['id', 'name']);
 
         return Inertia::render('Discounts/Index', [
             'rules' => $rules,
@@ -74,7 +74,7 @@ class DiscountRuleController extends Controller
 
     public function store(StoreDiscountRuleRequest $request): RedirectResponse
     {
-        DiscountRule::create([...$request->ruleAttributes(), 'company_id' => $request->user()->company_id]);
+        DiscountRule::create([...$request->ruleAttributes(), 'tenant_id' => $request->user()->tenant_id]);
 
         return redirect()->route('discounts.index')->with('success', 'Discount rule created.');
     }
@@ -117,12 +117,12 @@ class DiscountRuleController extends Controller
     {
         abort_unless(DiscountTemplates::exists($template), 404);
 
-        $companyId = $request->user()->company_id;
-        $values = $request->validate([...DiscountTemplates::rules($template, $companyId), 'is_active' => ['boolean']]);
+        $tenantId = $request->user()->tenant_id;
+        $values = $request->validate([...DiscountTemplates::rules($template, $tenantId), 'is_active' => ['boolean']]);
 
         $rule = DiscountRule::create([
             ...DiscountTemplates::build($template, $values),
-            'company_id' => $companyId,
+            'tenant_id' => $tenantId,
             'is_active' => $request->boolean('is_active', true),
         ]);
 
@@ -144,23 +144,23 @@ class DiscountRuleController extends Controller
 
     public function simulator(Request $request): Response
     {
-        $companyId = $request->user()->company_id;
+        $tenantId = $request->user()->tenant_id;
 
         return Inertia::render('Discounts/Simulator', [
-            'products' => Product::query()->where('company_id', $companyId)->orderBy('name')->limit(self::LOOKUP_LIMIT)->get(['id', 'name']),
-            'customers' => Customer::query()->where('company_id', $companyId)->orderBy('name')->limit(self::LOOKUP_LIMIT)->get(['id', 'name']),
+            'products' => Product::query()->where('tenant_id', $tenantId)->orderBy('name')->limit(self::LOOKUP_LIMIT)->get(['id', 'name']),
+            'customers' => Customer::query()->where('tenant_id', $tenantId)->orderBy('name')->limit(self::LOOKUP_LIMIT)->get(['id', 'name']),
         ]);
     }
 
     public function simulate(Request $request, DiscountPreview $preview): JsonResponse
     {
-        $companyId = $request->user()->company_id;
+        $tenantId = $request->user()->tenant_id;
 
         $data = $request->validate([
             'items' => ['required', 'array', 'min:1', 'max:100'],
-            'items.*.product_id' => ['required', 'integer', 'exists:products,id,company_id,'.$companyId],
+            'items.*.product_id' => ['required', 'integer', 'exists:products,id,tenant_id,'.$tenantId],
             'items.*.quantity' => ['required', 'numeric', 'min:0.0001', 'max:1000000'],
-            'customer_id' => ['nullable', 'integer', 'exists:customers,id,company_id,'.$companyId],
+            'customer_id' => ['nullable', 'integer', 'exists:customers,id,tenant_id,'.$tenantId],
             'coupon_code' => ['nullable', 'string', 'max:50'],
             'payment_type' => ['nullable', 'in:cash,debt'],
         ]);
@@ -176,7 +176,7 @@ class DiscountRuleController extends Controller
 
     private function ensureOwned(Request $request, DiscountRule $rule): void
     {
-        abort_unless($rule->company_id === $request->user()->company_id, 403);
+        abort_unless($rule->tenant_id === $request->user()->tenant_id, 403);
     }
 
     /**
@@ -221,8 +221,8 @@ class DiscountRuleController extends Controller
      */
     private function catalogue(Request $request): array
     {
-        $companyId = $request->user()->company_id;
-        $lookup = fn (string $model, array $columns = ['id', 'name']) => $model::query()->where('company_id', $companyId)->orderBy('name')->limit(self::LOOKUP_LIMIT)->get($columns);
+        $tenantId = $request->user()->tenant_id;
+        $lookup = fn (string $model, array $columns = ['id', 'name']) => $model::query()->where('tenant_id', $tenantId)->orderBy('name')->limit(self::LOOKUP_LIMIT)->get($columns);
 
         return [
             'facts' => collect(FactRegistry::definitions())->map(fn (array $definition, string $key): array => ['key' => $key, ...$definition])->values(),

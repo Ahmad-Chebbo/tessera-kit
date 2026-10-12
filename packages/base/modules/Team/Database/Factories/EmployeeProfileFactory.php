@@ -20,7 +20,7 @@ class EmployeeProfileFactory extends Factory
     {
         return [
             'user_id' => User::factory(),
-            'company_id' => fn (array $attributes) => User::find($attributes['user_id'])->company_id,
+            'tenant_id' => fn (array $attributes) => User::find($attributes['user_id'])->tenant_id,
             'employee_number' => 'EMP-'.str_pad((string) fake()->unique()->numberBetween(1, 9999), 4, '0', STR_PAD_LEFT),
             'phone' => fake()->phoneNumber(),
             'job_title' => fake()->jobTitle(),

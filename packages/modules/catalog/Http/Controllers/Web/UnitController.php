@@ -16,9 +16,9 @@ class UnitController extends Controller
         $user = $request->user();
 
         $units = Unit::query()
-            ->forCompany($user->company_id)
+            ->forTenant($user->tenant_id)
             ->active()
-            ->orderByRaw('company_id IS NULL DESC') // Global first
+            ->orderByRaw('tenant_id IS NULL DESC') // Global first
             ->orderBy('name')
             ->get();
 
@@ -37,7 +37,7 @@ class UnitController extends Controller
         ]);
 
         Unit::create([
-            'company_id' => $user->company_id,
+            'tenant_id' => $user->tenant_id,
             'name' => $validated['name'],
             'abbreviation' => $validated['abbreviation'],
         ]);
@@ -56,7 +56,7 @@ class UnitController extends Controller
                 ->with('error', 'Cannot edit system units.');
         }
 
-        if ($unit->company_id !== $user->company_id) {
+        if ($unit->tenant_id !== $user->tenant_id) {
             abort(403);
         }
 
@@ -80,7 +80,7 @@ class UnitController extends Controller
                 ->with('error', 'Cannot delete system units.');
         }
 
-        if ($unit->company_id !== $user->company_id) {
+        if ($unit->tenant_id !== $user->tenant_id) {
             abort(403);
         }
 

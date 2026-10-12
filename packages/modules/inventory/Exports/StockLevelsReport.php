@@ -3,7 +3,7 @@
 namespace App\Modules\Inventory\Exports;
 
 use App\Modules\Catalog\Models\Product;
-use App\Modules\Company\Models\Location;
+use App\Modules\Tenant\Models\Location;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
@@ -23,12 +23,12 @@ class StockLevelsReport extends ReportDefinition
         return 'view inventory';
     }
 
-    public function filterRules(int $companyId): array
+    public function filterRules(int $tenantId): array
     {
         return [
-            ...$this->branchRules($companyId),
-            'location_id' => ['nullable', 'integer', Rule::exists('locations', 'id')->where('company_id', $companyId)],
-            'category_id' => ['nullable', 'integer', Rule::exists('categories', 'id')->where('company_id', $companyId)],
+            ...$this->branchRules($tenantId),
+            'location_id' => ['nullable', 'integer', Rule::exists('locations', 'id')->where('tenant_id', $tenantId)],
+            'category_id' => ['nullable', 'integer', Rule::exists('categories', 'id')->where('tenant_id', $tenantId)],
             'search' => ['nullable', 'string', 'max:100'],
         ];
     }
@@ -82,7 +82,7 @@ class StockLevelsReport extends ReportDefinition
     public function filterLines(ExportContext $context): array
     {
         $location = $context->filter('location_id')
-            ? Location::query()->where('company_id', $context->company->id)->whereKey($context->filter('location_id'))->value('name')
+            ? Location::query()->where('tenant_id', $context->tenant->id)->whereKey($context->filter('location_id'))->value('name')
             : $context->t('values.all_locations');
 
         $lines = array_values(array_filter([$this->branchLine($context), $context->t('filters.location', ['value' => $location])]));
@@ -107,7 +107,7 @@ class StockLevelsReport extends ReportDefinition
     private function query(ExportContext $context): Builder
     {
         $locationId = $context->filter('location_id');
-        $bindings = [$context->company->id];
+        $bindings = [$context->tenant->id];
         $locationSql = '';
 
         if (($branchLocations = $this->branchLocationIds($context)) !== null) {
@@ -123,10 +123,10 @@ class StockLevelsReport extends ReportDefinition
 
         $query = Product::query()
             ->leftJoin('categories', 'products.category_id', '=', 'categories.id')
-            ->where('products.company_id', $context->company->id)
+            ->where('products.tenant_id', $context->tenant->id)
             ->where('products.is_active', true)
             ->select('products.id', 'products.name', 'products.sku', 'products.cost_price', 'categories.name as category_name')
-            ->selectRaw("COALESCE((SELECT SUM(stock_movements.quantity) FROM stock_movements WHERE stock_movements.product_id = products.id AND stock_movements.company_id = ?{$locationSql}), 0) as stock", $bindings);
+            ->selectRaw("COALESCE((SELECT SUM(stock_movements.quantity) FROM stock_movements WHERE stock_movements.product_id = products.id AND stock_movements.tenant_id = ?{$locationSql}), 0) as stock", $bindings);
 
         if ($categoryId = $context->filter('category_id')) {
             $query->where('products.category_id', $categoryId);

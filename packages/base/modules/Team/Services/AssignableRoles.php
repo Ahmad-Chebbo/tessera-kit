@@ -9,17 +9,17 @@ use Illuminate\Support\Collection;
 class AssignableRoles
 {
     /**
-     * The actor's company roles, plus shared roles the company has no copy of. Platform Admins manage every
-     * company, so only another Admin may hand that role out.
+     * The actor's tenant roles, plus shared roles the tenant has no copy of. Platform Admins manage every
+     * tenant, so only another Admin may hand that role out.
      *
      * @return Collection<int, Role>
      */
     public function models(User $actor): Collection
     {
-        $own = Role::query()->ownedBy($actor->company_id)->orderBy('name')->get();
+        $own = Role::query()->ownedBy($actor->tenant_id)->orderBy('name')->get();
 
         $shared = Role::query()
-            ->whereNull('company_id')
+            ->whereNull('tenant_id')
             ->whereNotIn('name', $own->pluck('name'))
             ->when(! $actor->isSuperAdmin(), fn ($query) => $query->where('name', '!=', 'Admin'))
             ->orderBy('name')

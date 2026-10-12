@@ -2,8 +2,8 @@
 
 namespace App\Modules\Expenses\Services;
 
-use App\Modules\Company\Services\BranchAccess;
 use App\Modules\Team\Models\User;
+use App\Modules\Tenant\Services\BranchAccess;
 use Illuminate\Auth\Access\AuthorizationException;
 
 /**

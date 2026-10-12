@@ -2,8 +2,8 @@
 
 namespace App\Modules\Shifts\Database\Factories;
 
-use App\Modules\Company\Models\Company;
 use App\Modules\Shifts\Models\ShiftTemplate;
+use App\Modules\Tenant\Models\Tenant;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,7 +17,7 @@ class ShiftTemplateFactory extends Factory
     public function definition(): array
     {
         return [
-            'company_id' => Company::factory(),
+            'tenant_id' => Tenant::factory(),
             'name' => fake()->unique()->word().' shift',
             'starts_at' => '09:00',
             'ends_at' => '17:00',

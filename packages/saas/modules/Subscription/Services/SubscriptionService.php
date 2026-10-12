@@ -2,25 +2,25 @@
 
 namespace App\Modules\Subscription\Services;
 
-use App\Modules\Company\Models\Company;
 use App\Modules\Subscription\Enums\SubscriptionStatus;
 use App\Modules\Subscription\Models\Plan;
 use App\Modules\Subscription\Models\Subscription;
+use App\Modules\Tenant\Models\Tenant;
 use Illuminate\Support\Carbon;
 
 class SubscriptionService
 {
     /**
-     * Put a company on a plan: a trial when the plan has one, otherwise an active period that runs for one interval.
+     * Put a tenant on a plan: a trial when the plan has one, otherwise an active period that runs for one interval.
      */
-    public function start(Company $company, Plan $plan): Subscription
+    public function start(Tenant $tenant, Plan $plan): Subscription
     {
-        $this->endCurrent($company);
+        $this->endCurrent($tenant);
 
         $trialing = $plan->trial_days > 0;
 
         return Subscription::create([
-            'company_id' => $company->id,
+            'tenant_id' => $tenant->id,
             'plan_id' => $plan->id,
             'status' => $trialing ? SubscriptionStatus::Trialing : SubscriptionStatus::Active,
             'starts_at' => now(),
@@ -32,9 +32,9 @@ class SubscriptionService
     /**
      * Close the current subscription so a new one can take over and the old row stays as history.
      */
-    public function endCurrent(Company $company): void
+    public function endCurrent(Tenant $tenant): void
     {
-        $current = $company->subscription()->first();
+        $current = $tenant->subscription()->first();
 
         if ($current && $current->status !== SubscriptionStatus::Expired) {
             $current->update(['status' => SubscriptionStatus::Canceled, 'canceled_at' => now(), 'ends_at' => now()]);

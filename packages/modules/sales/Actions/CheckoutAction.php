@@ -5,8 +5,6 @@ namespace App\Modules\Sales\Actions;
 use App\Modules\Catalog\Models\Product;
 use App\Modules\Catalog\Models\ProductUnit;
 use App\Modules\Catalog\Services\UnitConversionService;
-use App\Modules\Company\Models\Branch;
-use App\Modules\Company\Models\Location;
 use App\Modules\Customers\Models\Customer;
 use App\Modules\Inventory\Enums\StockMovementType;
 use App\Modules\Inventory\Models\StockMovement;
@@ -19,6 +17,8 @@ use App\Modules\Subscription\Services\Entitlements;
 use App\Modules\Team\Enums\ActivityEvent;
 use App\Modules\Team\Models\User;
 use App\Modules\Team\Services\ActivityLogger;
+use App\Modules\Tenant\Models\Branch;
+use App\Modules\Tenant\Models\Location;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\DB;
 use InvalidArgumentException;
@@ -71,7 +71,7 @@ class CheckoutAction
 
             if ($offlineId !== null) {
                 $existing = Order::query()
-                    ->where('company_id', $branch->company_id)
+                    ->where('tenant_id', $branch->tenant_id)
                     ->where('offline_id', $offlineId)
                     ->first();
 
@@ -80,7 +80,7 @@ class CheckoutAction
                 }
             }
 
-            $customer = $customerId !== null ? Customer::where('company_id', $branch->company_id)->whereKey($customerId)->first() : null;
+            $customer = $customerId !== null ? Customer::where('tenant_id', $branch->tenant_id)->whereKey($customerId)->first() : null;
 
             if ($customerId !== null && $customer === null) {
                 throw new InvalidArgumentException('Customer not found.');
@@ -90,14 +90,14 @@ class CheckoutAction
                 throw new InvalidArgumentException('A customer is required for credit sales.');
             }
 
-            $companyCurrency = $branch->company->currency ?? 'USD';
+            $tenantCurrency = $branch->tenant->currency ?? 'USD';
 
             $subtotal = 0;
             $orderItems = [];
 
             foreach ($cartItems as $item) {
                 $product = Product::query()
-                    ->where('company_id', $branch->company_id)
+                    ->where('tenant_id', $branch->tenant_id)
                     ->whereKey($item['product_id'])
                     ->first();
 
@@ -127,9 +127,9 @@ class CheckoutAction
                     );
                 }
 
-                // The server owns pricing. A client price (already converted to the company currency, and
+                // The server owns pricing. A client price (already converted to the tenant currency, and
                 // possibly queued offline) is only honoured when it matches the server price within a small tolerance.
-                $serverPrice = round($product->getSellingPriceIn($companyCurrency) ?? $product->getSellingPrice(), 2);
+                $serverPrice = round($product->getSellingPriceIn($tenantCurrency) ?? $product->getSellingPrice(), 2);
                 $unitPrice = $serverPrice;
 
                 if (isset($item['unit_price'])) {
@@ -166,12 +166,12 @@ class CheckoutAction
             }
 
             $discounts = $this->pricing->evaluate(new PricingContext(
-                companyId: $branch->company_id,
+                tenantId: $branch->tenant_id,
                 branchId: $branch->id,
                 customerId: $customerId,
                 customerGroupId: $customer?->customer_group_id,
                 paymentType: $paymentType,
-                now: CarbonImmutable::now($branch->company->timezone ?: config('app.timezone')),
+                now: CarbonImmutable::now($branch->tenant->timezone ?: config('app.timezone')),
                 lines: $cartLines,
                 couponCode: $couponCode,
             ));
@@ -205,7 +205,7 @@ class CheckoutAction
 
             $posShift = $this->posShifts->current($cashier);
 
-            if ($posShift === null && $requireShift && $branch->company->require_pos_shift && app(Entitlements::class)->hasModule($branch->company_id, Module::Shifts)) {
+            if ($posShift === null && $requireShift && $branch->tenant->require_pos_shift && app(Entitlements::class)->hasModule($branch->tenant_id, Module::Shifts)) {
                 throw new InvalidArgumentException('Open a shift before selling.');
             }
 
@@ -215,7 +215,7 @@ class CheckoutAction
             // Create order
             $isDebt = $paymentType === 'debt';
             $order = Order::create([
-                'company_id' => $branch->company_id,
+                'tenant_id' => $branch->tenant_id,
                 'branch_id' => $branch->id,
                 'pos_shift_id' => $posShift?->id,
                 'order_number' => $orderNumber,
@@ -255,7 +255,7 @@ class CheckoutAction
                 // Deduct stock (always in base units)
                 if (! $item['product']->unlimited_quantity) {
                     StockMovement::create([
-                        'company_id' => $branch->company_id,
+                        'tenant_id' => $branch->tenant_id,
                         'product_id' => $item['product']->id,
                         'location_id' => $location->id,
                         'type' => StockMovementType::Sale,

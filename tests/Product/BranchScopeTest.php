@@ -2,22 +2,22 @@
 
 use App\Modules\Attendance\Models\AttendanceRecord;
 use App\Modules\Catalog\Models\Product;
-use App\Modules\Company\Models\Branch;
-use App\Modules\Company\Models\Company;
-use App\Modules\Company\Models\Location;
-use App\Modules\Company\Services\BranchAccess;
 use App\Modules\Expenses\Models\Expense;
 use App\Modules\Expenses\Models\ExpenseCategory;
 use App\Modules\Inventory\Models\StockMovement;
 use App\Modules\Sales\Models\Order;
 use App\Modules\Sales\Models\PosShift;
 use App\Modules\Team\Models\User;
+use App\Modules\Tenant\Models\Branch;
+use App\Modules\Tenant\Models\Location;
+use App\Modules\Tenant\Models\Tenant;
+use App\Modules\Tenant\Services\BranchAccess;
 use Inertia\Testing\AssertableInertia as Assert;
 use Spatie\Permission\Models\Permission;
 
 function branchStaff(string $name, ?Branch $branch, array $permissions = []): User
 {
-    $user = User::factory()->create(['name' => $name, 'company_id' => test()->company->id, 'branch_id' => $branch?->id]);
+    $user = User::factory()->create(['name' => $name, 'tenant_id' => test()->tenant->id, 'branch_id' => $branch?->id]);
 
     return $user->givePermissionTo($permissions);
 }
@@ -25,7 +25,7 @@ function branchStaff(string $name, ?Branch $branch, array $permissions = []): Us
 function branchOrder(Branch $branch, string $number, User $cashier): Order
 {
     return Order::create([
-        'company_id' => test()->company->id, 'branch_id' => $branch->id, 'order_number' => $number,
+        'tenant_id' => test()->tenant->id, 'branch_id' => $branch->id, 'order_number' => $number,
         'subtotal' => 100, 'discount_amount' => 0, 'total' => 100, 'status' => 'completed',
         'cashier_id' => $cashier->id, 'payment_type' => 'cash',
     ]);
@@ -36,9 +36,9 @@ beforeEach(function () {
         Permission::findOrCreate($permission);
     }
 
-    $this->company = Company::factory()->create(['timezone' => 'UTC']);
-    $this->north = Branch::factory()->create(['company_id' => $this->company->id, 'name' => 'North']);
-    $this->south = Branch::factory()->create(['company_id' => $this->company->id, 'name' => 'South']);
+    $this->tenant = Tenant::factory()->create(['timezone' => 'UTC']);
+    $this->north = Branch::factory()->create(['tenant_id' => $this->tenant->id, 'name' => 'North']);
+    $this->south = Branch::factory()->create(['tenant_id' => $this->tenant->id, 'name' => 'South']);
 
     $this->all = ['view orders', 'view reports', 'view inventory', 'view expenses', 'create expenses', 'edit expenses', 'view attendance', 'manage attendance', 'view shift reports', 'view users', 'adjust inventory'];
     $this->boss = branchStaff('Boss', $this->north, [...$this->all, 'view all branches']);
@@ -61,7 +61,7 @@ describe('the rule', function () {
             ->and($access->allows($this->homeless, null))->toBeFalse();
     });
 
-    it('ignores branches of another company', function () {
+    it('ignores branches of another tenant', function () {
         $foreign = Branch::factory()->create();
 
         expect(app(BranchAccess::class)->effective($this->boss, $foreign->id))->toBeNull();
@@ -95,8 +95,8 @@ describe('orders', function () {
 
 describe('inventory', function () {
     beforeEach(function () {
-        $this->northShelf = Location::factory()->create(['company_id' => $this->company->id, 'branch_id' => $this->north->id, 'name' => 'North shelf']);
-        $this->southShelf = Location::factory()->create(['company_id' => $this->company->id, 'branch_id' => $this->south->id, 'name' => 'South shelf']);
+        $this->northShelf = Location::factory()->create(['tenant_id' => $this->tenant->id, 'branch_id' => $this->north->id, 'name' => 'North shelf']);
+        $this->southShelf = Location::factory()->create(['tenant_id' => $this->tenant->id, 'branch_id' => $this->south->id, 'name' => 'South shelf']);
     });
 
     it('only offers the locations of the user\'s branch', function () {
@@ -108,9 +108,9 @@ describe('inventory', function () {
     });
 
     it('hides movements of other branches and blocks adjustments there', function () {
-        $product = Product::factory()->create(['company_id' => $this->company->id]);
+        $product = Product::factory()->create(['tenant_id' => $this->tenant->id]);
         foreach ([$this->northShelf, $this->southShelf] as $location) {
-            StockMovement::create(['company_id' => $this->company->id, 'product_id' => $product->id, 'location_id' => $location->id, 'type' => 'adjustment', 'quantity' => 5, 'created_by' => $this->boss->id]);
+            StockMovement::create(['tenant_id' => $this->tenant->id, 'product_id' => $product->id, 'location_id' => $location->id, 'type' => 'adjustment', 'quantity' => 5, 'created_by' => $this->boss->id]);
         }
 
         $this->actingAs($this->northStaff)->get(route('inventory.movements'))->assertInertia(fn (Assert $page) => $page->has('movements.data', 1));
@@ -122,9 +122,9 @@ describe('inventory', function () {
 
 describe('expenses', function () {
     beforeEach(function () {
-        $this->category = ExpenseCategory::factory()->create(['company_id' => $this->company->id, 'name' => 'Rent']);
+        $this->category = ExpenseCategory::factory()->create(['tenant_id' => $this->tenant->id, 'name' => 'Rent']);
         foreach ([$this->north, $this->south] as $branch) {
-            Expense::factory()->create(['company_id' => $this->company->id, 'created_by' => $this->boss->id, 'expense_category_id' => $this->category->id, 'branch_id' => $branch->id, 'amount' => 100, 'expense_date' => now()->toDateString()]);
+            Expense::factory()->create(['tenant_id' => $this->tenant->id, 'created_by' => $this->boss->id, 'expense_category_id' => $this->category->id, 'branch_id' => $branch->id, 'amount' => 100, 'expense_date' => now()->toDateString()]);
         }
     });
 
@@ -154,7 +154,7 @@ describe('expenses', function () {
 describe('attendance, shifts and people', function () {
     it('limits attendance records to the employees of the user\'s branch', function () {
         foreach ([$this->northStaff, $this->southStaff] as $employee) {
-            AttendanceRecord::create(['company_id' => $this->company->id, 'user_id' => $employee->id, 'work_date' => now()->toDateString(), 'check_in_at' => now(), 'source' => 'manual']);
+            AttendanceRecord::create(['tenant_id' => $this->tenant->id, 'user_id' => $employee->id, 'work_date' => now()->toDateString(), 'check_in_at' => now(), 'source' => 'manual']);
         }
 
         $this->actingAs($this->northStaff)->get(route('attendance.index'))->assertInertia(fn (Assert $page) => $page->has('records.data', 1));
@@ -164,7 +164,7 @@ describe('attendance, shifts and people', function () {
 
     it('limits POS shifts and the employee list', function () {
         foreach ([[$this->north, $this->northStaff], [$this->south, $this->southStaff]] as [$branch, $employee]) {
-            PosShift::create(['company_id' => $this->company->id, 'branch_id' => $branch->id, 'user_id' => $employee->id, 'open_user_id' => $employee->id, 'status' => PosShift::OPEN, 'opened_at' => now(), 'opening_float' => 0]);
+            PosShift::create(['tenant_id' => $this->tenant->id, 'branch_id' => $branch->id, 'user_id' => $employee->id, 'open_user_id' => $employee->id, 'status' => PosShift::OPEN, 'opened_at' => now(), 'opening_float' => 0]);
         }
 
         $this->actingAs($this->northStaff)->get(route('pos-shifts.index'))->assertInertia(fn (Assert $page) => $page->has('shifts.data', 1));

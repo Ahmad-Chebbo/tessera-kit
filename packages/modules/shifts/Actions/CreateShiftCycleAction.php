@@ -2,9 +2,9 @@
 
 namespace App\Modules\Shifts\Actions;
 
-use App\Modules\Company\Services\BranchAccess;
 use App\Modules\Shifts\Models\ShiftCycle;
 use App\Modules\Team\Models\User;
+use App\Modules\Tenant\Services\BranchAccess;
 use Carbon\CarbonImmutable;
 
 class CreateShiftCycleAction
@@ -25,7 +25,7 @@ class CreateShiftCycleAction
         $cycle = ShiftCycle::create([
             ...$data,
             'weekdays' => collect($data['weekdays'])->map(fn ($day): int => (int) $day)->sort()->values()->all(),
-            'company_id' => $actor->company_id,
+            'tenant_id' => $actor->tenant_id,
         ]);
 
         $this->generateAhead($cycle);

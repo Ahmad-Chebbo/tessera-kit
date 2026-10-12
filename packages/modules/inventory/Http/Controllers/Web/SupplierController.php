@@ -16,7 +16,7 @@ class SupplierController extends Controller
         $user = $request->user();
 
         $query = Supplier::query()
-            ->where('company_id', $user->company_id);
+            ->where('tenant_id', $user->tenant_id);
 
         if ($request->filled('search')) {
             $search = $request->input('search');
@@ -55,7 +55,7 @@ class SupplierController extends Controller
             'notes' => ['nullable', 'string', 'max:1000'],
         ]);
 
-        $validated['company_id'] = $user->company_id;
+        $validated['tenant_id'] = $user->tenant_id;
 
         Supplier::create($validated);
 
@@ -67,7 +67,7 @@ class SupplierController extends Controller
     {
         $user = $request->user();
 
-        if ($supplier->company_id !== $user->company_id) {
+        if ($supplier->tenant_id !== $user->tenant_id) {
             abort(403);
         }
 
@@ -80,7 +80,7 @@ class SupplierController extends Controller
     {
         $user = $request->user();
 
-        if ($supplier->company_id !== $user->company_id) {
+        if ($supplier->tenant_id !== $user->tenant_id) {
             abort(403);
         }
 
@@ -103,7 +103,7 @@ class SupplierController extends Controller
     {
         $user = $request->user();
 
-        if ($supplier->company_id !== $user->company_id) {
+        if ($supplier->tenant_id !== $user->tenant_id) {
             abort(403);
         }
 

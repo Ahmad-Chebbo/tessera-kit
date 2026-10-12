@@ -14,7 +14,7 @@ class ShiftAssignment extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['company_id', 'user_id', 'shift_template_id', 'shift_cycle_id', 'date'];
+    protected $fillable = ['tenant_id', 'user_id', 'shift_template_id', 'shift_cycle_id', 'date'];
 
     public function user(): BelongsTo
     {

@@ -13,11 +13,11 @@ class ReceivedPurchaseLookup implements PurchaseLookup
         return true;
     }
 
-    public function linkable(int $companyId, array $excluded = [], ?int $current = null): array
+    public function linkable(int $tenantId, array $excluded = [], ?int $current = null): array
     {
         return Purchase::query()
             ->with('supplier:id,name')
-            ->where('company_id', $companyId)
+            ->where('tenant_id', $tenantId)
             ->where('status', 'received')
             ->where(fn (Builder $query) => $query->whereNotIn('id', $excluded)->when($current, fn (Builder $inner) => $inner->orWhere('id', $current)))
             ->latest('received_at')

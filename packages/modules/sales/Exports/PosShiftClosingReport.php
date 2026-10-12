@@ -2,10 +2,10 @@
 
 namespace App\Modules\Sales\Exports;
 
-use App\Modules\Company\Services\BranchAccess;
 use App\Modules\Sales\Models\Order;
 use App\Modules\Sales\Models\PosShift;
 use App\Modules\Sales\Services\PosShiftService;
+use App\Modules\Tenant\Services\BranchAccess;
 use Illuminate\Validation\ValidationException;
 use Tessera\Engine\Exports\Column;
 use Tessera\Engine\Exports\ExportContext;
@@ -25,7 +25,7 @@ class PosShiftClosingReport extends ReportDefinition
         return 'open pos shift';
     }
 
-    public function filterRules(int $companyId): array
+    public function filterRules(int $tenantId): array
     {
         return ['shift_id' => ['required', 'integer']];
     }
@@ -119,7 +119,7 @@ class PosShiftClosingReport extends ReportDefinition
     {
         return $context->remember('shift', fn (): ?PosShift => PosShift::query()
             ->with(['user:id,name', 'branch:id,name'])
-            ->where('company_id', $context->company->id)
+            ->where('tenant_id', $context->tenant->id)
             ->find($context->filter('shift_id')));
     }
 }

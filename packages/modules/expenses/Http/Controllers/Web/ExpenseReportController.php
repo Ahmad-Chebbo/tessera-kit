@@ -3,13 +3,13 @@
 namespace App\Modules\Expenses\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
-use App\Modules\Company\Services\BranchAccess;
 use App\Modules\Expenses\Enums\ExpenseType;
 use App\Modules\Expenses\Http\Requests\ExpenseFilterRequest;
 use App\Modules\Expenses\Models\ExpenseCategory;
 use App\Modules\Expenses\Services\ExpenseCategoryDefaults;
 use App\Modules\Expenses\Services\ExpenseLedger;
 use App\Modules\Expenses\Services\ProfitStatement;
+use App\Modules\Tenant\Services\BranchAccess;
 use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -20,12 +20,12 @@ class ExpenseReportController extends Controller
 
     public function report(ExpenseFilterRequest $request, ExpenseCategoryDefaults $defaults): Response
     {
-        $companyId = $request->user()->company_id;
-        $defaults->ensure($companyId);
+        $tenantId = $request->user()->tenant_id;
+        $defaults->ensure($tenantId);
 
         [$from, $to] = $request->dateRange();
         $filters = $request->filters();
-        $breakdown = $this->ledger->breakdown($companyId, $from, $to, $filters);
+        $breakdown = $this->ledger->breakdown($tenantId, $from, $to, $filters);
 
         $months = $this->ledger->monthsBetween($from, $to);
         $byMonth = collect($breakdown['by_month'])->keyBy('month');
@@ -39,7 +39,7 @@ class ExpenseReportController extends Controller
             'filters' => [...$filters, 'date_from' => $from->toDateString(), 'date_to' => $to->toDateString()],
             'presets' => $request->presets(),
             'lookups' => [
-                'categories' => ExpenseCategory::query()->where('company_id', $companyId)->orderBy('name')->get(['id', 'name']),
+                'categories' => ExpenseCategory::query()->where('tenant_id', $tenantId)->orderBy('name')->get(['id', 'name']),
                 'branches' => $this->access->branches($request->user()),
                 'types' => ExpenseType::values(),
             ],
@@ -48,12 +48,12 @@ class ExpenseReportController extends Controller
 
     public function statement(ExpenseFilterRequest $request): Response
     {
-        $companyId = $request->user()->company_id;
+        $tenantId = $request->user()->tenant_id;
         [$from, $to] = $request->dateRange();
         $branchId = $request->filters()['branch_id'] ?? null;
 
         return Inertia::render('Expenses/Statement', [
-            'statement' => $this->statement->forPeriod($companyId, $from, $to, $branchId),
+            'statement' => $this->statement->forPeriod($tenantId, $from, $to, $branchId),
             'filters' => ['date_from' => $from->toDateString(), 'date_to' => $to->toDateString(), 'branch_id' => $branchId],
             'presets' => $request->presets(),
             'lookups' => ['branches' => $this->access->branches($request->user())],

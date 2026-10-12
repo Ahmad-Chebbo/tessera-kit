@@ -2,11 +2,11 @@
 
 namespace App\Modules\Shifts\Actions;
 
-use App\Modules\Company\Services\BranchAccess;
 use App\Modules\Shifts\Models\ShiftAssignment;
 use App\Modules\Team\Enums\ActivityEvent;
 use App\Modules\Team\Models\User;
 use App\Modules\Team\Services\ActivityLogger;
+use App\Modules\Tenant\Services\BranchAccess;
 
 class AssignShiftAction
 {
@@ -26,7 +26,7 @@ class AssignShiftAction
 
         $assignment = ShiftAssignment::firstOrCreate(
             ['user_id' => $data['user_id'], 'shift_template_id' => $data['shift_template_id'], 'date' => $data['date']],
-            ['company_id' => $actor->company_id],
+            ['tenant_id' => $actor->tenant_id],
         );
 
         if ($assignment->wasRecentlyCreated) {

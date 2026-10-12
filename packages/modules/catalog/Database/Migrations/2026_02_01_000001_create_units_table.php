@@ -10,13 +10,13 @@ return new class extends Migration
     {
         Schema::create('units', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('company_id')->nullable()->constrained()->cascadeOnDelete();
+            $table->foreignId('tenant_id')->nullable()->constrained()->cascadeOnDelete();
             $table->string('name');
             $table->string('abbreviation', 10);
             $table->boolean('is_active')->default(true);
             $table->timestamps();
 
-            $table->index(['company_id', 'is_active']);
+            $table->index(['tenant_id', 'is_active']);
         });
     }
 

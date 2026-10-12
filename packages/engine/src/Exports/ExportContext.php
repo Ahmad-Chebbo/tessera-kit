@@ -2,13 +2,13 @@
 
 namespace Tessera\Engine\Exports;
 
-use App\Modules\Company\Models\Company;
 use App\Modules\Team\Models\User;
+use App\Modules\Tenant\Models\Tenant;
 use Carbon\CarbonImmutable;
 use Carbon\CarbonInterface;
 
 /**
- * Everything a report needs to produce its rows: who asked, for which company, in which language and with
+ * Everything a report needs to produce its rows: who asked, for which tenant, in which language and with
  * which (already validated) filters.
  */
 class ExportContext
@@ -23,7 +23,7 @@ class ExportContext
      */
     public function __construct(
         public readonly User $user,
-        public readonly Company $company,
+        public readonly Tenant $tenant,
         public readonly string $locale,
         public readonly array $filters = [],
     ) {}
@@ -35,12 +35,12 @@ class ExportContext
 
     public function currency(): string
     {
-        return $this->company->currency ?: 'USD';
+        return $this->tenant->currency ?: 'USD';
     }
 
     public function timezone(): string
     {
-        return $this->company->timezone ?: config('app.timezone');
+        return $this->tenant->timezone ?: config('app.timezone');
     }
 
     public function filter(string $key, mixed $default = null): mixed
@@ -58,7 +58,7 @@ class ExportContext
     }
 
     /**
-     * Shows a stored (UTC) moment in the company's own clock.
+     * Shows a stored (UTC) moment in the tenant's own clock.
      */
     public function local(?CarbonInterface $moment): ?CarbonImmutable
     {

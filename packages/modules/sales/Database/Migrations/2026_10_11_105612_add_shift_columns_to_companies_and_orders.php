@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::table('companies', function (Blueprint $table) {
+        Schema::table('tenants', function (Blueprint $table) {
             $table->boolean('require_pos_shift')->default(false);
         });
 
@@ -23,7 +23,7 @@ return new class extends Migration
             $table->dropConstrainedForeignId('pos_shift_id');
         });
 
-        Schema::table('companies', function (Blueprint $table) {
+        Schema::table('tenants', function (Blueprint $table) {
             $table->dropColumn('require_pos_shift');
         });
     }

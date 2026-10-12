@@ -38,7 +38,7 @@ class VoidOrderAction
                 ->where('type', StockMovementType::Sale)
                 ->get()
                 ->each(fn (StockMovement $sale) => StockMovement::create([
-                    'company_id' => $sale->company_id,
+                    'tenant_id' => $sale->tenant_id,
                     'product_id' => $sale->product_id,
                     'location_id' => $sale->location_id,
                     'type' => StockMovementType::Adjustment,

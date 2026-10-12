@@ -2,40 +2,40 @@
 
 use App\Modules\Attendance\Models\AttendanceExcuse;
 use App\Modules\Attendance\Models\AttendanceRecord;
-use App\Modules\Company\Models\Branch;
-use App\Modules\Company\Models\Company;
 use App\Modules\Shifts\Models\ShiftAssignment;
 use App\Modules\Shifts\Models\ShiftTemplate;
 use App\Modules\Team\Models\ActivityLog;
 use App\Modules\Team\Models\User;
+use App\Modules\Tenant\Models\Branch;
+use App\Modules\Tenant\Models\Tenant;
 use Carbon\CarbonImmutable;
 use Database\Seeders\RolesAndPermissionsSeeder;
 use Inertia\Testing\AssertableInertia as Assert;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
-function crewMember(Company $company, Branch $branch, array $permissions): User
+function crewMember(Tenant $tenant, Branch $branch, array $permissions): User
 {
     foreach ($permissions as $permission) {
         Permission::findOrCreate($permission);
     }
 
-    return User::factory()->create(['company_id' => $company->id, 'branch_id' => $branch->id])->givePermissionTo($permissions);
+    return User::factory()->create(['tenant_id' => $tenant->id, 'branch_id' => $branch->id])->givePermissionTo($permissions);
 }
 
 beforeEach(function () {
     $this->travelTo(CarbonImmutable::parse('2026-10-14 09:10:00', 'UTC'));
 
-    $this->company = Company::factory()->create(['timezone' => 'UTC']);
-    $this->branch = Branch::factory()->create(['company_id' => $this->company->id]);
-    $this->manager = crewMember($this->company, $this->branch, ['view attendance', 'manage attendance', 'record attendance', 'view activity log']);
-    $this->employee = crewMember($this->company, $this->branch, ['record attendance']);
+    $this->tenant = Tenant::factory()->create(['timezone' => 'UTC']);
+    $this->branch = Branch::factory()->create(['tenant_id' => $this->tenant->id]);
+    $this->manager = crewMember($this->tenant, $this->branch, ['view attendance', 'manage attendance', 'record attendance', 'view activity log']);
+    $this->employee = crewMember($this->tenant, $this->branch, ['record attendance']);
 
-    $this->other = Company::factory()->create();
-    $this->otherBranch = Branch::factory()->create(['company_id' => $this->other->id]);
+    $this->other = Tenant::factory()->create();
+    $this->otherBranch = Branch::factory()->create(['tenant_id' => $this->other->id]);
     $this->otherManager = crewMember($this->other, $this->otherBranch, ['view attendance', 'manage attendance', 'record attendance']);
 
-    $this->morning = ShiftTemplate::factory()->create(['company_id' => $this->company->id, 'starts_at' => '09:00', 'ends_at' => '17:00']);
+    $this->morning = ShiftTemplate::factory()->create(['tenant_id' => $this->tenant->id, 'starts_at' => '09:00', 'ends_at' => '17:00']);
 });
 
 describe('self check-in and check-out', function () {
@@ -84,8 +84,8 @@ describe('self check-in and check-out', function () {
         $this->actingAs($this->employee)->post(route('attendance.check-in'))->assertSessionHas('success');
     });
 
-    it('measures against the company timezone', function () {
-        $this->company->update(['timezone' => 'Asia/Beirut']);
+    it('measures against the tenant timezone', function () {
+        $this->tenant->update(['timezone' => 'Asia/Beirut']);
         ShiftAssignment::factory()->create(['user_id' => $this->employee->id, 'shift_template_id' => $this->morning->id, 'date' => '2026-10-14']);
 
         $this->actingAs($this->employee)->post(route('attendance.check-in'));
@@ -94,7 +94,7 @@ describe('self check-in and check-out', function () {
     });
 
     it('requires the record permission', function () {
-        $viewer = crewMember($this->company, $this->branch, ['view attendance']);
+        $viewer = crewMember($this->tenant, $this->branch, ['view attendance']);
 
         $this->actingAs($viewer)->post(route('attendance.check-in'))->assertForbidden();
     });
@@ -153,7 +153,7 @@ describe('manager corrections', function () {
         ])->assertSessionHasErrors('user_id');
     });
 
-    it('keeps other companies out', function () {
+    it('keeps other tenants out', function () {
         $record = AttendanceRecord::factory()->create(['user_id' => $this->employee->id]);
 
         $this->actingAs($this->otherManager)->delete(route('attendance.destroy', $record))->assertForbidden();
@@ -226,7 +226,7 @@ describe('absences', function () {
         ])->assertSessionHasErrors(['date', 'reason']);
     });
 
-    it('is limited to viewers and the own company', function () {
+    it('is limited to viewers and the own tenant', function () {
         ShiftAssignment::factory()->create(['user_id' => $this->employee->id, 'shift_template_id' => $this->morning->id, 'date' => '2026-10-12']);
 
         $this->actingAs($this->employee)->get(route('attendance.absences'))->assertForbidden();
@@ -253,7 +253,7 @@ describe('report', function () {
                 ->where('report.daily.1.headcount', 2));
     });
 
-    it('is scoped to the company and needs the view permission', function () {
+    it('is scoped to the tenant and needs the view permission', function () {
         AttendanceRecord::factory()->create(['user_id' => $this->employee->id, 'work_date' => '2026-10-13']);
 
         $this->actingAs($this->employee)->get(route('attendance.report'))->assertForbidden();

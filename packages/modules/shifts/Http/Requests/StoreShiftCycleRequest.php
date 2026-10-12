@@ -17,11 +17,11 @@ class StoreShiftCycleRequest extends FormRequest
      */
     public function rules(): array
     {
-        $companyId = $this->user()->company_id;
+        $tenantId = $this->user()->tenant_id;
 
         return [
-            'user_id' => ['required', 'integer', Rule::exists('users', 'id')->where('company_id', $companyId)],
-            'shift_template_id' => ['required', 'integer', Rule::exists('shift_templates', 'id')->where('company_id', $companyId)->where('is_active', true)],
+            'user_id' => ['required', 'integer', Rule::exists('users', 'id')->where('tenant_id', $tenantId)],
+            'shift_template_id' => ['required', 'integer', Rule::exists('shift_templates', 'id')->where('tenant_id', $tenantId)->where('is_active', true)],
             'weekdays' => ['required', 'array', 'min:1', 'max:7'],
             'weekdays.*' => ['integer', 'between:0,6', 'distinct'],
             'starts_on' => ['required', 'date_format:Y-m-d'],

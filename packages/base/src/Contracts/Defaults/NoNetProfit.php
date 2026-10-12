@@ -12,7 +12,7 @@ class NoNetProfit implements NetProfit
         return false;
     }
 
-    public function forPeriod(int $companyId, CarbonImmutable $from, CarbonImmutable $to, ?int $branchId = null): array
+    public function forPeriod(int $tenantId, CarbonImmutable $from, CarbonImmutable $to, ?int $branchId = null): array
     {
         return ['months' => [], 'totals' => []];
     }

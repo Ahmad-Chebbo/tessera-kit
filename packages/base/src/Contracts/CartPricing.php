@@ -7,7 +7,7 @@ use Tessera\Core\Pricing\DiscountResult;
 use Tessera\Core\Pricing\PricingContext;
 
 /**
- * Prices a cart with the company's discount rules. The Discounts module answers; without it nothing is discounted.
+ * Prices a cart with the tenant's discount rules. The Discounts module answers; without it nothing is discounted.
  */
 interface CartPricing
 {

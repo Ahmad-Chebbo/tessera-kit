@@ -2,8 +2,8 @@
 
 namespace App\Modules\Shifts\Models;
 
-use App\Modules\Company\Models\Company;
 use App\Modules\Shifts\Database\Factories\ShiftTemplateFactory;
+use App\Modules\Tenant\Models\Tenant;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -15,16 +15,16 @@ class ShiftTemplate extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['company_id', 'name', 'starts_at', 'ends_at', 'is_active'];
+    protected $fillable = ['tenant_id', 'name', 'starts_at', 'ends_at', 'is_active'];
 
     protected function casts(): array
     {
         return ['is_active' => 'boolean'];
     }
 
-    public function company(): BelongsTo
+    public function tenant(): BelongsTo
     {
-        return $this->belongsTo(Company::class);
+        return $this->belongsTo(Tenant::class);
     }
 
     public function assignments(): HasMany

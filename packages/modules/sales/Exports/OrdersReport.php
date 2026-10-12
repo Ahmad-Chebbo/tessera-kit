@@ -21,10 +21,10 @@ class OrdersReport extends ReportDefinition
         return 'view orders';
     }
 
-    public function filterRules(int $companyId): array
+    public function filterRules(int $tenantId): array
     {
         return [
-            ...$this->branchRules($companyId),
+            ...$this->branchRules($tenantId),
             'search' => ['nullable', 'string', 'max:100'],
             'status' => ['nullable', Rule::in(['completed', 'voided', 'debt'])],
             'payment_type' => ['nullable', Rule::in(['cash', 'debt'])],
@@ -120,7 +120,7 @@ class OrdersReport extends ReportDefinition
      */
     private function query(ExportContext $context): Builder
     {
-        $query = Order::query()->where('company_id', $context->company->id);
+        $query = Order::query()->where('tenant_id', $context->tenant->id);
 
         if ($branchId = $this->branchId($context)) {
             $query->where('branch_id', $branchId);

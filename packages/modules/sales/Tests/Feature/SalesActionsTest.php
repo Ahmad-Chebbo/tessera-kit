@@ -1,9 +1,6 @@
 <?php
 
 use App\Modules\Catalog\Models\Product;
-use App\Modules\Company\Models\Branch;
-use App\Modules\Company\Models\Company;
-use App\Modules\Company\Models\Location;
 use App\Modules\Customers\Models\Customer;
 use App\Modules\Inventory\Models\StockMovement;
 use App\Modules\Sales\Actions\CheckoutAction;
@@ -16,6 +13,9 @@ use App\Modules\Sales\Models\HeldOrder;
 use App\Modules\Sales\Models\Order;
 use App\Modules\Team\Models\ActivityLog;
 use App\Modules\Team\Models\User;
+use App\Modules\Tenant\Models\Branch;
+use App\Modules\Tenant\Models\Location;
+use App\Modules\Tenant\Models\Tenant;
 
 function actionSale(User $cashier, Branch $branch, Product $product, string $paymentType = 'cash', ?int $customerId = null): Order
 {
@@ -36,12 +36,12 @@ function actionStock(Product $product): float
 }
 
 beforeEach(function () {
-    $this->company = Company::factory()->create();
-    $this->branch = Branch::factory()->create(['company_id' => $this->company->id]);
-    $this->location = Location::factory()->create(['company_id' => $this->company->id, 'branch_id' => $this->branch->id, 'type' => 'branch']);
-    $this->cashier = User::factory()->create(['company_id' => $this->company->id, 'branch_id' => $this->branch->id]);
-    $this->product = Product::factory()->create(['company_id' => $this->company->id, 'base_price' => 25, 'cost_price' => 10, 'is_active' => true]);
-    StockMovement::factory()->create(['company_id' => $this->company->id, 'product_id' => $this->product->id, 'location_id' => $this->location->id, 'quantity' => 100]);
+    $this->tenant = Tenant::factory()->create();
+    $this->branch = Branch::factory()->create(['tenant_id' => $this->tenant->id]);
+    $this->location = Location::factory()->create(['tenant_id' => $this->tenant->id, 'branch_id' => $this->branch->id, 'type' => 'branch']);
+    $this->cashier = User::factory()->create(['tenant_id' => $this->tenant->id, 'branch_id' => $this->branch->id]);
+    $this->product = Product::factory()->create(['tenant_id' => $this->tenant->id, 'base_price' => 25, 'cost_price' => 10, 'is_active' => true]);
+    StockMovement::factory()->create(['tenant_id' => $this->tenant->id, 'product_id' => $this->product->id, 'location_id' => $this->location->id, 'quantity' => 100]);
 });
 
 describe('voiding an order', function () {
@@ -66,7 +66,7 @@ describe('voiding an order', function () {
 
 describe('marking an order as paid', function () {
     beforeEach(function () {
-        $this->customer = Customer::create(['company_id' => $this->company->id, 'name' => 'Mona']);
+        $this->customer = Customer::create(['tenant_id' => $this->tenant->id, 'name' => 'Mona']);
     });
 
     it('settles a debt order', function () {

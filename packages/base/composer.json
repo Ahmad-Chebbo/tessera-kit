@@ -1,6 +1,6 @@
 {
     "name": "tessera/tessera-base",
-    "description": "The base of Tessera: sign-in, users, roles and permissions. Add tessera-saas on top for companies, branches and subscriptions.",
+    "description": "The base of Tessera: sign-in, users, roles and permissions. Add tessera-saas on top for tenants, branches and subscriptions.",
     "type": "library",
     "license": "proprietary",
     "require": {

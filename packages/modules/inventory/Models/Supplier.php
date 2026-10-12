@@ -2,7 +2,7 @@
 
 namespace App\Modules\Inventory\Models;
 
-use App\Modules\Company\Models\Company;
+use App\Modules\Tenant\Models\Tenant;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Supplier extends Model
 {
     protected $fillable = [
-        'company_id',
+        'tenant_id',
         'name',
         'contact_person',
         'email',
@@ -27,9 +27,9 @@ class Supplier extends Model
         ];
     }
 
-    public function company(): BelongsTo
+    public function tenant(): BelongsTo
     {
-        return $this->belongsTo(Company::class);
+        return $this->belongsTo(Tenant::class);
     }
 
     public function purchases(): HasMany

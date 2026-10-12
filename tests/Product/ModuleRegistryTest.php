@@ -1,6 +1,6 @@
 <?php
 
-use App\Modules\Company\Services\CurrencyService;
+use App\Modules\Tenant\Services\CurrencyService;
 use Illuminate\Support\Facades\Process;
 use Illuminate\Support\ServiceProvider;
 use Tessera\Engine\ModuleException;
@@ -72,7 +72,7 @@ describe('enabling', function () {
     it('leaves out disabled modules but never core modules', function () {
         $registry = new ModuleRegistry(array_values(app(ModuleRegistry::class)->all()), 'catalog,inventory');
 
-        expect(array_keys($registry->enabled()))->toContain('catalog', 'inventory', 'company', 'team', 'auth', 'subscription')
+        expect(array_keys($registry->enabled()))->toContain('catalog', 'inventory', 'tenant', 'team', 'auth', 'subscription')
             ->not->toContain('expenses', 'sales')
             ->and(array_filter($registry->routeFiles('web.php'), fn (string $file): bool => stripos($file, 'expenses') !== false))->toBe([]);
     });

@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
 /**
- * Which branches a user may look at. The Company module answers; without it there are no branches, and everyone sees
+ * Which branches a user may look at. The Tenant module answers; without it there are no branches, and everyone sees
  * everything.
  */
 interface BranchScope

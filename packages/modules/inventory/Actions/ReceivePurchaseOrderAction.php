@@ -22,7 +22,7 @@ class ReceivePurchaseOrderAction
             // Create stock movements for each item
             foreach ($purchase->items as $item) {
                 StockMovement::create([
-                    'company_id' => $purchase->company_id,
+                    'tenant_id' => $purchase->tenant_id,
                     'product_id' => $item->product_id,
                     'location_id' => $purchase->location_id,
                     'type' => StockMovementType::Purchase,

@@ -21,21 +21,21 @@ class StoreExpenseRequest extends FormRequest
      */
     public function rules(): array
     {
-        $companyId = $this->user()->company_id;
+        $tenantId = $this->user()->tenant_id;
         $expense = $this->route('expense');
-        $inCompany = fn (string $table) => Rule::exists($table, 'id')->where('company_id', $companyId);
+        $inTenant = fn (string $table) => Rule::exists($table, 'id')->where('tenant_id', $tenantId);
 
         return [
-            'expense_category_id' => ['required', 'integer', $inCompany('expense_categories')->where('is_active', true)],
+            'expense_category_id' => ['required', 'integer', $inTenant('expense_categories')->where('is_active', true)],
             'amount' => ['required', 'numeric', 'gt:0', 'max:99999999'],
             'expense_date' => ['required', 'date_format:Y-m-d'],
             'description' => ['required', 'string', 'max:255'],
-            'branch_id' => ['nullable', 'integer', $inCompany('branches')],
-            'employee_id' => ['nullable', 'integer', $inCompany('users')],
+            'branch_id' => ['nullable', 'integer', $inTenant('branches')],
+            'employee_id' => ['nullable', 'integer', $inTenant('users')],
             'purchase_id' => app(PurchaseLookup::class)->available()
                 ? [
                     'nullable', 'integer',
-                    Rule::exists('purchases', 'id')->where('company_id', $companyId)->where('status', 'received'),
+                    Rule::exists('purchases', 'id')->where('tenant_id', $tenantId)->where('status', 'received'),
                     Rule::unique('expenses', 'purchase_id')->ignore($expense?->id),
                 ]
                 : ['prohibited'],
@@ -50,7 +50,7 @@ class StoreExpenseRequest extends FormRequest
     public function after(): array
     {
         return [function (Validator $validator): void {
-            $category = ExpenseCategory::query()->where('company_id', $this->user()->company_id)->find($this->input('expense_category_id'));
+            $category = ExpenseCategory::query()->where('tenant_id', $this->user()->tenant_id)->find($this->input('expense_category_id'));
 
             if ($this->filled('spread_months') && $category?->type !== ExpenseType::Assets) {
                 $validator->errors()->add('spread_months', 'Only asset expenses can be spread over months.');

@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('pos_shifts', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('tenant_id')->constrained()->cascadeOnDelete();
             $table->foreignId('branch_id')->constrained()->cascadeOnDelete();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->unsignedBigInteger('open_user_id')->nullable()->unique();
@@ -25,7 +25,7 @@ return new class extends Migration
             $table->json('summary')->nullable();
             $table->timestamps();
 
-            $table->index(['company_id', 'opened_at']);
+            $table->index(['tenant_id', 'opened_at']);
             $table->index(['user_id', 'opened_at']);
         });
     }

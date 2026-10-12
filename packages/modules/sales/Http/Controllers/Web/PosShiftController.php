@@ -3,13 +3,13 @@
 namespace App\Modules\Sales\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
-use App\Modules\Company\Services\BranchAccess;
 use App\Modules\Sales\Http\Requests\ClosePosShiftRequest;
 use App\Modules\Sales\Http\Requests\OpenPosShiftRequest;
 use App\Modules\Sales\Models\Order;
 use App\Modules\Sales\Models\PosShift;
 use App\Modules\Sales\Services\PosShiftService;
 use App\Modules\Team\Models\User;
+use App\Modules\Tenant\Services\BranchAccess;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -26,7 +26,7 @@ class PosShiftController extends Controller
         $seesEveryone = $actor->can('view shift reports');
 
         $query = PosShift::query()
-            ->where('company_id', $actor->company_id)
+            ->where('tenant_id', $actor->tenant_id)
             ->when(! $seesEveryone, fn ($query) => $query->where('user_id', $actor->id))
             ->when($seesEveryone, fn ($query) => $this->access->scope($query, $actor, $request->query('branch_id')))
             ->when($seesEveryone && $request->integer('user_id'), fn ($query, $id) => $query->where('user_id', $id))
@@ -35,7 +35,7 @@ class PosShiftController extends Controller
         return Inertia::render('PosShifts/Index', [
             'shifts' => $query->with(['user:id,name', 'branch:id,name'])->latest('opened_at')->paginate(15)->withQueryString(),
             'currentShift' => ($current = $this->shifts->current($actor)) ? $this->shiftPayload($current) : null,
-            'employees' => $seesEveryone ? $this->access->scope(User::query()->where('company_id', $actor->company_id), $actor, $request->query('branch_id'))->orderBy('name')->get(['id', 'name']) : [],
+            'employees' => $seesEveryone ? $this->access->scope(User::query()->where('tenant_id', $actor->tenant_id), $actor, $request->query('branch_id'))->orderBy('name')->get(['id', 'name']) : [],
             'filters' => [...$request->only(['user_id', 'status']), 'branch_id' => $this->access->canSeeAll($actor) ? $this->access->effective($actor, $request->query('branch_id')) : null],
             'can' => ['open' => $actor->can('open pos shift'), 'seeAll' => $seesEveryone],
         ]);
@@ -68,7 +68,7 @@ class PosShiftController extends Controller
         $actor = $request->user();
 
         abort_unless(
-            $posShift->company_id === $actor->company_id
+            $posShift->tenant_id === $actor->tenant_id
                 && ($posShift->user_id === $actor->id || ($actor->can('view shift reports') && $this->access->allows($actor, $posShift->branch_id))),
             403,
         );

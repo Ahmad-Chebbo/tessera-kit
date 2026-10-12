@@ -7,7 +7,7 @@ return [
     | Employee profiles
     |--------------------------------------------------------------------------
     |
-    | Employment details on each user (employee number, job title, hire date...). Leave empty to follow the Company
+    | Employment details on each user (employee number, job title, hire date...). Leave empty to follow the Tenant
     | module: on when it is installed, off for a plain users-and-roles project. Set true or false to decide yourself.
     |
     */

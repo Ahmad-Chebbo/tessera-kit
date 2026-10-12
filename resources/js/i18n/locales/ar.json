@@ -21,7 +21,7 @@
         "branches": "الفروع",
         "locations": "المواقع",
         "users": "المستخدمين",
-        "companies": "الشركات",
+        "tenants": "الشركات",
         "warehouse": "المستودع",
         "customers": "العملاء"
     },

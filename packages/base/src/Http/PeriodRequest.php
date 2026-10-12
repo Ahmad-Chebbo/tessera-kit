@@ -52,11 +52,11 @@ class PeriodRequest extends FormRequest
     }
 
     /**
-     * Today in the company's timezone, so "today" means the shop's day rather than the server's.
+     * Today in the tenant's timezone, so "today" means the shop's day rather than the server's.
      */
     public function today(): CarbonImmutable
     {
-        return CarbonImmutable::now($this->user()?->company?->timezone ?: config('app.timezone'))->startOfDay();
+        return CarbonImmutable::now($this->user()?->tenant?->timezone ?: config('app.timezone'))->startOfDay();
     }
 
     /**

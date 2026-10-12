@@ -7,7 +7,7 @@ use Tessera\Core\Contracts\RevenueSource;
 
 class NoRevenueSource implements RevenueSource
 {
-    public function byMonth(int $companyId, CarbonImmutable $from, CarbonImmutable $to, ?int $branchId = null): array
+    public function byMonth(int $tenantId, CarbonImmutable $from, CarbonImmutable $to, ?int $branchId = null): array
     {
         return [];
     }

@@ -21,14 +21,14 @@ class StoreProductRequest extends FormRequest
 
         return [
             'name' => ['required', 'string', 'max:255'],
-            'category_id' => ['nullable', 'integer', Rule::exists('categories', 'id')->where('company_id', $user->company_id)],
+            'category_id' => ['nullable', 'integer', Rule::exists('categories', 'id')->where('tenant_id', $user->tenant_id)],
             'barcode' => [
                 'nullable',
                 'string',
                 'max:255',
                 Rule::unique('products', 'barcode')
                     ->where(function ($query) use ($user) {
-                        return $query->where('company_id', $user->company_id);
+                        return $query->where('tenant_id', $user->tenant_id);
                     })
                     ->ignore($productId),
             ],
@@ -38,7 +38,7 @@ class StoreProductRequest extends FormRequest
                 'max:255',
                 Rule::unique('products', 'sku')
                     ->where(function ($query) use ($user) {
-                        return $query->where('company_id', $user->company_id);
+                        return $query->where('tenant_id', $user->tenant_id);
                     })
                     ->ignore($productId),
             ],

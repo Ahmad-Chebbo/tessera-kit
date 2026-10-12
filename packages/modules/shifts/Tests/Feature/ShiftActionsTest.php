@@ -1,13 +1,13 @@
 <?php
 
-use App\Modules\Company\Models\Branch;
-use App\Modules\Company\Models\Company;
 use App\Modules\Shifts\Actions\AssignShiftAction;
 use App\Modules\Shifts\Actions\CreateShiftCycleAction;
 use App\Modules\Shifts\Models\ShiftAssignment;
 use App\Modules\Shifts\Models\ShiftTemplate;
 use App\Modules\Team\Models\ActivityLog;
 use App\Modules\Team\Models\User;
+use App\Modules\Tenant\Models\Branch;
+use App\Modules\Tenant\Models\Tenant;
 use Carbon\CarbonImmutable;
 use Spatie\Permission\Models\Permission;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -15,13 +15,13 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 beforeEach(function () {
     $this->travelTo(CarbonImmutable::parse('2026-10-14 08:00:00', 'UTC'));
 
-    $this->company = Company::factory()->create();
-    $this->north = Branch::factory()->create(['company_id' => $this->company->id]);
-    $this->south = Branch::factory()->create(['company_id' => $this->company->id]);
-    $this->boss = User::factory()->create(['company_id' => $this->company->id, 'branch_id' => $this->north->id])->givePermissionTo(Permission::findOrCreate('view all branches'));
-    $this->northManager = User::factory()->create(['company_id' => $this->company->id, 'branch_id' => $this->north->id]);
-    $this->southStaff = User::factory()->create(['company_id' => $this->company->id, 'branch_id' => $this->south->id]);
-    $this->morning = ShiftTemplate::factory()->create(['company_id' => $this->company->id, 'starts_at' => '09:00', 'ends_at' => '17:00']);
+    $this->tenant = Tenant::factory()->create();
+    $this->north = Branch::factory()->create(['tenant_id' => $this->tenant->id]);
+    $this->south = Branch::factory()->create(['tenant_id' => $this->tenant->id]);
+    $this->boss = User::factory()->create(['tenant_id' => $this->tenant->id, 'branch_id' => $this->north->id])->givePermissionTo(Permission::findOrCreate('view all branches'));
+    $this->northManager = User::factory()->create(['tenant_id' => $this->tenant->id, 'branch_id' => $this->north->id]);
+    $this->southStaff = User::factory()->create(['tenant_id' => $this->tenant->id, 'branch_id' => $this->south->id]);
+    $this->morning = ShiftTemplate::factory()->create(['tenant_id' => $this->tenant->id, 'starts_at' => '09:00', 'ends_at' => '17:00']);
 });
 
 describe('assigning a shift', function () {
@@ -32,7 +32,7 @@ describe('assigning a shift', function () {
         $second = app(AssignShiftAction::class)->execute($this->boss, $data);
 
         expect($second->id)->toBe($first->id)
-            ->and($first->company_id)->toBe($this->company->id)
+            ->and($first->tenant_id)->toBe($this->tenant->id)
             ->and(ShiftAssignment::count())->toBe(1)
             ->and(ActivityLog::where('event', 'shift.assigned')->where('user_id', $this->boss->id)->count())->toBe(1);
     });
@@ -52,7 +52,7 @@ describe('creating a shift cycle', function () {
         $dates = ShiftAssignment::where('shift_cycle_id', $cycle->id)->orderBy('date')->pluck('date')->all();
 
         expect($cycle->weekdays)->toBe([1, 3])
-            ->and($cycle->company_id)->toBe($this->company->id)
+            ->and($cycle->tenant_id)->toBe($this->tenant->id)
             ->and($dates)->toBe(['2026-10-14', '2026-10-19', '2026-10-21', '2026-10-26', '2026-10-28']);
     });
 

@@ -1,32 +1,32 @@
 <?php
 
 use App\Modules\Catalog\Models\Product;
-use App\Modules\Company\Models\Branch;
-use App\Modules\Company\Models\Company;
-use App\Modules\Company\Models\Location;
 use App\Modules\Customers\Models\Customer;
 use App\Modules\Inventory\Models\StockMovement;
 use App\Modules\Sales\Enums\OrderStatus;
 use App\Modules\Sales\Models\Order;
 use App\Modules\Team\Models\User;
+use App\Modules\Tenant\Models\Branch;
+use App\Modules\Tenant\Models\Location;
+use App\Modules\Tenant\Models\Tenant;
 use Spatie\Permission\Models\Permission;
 
 beforeEach(function () {
-    $this->company = Company::factory()->create(['currency' => 'USD']);
-    $this->branch = Branch::factory()->create(['company_id' => $this->company->id]);
+    $this->tenant = Tenant::factory()->create(['currency' => 'USD']);
+    $this->branch = Branch::factory()->create(['tenant_id' => $this->tenant->id]);
     $this->location = Location::factory()->create([
-        'company_id' => $this->company->id,
+        'tenant_id' => $this->tenant->id,
         'branch_id' => $this->branch->id,
         'type' => 'branch',
     ]);
     $this->user = User::factory()->create([
-        'company_id' => $this->company->id,
+        'tenant_id' => $this->tenant->id,
         'branch_id' => $this->branch->id,
     ]);
     Permission::findOrCreate('access pos');
     $this->user->givePermissionTo('access pos');
     $this->product = Product::factory()->create([
-        'company_id' => $this->company->id,
+        'tenant_id' => $this->tenant->id,
         'base_price' => 25.00,
         'cost_price' => 15.00,
         'is_active' => true,
@@ -34,7 +34,7 @@ beforeEach(function () {
 
     // Add initial stock
     StockMovement::factory()->create([
-        'company_id' => $this->company->id,
+        'tenant_id' => $this->tenant->id,
         'product_id' => $this->product->id,
         'location_id' => $this->location->id,
         'quantity' => 100,
@@ -218,7 +218,7 @@ it('returns receipt data for order', function () {
         ->get(route('pos.receipt', $orderId))
         ->assertSuccessful()
         ->assertJsonStructure([
-            'company_name',
+            'tenant_name',
             'branch_name',
             'order_number',
             'date',
@@ -246,9 +246,9 @@ it('prevents accessing receipt from another branch', function () {
     $orderId = $checkoutResponse->json('order.id');
 
     // Create another user in different branch
-    $otherBranch = Branch::factory()->create(['company_id' => $this->company->id]);
+    $otherBranch = Branch::factory()->create(['tenant_id' => $this->tenant->id]);
     $otherUser = User::factory()->create([
-        'company_id' => $this->company->id,
+        'tenant_id' => $this->tenant->id,
         'branch_id' => $otherBranch->id,
     ]);
 
@@ -259,7 +259,7 @@ it('prevents accessing receipt from another branch', function () {
 });
 
 it('assigns a customer to a cash sale', function () {
-    $customer = Customer::create(['company_id' => $this->company->id, 'name' => 'Rana']);
+    $customer = Customer::create(['tenant_id' => $this->tenant->id, 'name' => 'Rana']);
 
     $this->actingAs($this->user)
         ->postJson(route('pos.checkout'), [
@@ -278,8 +278,8 @@ it('assigns a customer to a cash sale', function () {
     ]);
 });
 
-it('does not accept a customer from another company on a cash sale', function () {
-    $foreign = Customer::create(['company_id' => Company::factory()->create()->id, 'name' => 'Other']);
+it('does not accept a customer from another tenant on a cash sale', function () {
+    $foreign = Customer::create(['tenant_id' => Tenant::factory()->create()->id, 'name' => 'Other']);
 
     $this->actingAs($this->user)
         ->postJson(route('pos.checkout'), [

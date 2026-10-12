@@ -1,11 +1,11 @@
 <?php
 
 use App\Modules\Attendance\Models\AttendanceRecord;
-use App\Modules\Company\Models\Branch;
-use App\Modules\Company\Models\Company;
 use App\Modules\Shifts\Models\ShiftAssignment;
 use App\Modules\Shifts\Models\ShiftTemplate;
 use App\Modules\Team\Models\User;
+use App\Modules\Tenant\Models\Branch;
+use App\Modules\Tenant\Models\Tenant;
 use Illuminate\Support\Facades\DB;
 
 function managerTimesMigration(): object
@@ -14,15 +14,15 @@ function managerTimesMigration(): object
 }
 
 beforeEach(function () {
-    $this->company = Company::factory()->create(['timezone' => 'Asia/Beirut']);
-    $this->branch = Branch::factory()->create(['company_id' => $this->company->id]);
-    $this->employee = User::factory()->create(['company_id' => $this->company->id, 'branch_id' => $this->branch->id]);
+    $this->tenant = Tenant::factory()->create(['timezone' => 'Asia/Beirut']);
+    $this->branch = Branch::factory()->create(['tenant_id' => $this->tenant->id]);
+    $this->employee = User::factory()->create(['tenant_id' => $this->tenant->id, 'branch_id' => $this->branch->id]);
 
-    $template = ShiftTemplate::factory()->create(['company_id' => $this->company->id, 'starts_at' => '09:00', 'ends_at' => '17:00']);
+    $template = ShiftTemplate::factory()->create(['tenant_id' => $this->tenant->id, 'starts_at' => '09:00', 'ends_at' => '17:00']);
     ShiftAssignment::factory()->create(['user_id' => $this->employee->id, 'shift_template_id' => $template->id, 'date' => '2026-10-13']);
 
     $row = fn (string $source, string $updatedAt) => DB::table('attendance_records')->insertGetId([
-        'company_id' => $this->company->id, 'user_id' => $this->employee->id, 'source' => $source, 'work_date' => '2026-10-13',
+        'tenant_id' => $this->tenant->id, 'user_id' => $this->employee->id, 'source' => $source, 'work_date' => '2026-10-13',
         'check_in_at' => '2026-10-13 09:00:00', 'check_out_at' => '2026-10-13 17:00:00', 'late_minutes' => 180, 'early_leave_minutes' => 0, 'worked_minutes' => 480,
         'created_at' => $updatedAt, 'updated_at' => $updatedAt,
     ]);

@@ -1,13 +1,13 @@
 <?php
 
-use App\Modules\Company\Models\Branch;
-use App\Modules\Company\Models\Company;
 use App\Modules\Subscription\Enums\Module;
 use App\Modules\Subscription\Models\Plan;
 use App\Modules\Subscription\Services\SubscriptionService;
 use App\Modules\Team\Models\Role;
 use App\Modules\Team\Models\User;
 use App\Modules\Team\Services\PermissionSynchronizer;
+use App\Modules\Tenant\Models\Branch;
+use App\Modules\Tenant\Models\Tenant;
 use Inertia\Testing\AssertableInertia as Assert;
 use Spatie\Permission\Models\Permission;
 use Tessera\Engine\ModuleRegistry;
@@ -24,7 +24,7 @@ const PERMISSIONS_BEFORE_MODULES = [
     'view reports', 'view sales reports', 'view profit reports', 'view inventory reports',
     'view users', 'create users', 'edit users', 'delete users',
     'view customers', 'create customers', 'edit customers', 'delete customers',
-    'manage settings', 'manage companies', 'manage branches', 'manage locations',
+    'manage settings', 'manage tenants', 'manage branches', 'manage locations',
     'view all branches', 'export reports', 'manage discounts', 'manage roles', 'view activity log',
     'view shifts', 'manage shifts', 'view shift reports', 'open pos shift',
     'view attendance', 'manage attendance', 'record attendance',
@@ -92,7 +92,7 @@ describe('default roles', function () {
 
         $team = ['view activity log', 'view shifts', 'manage shifts', 'view shift reports', 'open pos shift', 'view attendance', 'manage attendance', 'record attendance'];
 
-        expect($roles['Admin'])->toBe(['manage companies'])
+        expect($roles['Admin'])->toBe(['manage tenants'])
             ->and($roles['Cashier'])->toEqualCanonicalizing(['access pos', 'view customers', 'create customers', 'open pos shift', 'record attendance'])
             ->and($roles['Stock Keeper'])->toEqualCanonicalizing(['view dashboard', 'view products', 'view categories', 'view inventory', 'adjust inventory', 'transfer stock', 'view purchases', 'receive purchases', 'view inventory reports', 'record attendance', 'view customers'])
             ->and($roles['Manager'])->toEqualCanonicalizing([
@@ -103,7 +103,7 @@ describe('default roles', function () {
                 'manage discounts', 'export reports', 'view all branches', ...$team,
             ])
             ->and($roles['Owner'])->toContain('manage roles', 'manage settings', 'view all branches', 'delete products', ...$team)
-            ->not->toContain('manage companies', 'delete users');
+            ->not->toContain('manage tenants', 'delete users');
     });
 
     it('creates the permissions and template roles when synced, and nothing twice', function () {
@@ -114,15 +114,15 @@ describe('default roles', function () {
         expect($first['created'])->toHaveCount(count(PERMISSIONS_BEFORE_MODULES) - $before)
             ->and($second['created'])->toBe([])
             ->and(Permission::count())->toBe(count(PERMISSIONS_BEFORE_MODULES))
-            ->and(Role::whereNull('company_id')->whereIn('name', ['Admin', 'Owner', 'Manager', 'Cashier', 'Stock Keeper'])->count())->toBe(5)
-            ->and(Role::whereNull('company_id')->where('name', 'Cashier')->first()->hasPermissionTo('access pos'))->toBeTrue();
+            ->and(Role::whereNull('tenant_id')->whereIn('name', ['Admin', 'Owner', 'Manager', 'Cashier', 'Stock Keeper'])->count())->toBe(5)
+            ->and(Role::whereNull('tenant_id')->where('name', 'Cashier')->first()->hasPermissionTo('access pos'))->toBeTrue();
     });
 
-    it('hands a new permission to company roles but never re-adds one a company removed', function () {
+    it('hands a new permission to tenant roles but never re-adds one a tenant removed', function () {
         app(PermissionSynchronizer::class)->sync();
 
-        $company = Company::factory()->create();
-        $owner = Role::query()->firstOrCreate(['name' => 'Owner', 'guard_name' => 'web', 'company_id' => $company->id]);
+        $tenant = Tenant::factory()->create();
+        $owner = Role::query()->firstOrCreate(['name' => 'Owner', 'guard_name' => 'web', 'tenant_id' => $tenant->id]);
         $owner->givePermissionTo('view products');
 
         Permission::where('name', 'view all branches')->delete();
@@ -142,9 +142,9 @@ describe('default roles', function () {
 
 describe('sidebar', function () {
     beforeEach(function () {
-        $this->company = Company::factory()->create();
-        $this->branch = Branch::factory()->create(['company_id' => $this->company->id]);
-        $this->staff = fn (array $permissions) => User::factory()->create(['company_id' => $this->company->id, 'branch_id' => $this->branch->id])->givePermissionTo(
+        $this->tenant = Tenant::factory()->create();
+        $this->branch = Branch::factory()->create(['tenant_id' => $this->tenant->id]);
+        $this->staff = fn (array $permissions) => User::factory()->create(['tenant_id' => $this->tenant->id, 'branch_id' => $this->branch->id])->givePermissionTo(
             collect($permissions)->map(fn (string $name) => Permission::findOrCreate($name))->all()
         );
     });
@@ -172,7 +172,7 @@ describe('sidebar', function () {
 
     it('hides features the plan leaves out', function () {
         $plan = Plan::factory()->withModules([Module::Catalog])->create();
-        app(SubscriptionService::class)->start($this->company, $plan);
+        app(SubscriptionService::class)->start($this->tenant, $plan);
 
         $navigation = navigationOf(($this->staff)(['view users', 'view products', 'view expenses', 'view orders']));
 
@@ -180,13 +180,13 @@ describe('sidebar', function () {
     });
 
     it('shows a super admin only the pages the role can open', function () {
-        $admin = User::factory()->create(['company_id' => null]);
-        $admin->givePermissionTo(Permission::findOrCreate('manage companies'));
-        $admin->assignRole(Role::query()->firstOrCreate(['name' => 'Admin', 'guard_name' => 'web', 'company_id' => null]));
+        $admin = User::factory()->create(['tenant_id' => null]);
+        $admin->givePermissionTo(Permission::findOrCreate('manage tenants'));
+        $admin->assignRole(Role::query()->firstOrCreate(['name' => 'Admin', 'guard_name' => 'web', 'tenant_id' => null]));
 
-        $labels = navigationLabels(navigationOf($admin, 'admin.companies.index'));
+        $labels = navigationLabels(navigationOf($admin, 'admin.tenants.index'));
 
-        expect($labels)->toContain('nav.companies', 'plans.nav')
+        expect($labels)->toContain('nav.tenants', 'plans.nav')
             ->not->toContain('nav.products', 'expenses.nav', 'attendance.historyNav', 'settings.title', 'nav.branches');
     });
 });

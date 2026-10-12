@@ -24,11 +24,11 @@ return [
     |--------------------------------------------------------------------------
     |
     | `module:package` requires the base package for every module, and the SaaS package too when the module requires one
-    | of these (companies, branches, plans).
+    | of these (tenants, branches, plans).
     |
     */
 
-    'saas_modules' => ['company', 'subscription'],
+    'saas_modules' => ['tenant', 'subscription'],
 
     /*
     |--------------------------------------------------------------------------

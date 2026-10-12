@@ -11,7 +11,7 @@ class NoPurchaseLookup implements PurchaseLookup
         return false;
     }
 
-    public function linkable(int $companyId, array $excluded = [], ?int $current = null): array
+    public function linkable(int $tenantId, array $excluded = [], ?int $current = null): array
     {
         return [];
     }

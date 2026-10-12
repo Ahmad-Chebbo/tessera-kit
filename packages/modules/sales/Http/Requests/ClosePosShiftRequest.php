@@ -14,7 +14,7 @@ class ClosePosShiftRequest extends FormRequest
         $user = $this->user();
 
         return $user !== null
-            && $shift->company_id === $user->company_id
+            && $shift->tenant_id === $user->tenant_id
             && ($shift->user_id === $user->id || $user->can('manage shifts'));
     }
 

@@ -31,7 +31,7 @@ class EmployeeProfile extends Model
 
     protected $fillable = [
         'user_id',
-        'company_id',
+        'tenant_id',
         ...self::EDITABLE,
     ];
 

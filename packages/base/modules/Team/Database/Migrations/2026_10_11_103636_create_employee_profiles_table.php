@@ -12,7 +12,7 @@ return new class extends Migration
         Schema::create('employee_profiles', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->unique()->constrained()->cascadeOnDelete();
-            $table->unsignedBigInteger('company_id')->nullable();
+            $table->unsignedBigInteger('tenant_id')->nullable();
             $table->string('employee_number', 32);
             $table->string('phone', 50)->nullable();
             $table->string('job_title', 100)->nullable();
@@ -25,18 +25,18 @@ return new class extends Migration
             $table->text('notes')->nullable();
             $table->timestamps();
 
-            $table->unique(['company_id', 'employee_number']);
+            $table->unique(['tenant_id', 'employee_number']);
         });
 
         $counters = [];
 
-        DB::table('users')->whereNotNull('company_id')->orderBy('id')->each(function ($user) use (&$counters) {
-            $counters[$user->company_id] = ($counters[$user->company_id] ?? 0) + 1;
+        DB::table('users')->whereNotNull('tenant_id')->orderBy('id')->each(function ($user) use (&$counters) {
+            $counters[$user->tenant_id] = ($counters[$user->tenant_id] ?? 0) + 1;
 
             DB::table('employee_profiles')->insert([
                 'user_id' => $user->id,
-                'company_id' => $user->company_id,
-                'employee_number' => 'EMP-'.str_pad((string) $counters[$user->company_id], 4, '0', STR_PAD_LEFT),
+                'tenant_id' => $user->tenant_id,
+                'employee_number' => 'EMP-'.str_pad((string) $counters[$user->tenant_id], 4, '0', STR_PAD_LEFT),
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);

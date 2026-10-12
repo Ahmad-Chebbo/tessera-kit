@@ -19,8 +19,8 @@ class ExpenseFactory extends Factory
     {
         return [
             'created_by' => User::factory(),
-            'company_id' => fn (array $attributes) => User::find($attributes['created_by'])->company_id,
-            'expense_category_id' => fn (array $attributes) => ExpenseCategory::factory()->create(['company_id' => $attributes['company_id']])->id,
+            'tenant_id' => fn (array $attributes) => User::find($attributes['created_by'])->tenant_id,
+            'expense_category_id' => fn (array $attributes) => ExpenseCategory::factory()->create(['tenant_id' => $attributes['tenant_id']])->id,
             'amount' => 100,
             'description' => fake()->sentence(3),
             'expense_date' => now()->toDateString(),

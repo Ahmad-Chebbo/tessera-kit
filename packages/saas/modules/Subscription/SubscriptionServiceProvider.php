@@ -17,7 +17,7 @@ use Tessera\Engine\ModuleManifest;
 use Tessera\Engine\ModuleServiceProvider;
 
 /**
- * Plans and subscriptions. A core module that works with Company and Team.
+ * Plans and subscriptions. A core module that works with Tenant and Team.
  */
 class SubscriptionServiceProvider extends ModuleServiceProvider
 {
@@ -34,7 +34,7 @@ class SubscriptionServiceProvider extends ModuleServiceProvider
     public function menu(): array
     {
         return [
-            new MenuItem('admin', 'plans.nav', 'admin.plans.index', 'plans', 'manage companies', ['admin.plans.*'], 20),
+            new MenuItem('admin', 'plans.nav', 'admin.plans.index', 'plans', 'manage tenants', ['admin.plans.*'], 20),
             new MenuItem('settings', 'plans.subscriptionNav', 'subscription.show', 'subscription', 'manage settings', ['subscription.*'], 10),
         ];
     }
@@ -69,17 +69,17 @@ class SubscriptionServiceProvider extends ModuleServiceProvider
     public function sharedProps(): array
     {
         return [
-            'plan' => fn (Request $request, ?User $user) => $user && $user->company_id ? $this->planSummary($user->company_id) : null,
+            'plan' => fn (Request $request, ?User $user) => $user && $user->tenant_id ? $this->planSummary($user->tenant_id) : null,
         ];
     }
 
     /**
      * @return array{name: string, status: string, usable: bool, trial_ends_at: ?string, ends_at: ?string, modules: list<string>}|null
      */
-    private function planSummary(int $companyId): ?array
+    private function planSummary(int $tenantId): ?array
     {
         $entitlements = $this->app->make(Entitlements::class);
-        $subscription = $entitlements->subscription($companyId);
+        $subscription = $entitlements->subscription($tenantId);
 
         return $subscription ? [
             'name' => $subscription->plan->name,
@@ -87,7 +87,7 @@ class SubscriptionServiceProvider extends ModuleServiceProvider
             'usable' => $subscription->isUsable(),
             'trial_ends_at' => $subscription->trial_ends_at?->toIso8601String(),
             'ends_at' => $subscription->ends_at?->toIso8601String(),
-            'modules' => $entitlements->modules($companyId),
+            'modules' => $entitlements->modules($tenantId),
         ] : null;
     }
 }

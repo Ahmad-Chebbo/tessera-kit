@@ -31,7 +31,7 @@ return new class extends Migration
         DB::table('plans')->insert([
             'name' => 'Legacy (all modules)',
             'slug' => 'legacy',
-            'description' => 'Given to companies that existed before plans were introduced.',
+            'description' => 'Given to tenants that existed before plans were introduced.',
             'price' => 0,
             'billing_interval' => 'lifetime',
             'modules' => json_encode($modules),

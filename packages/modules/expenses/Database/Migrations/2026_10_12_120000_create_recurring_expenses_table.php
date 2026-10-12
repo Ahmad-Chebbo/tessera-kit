@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('recurring_expenses', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('tenant_id')->constrained()->cascadeOnDelete();
             $table->foreignId('branch_id')->nullable()->constrained()->nullOnDelete();
             $table->foreignId('expense_category_id')->constrained()->cascadeOnDelete();
             $table->foreignId('created_by')->constrained('users')->cascadeOnDelete();

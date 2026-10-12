@@ -40,7 +40,7 @@ class UserController extends Controller
         }
 
         $query = User::query()
-            ->where('company_id', $user->company_id)
+            ->where('tenant_id', $user->tenant_id)
             ->with(['roles:id,name', ...($this->features->branches() ? ['branch:id,name'] : []), ...($this->features->employeeProfiles() ? ['employeeProfile'] : [])])
             ->orderBy('name');
 
@@ -112,7 +112,7 @@ class UserController extends Controller
     {
         $actor = $request->user();
 
-        if (! $actor->can('view users') || $user->company_id !== $actor->company_id) {
+        if (! $actor->can('view users') || $user->tenant_id !== $actor->tenant_id) {
             abort(403);
         }
 
@@ -121,7 +121,7 @@ class UserController extends Controller
         $user->load(['roles:id,name', ...($this->features->branches() ? ['branch:id,name'] : []), ...($this->features->employeeProfiles() ? ['employeeProfile'] : [])]);
 
         $activity = ActivityLog::query()
-            ->where('company_id', $actor->company_id)
+            ->where('tenant_id', $actor->tenant_id)
             ->where('user_id', $user->id)
             ->latest('id')
             ->paginate(10)
@@ -162,7 +162,7 @@ class UserController extends Controller
             abort(403);
         }
 
-        if ($user->company_id !== $currentUser->company_id) {
+        if ($user->tenant_id !== $currentUser->tenant_id) {
             abort(403);
         }
 
@@ -195,7 +195,7 @@ class UserController extends Controller
     public function update(UpdateUserRequest $request, User $user): RedirectResponse
     {
         $currentUser = $request->user();
-        abort_unless($user->company_id === $currentUser->company_id, 403);
+        abort_unless($user->tenant_id === $currentUser->tenant_id, 403);
         $this->access->ensure($currentUser, $user->branch_id);
 
         $this->updateEmployee->execute($currentUser, $user, $request->validated());
@@ -212,7 +212,7 @@ class UserController extends Controller
             abort(403);
         }
 
-        if ($user->company_id !== $currentUser->company_id) {
+        if ($user->tenant_id !== $currentUser->tenant_id) {
             abort(403);
         }
 

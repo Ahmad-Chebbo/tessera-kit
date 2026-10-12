@@ -4,11 +4,11 @@ namespace App\Modules\Inventory\Models;
 
 use App\Modules\Catalog\Models\Product;
 use App\Modules\Catalog\Models\Unit;
-use App\Modules\Company\Models\Company;
-use App\Modules\Company\Models\Location;
 use App\Modules\Inventory\Database\Factories\StockMovementFactory;
 use App\Modules\Inventory\Enums\StockMovementType;
 use App\Modules\Team\Models\User;
+use App\Modules\Tenant\Models\Location;
+use App\Modules\Tenant\Models\Tenant;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -21,7 +21,7 @@ class StockMovement extends Model
     use HasFactory;
 
     protected $fillable = [
-        'company_id',
+        'tenant_id',
         'product_id',
         'location_id',
         'type',
@@ -46,9 +46,9 @@ class StockMovement extends Model
         ];
     }
 
-    public function company(): BelongsTo
+    public function tenant(): BelongsTo
     {
-        return $this->belongsTo(Company::class);
+        return $this->belongsTo(Tenant::class);
     }
 
     public function unit(): BelongsTo

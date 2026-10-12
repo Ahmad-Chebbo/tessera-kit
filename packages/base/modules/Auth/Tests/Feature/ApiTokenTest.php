@@ -1,16 +1,16 @@
 <?php
 
-use App\Modules\Company\Models\Branch;
-use App\Modules\Company\Models\Company;
 use App\Modules\Team\Models\User;
+use App\Modules\Tenant\Models\Branch;
+use App\Modules\Tenant\Models\Tenant;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Permission;
 
 beforeEach(function () {
-    $this->company = Company::factory()->create();
-    $this->branch = Branch::factory()->create(['company_id' => $this->company->id]);
+    $this->tenant = Tenant::factory()->create();
+    $this->branch = Branch::factory()->create(['tenant_id' => $this->tenant->id]);
     $this->user = User::factory()->create([
-        'company_id' => $this->company->id, 'branch_id' => $this->branch->id,
+        'tenant_id' => $this->tenant->id, 'branch_id' => $this->branch->id,
         'email' => 'rana@example.com', 'password' => Hash::make('Str0ng!Passw0rd#2026'),
     ])->givePermissionTo(Permission::findOrCreate('view expenses'));
 });
@@ -19,7 +19,7 @@ it('exchanges credentials for a token that opens the API', function () {
     $response = $this->postJson('/api/v1/auth/token', ['email' => 'rana@example.com', 'password' => 'Str0ng!Passw0rd#2026', 'device_name' => 'phone'])
         ->assertCreated()
         ->assertJsonPath('user.email', 'rana@example.com')
-        ->assertJsonPath('user.company_id', $this->company->id);
+        ->assertJsonPath('user.tenant_id', $this->tenant->id);
 
     $this->withToken($response->json('token'))->getJson('/api/v1/me')->assertOk()->assertJsonPath('data.email', 'rana@example.com')->assertJsonPath('data.permissions.0', 'view expenses');
 });

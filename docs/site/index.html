@@ -284,8 +284,8 @@ footer .legal { margin-top: 2rem; max-width: 46em; }
         <div class="layers">
             <div class="layer you"><code>app/Modules</code><p>Your own modules. They sit in the project, load exactly like the packaged ones, and can be packaged for other projects later.</p></div>
             <div class="layer"><code>tessera/tessera-&lt;module&gt;</code><p>Ten feature modules: catalog, inventory, customers, sales, discounts, expenses, reports, exports, shifts and attendance.</p></div>
-            <div class="layer"><code>tessera/tessera-saas</code><p>Companies, branches, stock locations, currencies, plans and subscription limits. Add it when one install serves many businesses.</p></div>
-            <div class="layer"><code>tessera/tessera-base</code><p>Sign-in, registration, password reset, profile, API tokens, users, roles and permissions. Works without companies or plans.</p></div>
+            <div class="layer"><code>tessera/tessera-saas</code><p>Tenants, branches, stock locations, currencies, plans and subscription limits. Add it when one install serves many businesses.</p></div>
+            <div class="layer"><code>tessera/tessera-base</code><p>Sign-in, registration, password reset, profile, API tokens, users, roles and permissions. Works without tenants or plans.</p></div>
             <div class="layer-split">
                 <div class="layer"><code>tessera/tessera-engine</code><p>Finds, orders and boots modules, and gives you <code style="color:inherit">module:make</code>, <code style="color:inherit">module:add</code>, <code style="color:inherit">module:check</code> and <code style="color:inherit">module:package</code>. Works in any Laravel 13 app.</p></div>
                 <div class="layer"><code>@tessera/tessera-ui</code><p>Vue 3 components, charts, composables and the theme. Installed with bun or npm, and usable on its own.</p></div>
@@ -301,8 +301,8 @@ footer .legal { margin-top: 2rem; max-width: 46em; }
         <div class="features">
             <div class="feature"><h3>Modules that do not break each other</h3><p>A module declares what it requires and everything else goes through a contract with a safe default. <code style="font-family:var(--mono);font-size:.9em">module:check</code> fails the build when a module imports one it did not declare.</p></div>
             <div class="feature"><h3>Roles and permissions that follow the modules</h3><p>Each module declares its permissions and the roles that get them by default. Install a module, run <code style="font-family:var(--mono);font-size:.9em">modules:sync</code>, and the role page lists the new permissions.</p></div>
-            <div class="feature"><h3>Many companies in one install</h3><p>With the SaaS package every company has its own users, roles, branches, stock and settings. A platform admin creates companies and assigns plans.</p></div>
-            <div class="feature"><h3>Plans that switch features on and off</h3><p>A plan lists the modules a company may use and its limits, such as the number of users. Pages, menus and permissions of a module the plan leaves out disappear.</p></div>
+            <div class="feature"><h3>Many tenants in one install</h3><p>With the SaaS package every tenant has its own users, roles, branches, stock and settings. A platform admin creates tenants and assigns plans.</p></div>
+            <div class="feature"><h3>Plans that switch features on and off</h3><p>A plan lists the modules a tenant may use and its limits, such as the number of users. Pages, menus and permissions of a module the plan leaves out disappear.</p></div>
             <div class="feature"><h3>Branches and stock locations</h3><p>Staff see their own branch, managers with the right permission see all of them, and every report can be narrowed to one branch.</p></div>
             <div class="feature"><h3>A till that works offline</h3><p>The point of sale queues sales while the connection is down and syncs them later without double-charging, with weighed goods, held orders, receipts and cash-drawer shifts.</p></div>
             <div class="feature"><h3>Reports and exports</h3><p>A dashboard, sales, item and profit reports, and Excel or PDF exports in English or Arabic. Large exports run in the background and wait on an Exports page.</p></div>
@@ -336,7 +336,7 @@ footer .legal { margin-top: 2rem; max-width: 46em; }
                 </tbody>
             </table>
         </div>
-        <p class="prose" style="margin-top:1rem">Modules that work with companies install <code style="font-family:var(--mono);font-size:.9em;color:var(--accent)">tessera-saas</code> as well, because their data belongs to a company.</p>
+        <p class="prose" style="margin-top:1rem">Modules that work with tenants install <code style="font-family:var(--mono);font-size:.9em;color:var(--accent)">tessera-saas</code> as well, because their data belongs to a tenant.</p>
     </div>
 </section>
 
@@ -354,7 +354,7 @@ footer .legal { margin-top: 2rem; max-width: 46em; }
         </div>
 
         <div class="panel" id="p-saas" role="tabpanel" aria-labelledby="t-saas">
-            <p class="prose" style="margin-bottom:1.5rem">Companies, branches, plans and everything under them. The first account is the platform admin who creates companies.</p>
+            <p class="prose" style="margin-bottom:1.5rem">Tenants, branches, plans and everything under them. The first account is the platform admin who creates tenants.</p>
             <ol class="steps">
                 <li><div><h3>Create the project</h3>
 <div class="code"><pre>composer create-project tessera/tessera-starter shop \
@@ -374,7 +374,7 @@ bun run build   <span class="tok-c"># or: bun run dev</span></pre><button class=
         </div>
 
         <div class="panel" id="p-fresh" role="tabpanel" aria-labelledby="t-fresh" hidden>
-            <p class="prose" style="margin-bottom:1.5rem">Sign-in, users, roles and permissions, with no companies or plans. A good base for an internal tool or an admin panel.</p>
+            <p class="prose" style="margin-bottom:1.5rem">Sign-in, users, roles and permissions, with no tenants or plans. A good base for an internal tool or an admin panel.</p>
             <ol class="steps">
                 <li><div><h3>Create the project</h3>
 <div class="code"><pre>composer create-project tessera/tessera-fresh app \
@@ -427,11 +427,11 @@ php artisan module:add reports
 php artisan module:add expenses</pre><button class="copy" type="button">Copy</button></div>
             </article>
             <article class="case">
-                <div><h3>Software that serves many businesses</h3><p>One install, many customers. Each company gets its own data, users, branches and plan, and you decide which modules and how many users each plan includes.</p>
+                <div><h3>Software that serves many businesses</h3><p>One install, many customers. Each tenant gets its own data, users, branches and plan, and you decide which modules and how many users each plan includes.</p>
                 <ul><li>saas starter</li><li>plans</li><li>branches</li></ul></div>
                 <div class="code"><pre>composer create-project tessera/tessera-starter platform
 <span class="tok-c"># sign in as the platform admin, open Plans,
-# then create a company and give it a plan</span></pre><button class="copy" type="button">Copy</button></div>
+# then create a tenant and give it a plan</span></pre><button class="copy" type="button">Copy</button></div>
             </article>
             <article class="case">
                 <div><h3>An internal tool with users and roles</h3><p>An admin panel, a back office or an intranet. People sign in, an owner creates users and decides what each role may do, and your own modules add the screens.</p>

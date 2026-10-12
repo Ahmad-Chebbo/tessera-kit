@@ -20,7 +20,7 @@ class EnsureModuleEnabled
         $user = $request->user();
         $label = app(ModuleRegistry::class)->features()[$module]->label ?? $module;
 
-        if ($user === null || $user->company_id === null || $user->isSuperAdmin() || $this->entitlements->hasModule($user->company_id, $module)) {
+        if ($user === null || $user->tenant_id === null || $user->isSuperAdmin() || $this->entitlements->hasModule($user->tenant_id, $module)) {
             return $next($request);
         }
 

@@ -18,7 +18,7 @@ class CatalogServiceProvider extends ModuleServiceProvider
         return new ModuleManifest(
             key: 'catalog',
             name: 'Catalog',
-            requires: ['company'],
+            requires: ['tenant'],
             packages: ['spatie/laravel-medialibrary'],
         );
     }

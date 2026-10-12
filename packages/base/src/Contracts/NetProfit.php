@@ -15,5 +15,5 @@ interface NetProfit
     /**
      * @return array{months: list<array<string, mixed>>, totals: array<string, float>}
      */
-    public function forPeriod(int $companyId, CarbonImmutable $from, CarbonImmutable $to, ?int $branchId = null): array;
+    public function forPeriod(int $tenantId, CarbonImmutable $from, CarbonImmutable $to, ?int $branchId = null): array;
 }

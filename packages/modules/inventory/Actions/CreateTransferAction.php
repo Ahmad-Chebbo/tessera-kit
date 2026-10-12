@@ -2,10 +2,10 @@
 
 namespace App\Modules\Inventory\Actions;
 
-use App\Modules\Company\Models\Location;
 use App\Modules\Inventory\Enums\TransferStatus;
 use App\Modules\Inventory\Models\Transfer;
 use App\Modules\Team\Models\User;
+use App\Modules\Tenant\Models\Location;
 use Illuminate\Support\Facades\DB;
 
 class CreateTransferAction
@@ -19,7 +19,7 @@ class CreateTransferAction
     {
         return DB::transaction(function () use ($from, $to, $items, $user, $notes) {
             $transfer = Transfer::create([
-                'company_id' => $from->company_id,
+                'tenant_id' => $from->tenant_id,
                 'from_location_id' => $from->id,
                 'to_location_id' => $to->id,
                 'status' => TransferStatus::Pending,
