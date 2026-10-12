@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { addTax, applyDiscount, CalculatorError, evaluate, removeTax, roundMoney, settle, tryEvaluate } from '@/Utils/calculator';
+import { addTax, applyDiscount, CalculatorError, evaluate, removeTax, roundMoney, settle, tryEvaluate } from '@/utils/calculator';
 
 describe('evaluate', () => {
     it('does arithmetic with the usual precedence', () => {

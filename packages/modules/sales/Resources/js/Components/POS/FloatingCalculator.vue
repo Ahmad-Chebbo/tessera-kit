@@ -2,7 +2,7 @@
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import { Calculator, Delete, GripHorizontal, X } from 'lucide-vue-next';
 import { useI18n } from 'vue-i18n';
-import { addTax, applyDiscount, removeTax, roundMoney, settle, tryEvaluate } from '@/Utils/calculator';
+import { addTax, applyDiscount, removeTax, roundMoney, settle, tryEvaluate } from '@/utils/calculator';
 
 const props = defineProps({
     open: { type: Boolean, default: false },
