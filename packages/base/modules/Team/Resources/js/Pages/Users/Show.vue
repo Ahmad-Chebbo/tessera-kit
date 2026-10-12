@@ -11,6 +11,7 @@ import StatusBadge from '@ahmad-chebbo/tessera-ui/Components/StatusBadge.vue';
 import DataTable from '@ahmad-chebbo/tessera-ui/Components/DataTable.vue';
 
 const props = defineProps({
+    features: { type: Object, default: () => ({ branches: true, employeeProfiles: true, activityLog: true }) },
     employee: Object,
     activity: Object,
     can: Object,
@@ -21,7 +22,7 @@ const { t } = useI18n();
 const tab = ref('overview');
 const tabs = computed(() => [
     { value: 'overview', label: t('employees.overview') },
-    { value: 'activity', label: t('employees.activityTab') },
+    ...(props.features.activityLog ? [{ value: 'activity', label: t('employees.activityTab') }] : []),
 ]);
 
 const profile = computed(() => props.employee.profile ?? {});
@@ -29,7 +30,7 @@ const profile = computed(() => props.employee.profile ?? {});
 const formatDate = (value) => (value ? new Date(value).toLocaleDateString() : '-');
 const formatDateTime = (value) => new Date(value).toLocaleString();
 
-const sections = computed(() => [
+const sections = computed(() => props.features.employeeProfiles ? [
     {
         title: t('employees.employment'),
         rows: [
@@ -55,6 +56,16 @@ const sections = computed(() => [
         rows: [
             [t('common.name'), profile.value.emergency_contact_name],
             [t('employees.phone'), profile.value.emergency_contact_phone],
+        ],
+    },
+] : [
+    {
+        title: t('users.user'),
+        rows: [
+            [t('common.name'), props.employee.name],
+            [t('users.email'), props.employee.email],
+            [t('users.role'), props.employee.role],
+            ...(props.features.branches ? [[t('users.branch'), props.employee.branch?.name]] : []),
         ],
     },
 ]);
@@ -105,7 +116,7 @@ const activityColumns = computed(() => [
                     </div>
                 </dl>
             </Card>
-            <Card v-if="profile.notes" class="lg:col-span-3">
+            <Card v-if="features.employeeProfiles && profile.notes" class="lg:col-span-3">
                 <h2 class="mb-2 font-display text-lg font-normal text-fg">{{ t('employees.notes') }}</h2>
                 <p class="whitespace-pre-line text-sm text-muted">{{ profile.notes }}</p>
             </Card>

@@ -11,6 +11,7 @@ import Select from '@ahmad-chebbo/tessera-ui/Components/Select.vue';
 import EmployeeProfileFields from '@modules/Team/Resources/js/Pages/Users/Partials/EmployeeProfileFields.vue';
 
 const props = defineProps({
+    features: { type: Object, default: () => ({ branches: true, employeeProfiles: true, activityLog: true }) },
     branches: Array,
     roles: Array,
 });
@@ -96,7 +97,7 @@ const submit = () => {
                     <InputError :message="form.errors.password" class="mt-2" />
                 </div>
 
-                <div>
+                <div v-if="features.branches">
                     <InputLabel for="branch_id" :value="t('users.branch')" />
                     <Select
                         id="branch_id"
@@ -136,7 +137,7 @@ const submit = () => {
                     <InputLabel for="is_active" :value="t('common.active')" />
                 </div>
 
-                <EmployeeProfileFields :form="form" />
+                <EmployeeProfileFields v-if="features.employeeProfiles" :form="form" />
 
                 <div class="flex items-center justify-end gap-4">
                     <Link

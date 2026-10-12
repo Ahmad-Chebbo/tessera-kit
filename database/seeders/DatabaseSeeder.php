@@ -2,9 +2,11 @@
 
 namespace Database\Seeders;
 
+use App\Modules\Team\Models\Role;
 use App\Modules\Team\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Spatie\Permission\Models\Permission;
 use Tessera\Engine\ModuleRegistry;
 
 class DatabaseSeeder extends Seeder
@@ -12,8 +14,9 @@ class DatabaseSeeder extends Seeder
     use WithoutModelEvents;
 
     /**
-     * Seeds the roles and the platform admin (no company; it manages companies and plans), then whatever the enabled
-     * modules seed (plans, units, a demo store with its own owner...).
+     * Seeds the roles and the first account, then whatever the enabled modules seed (plans, units, a demo store with its
+     * own owner...). With the Company module the account is the platform Admin, who has no company and manages
+     * companies and plans; without it, the Owner, who holds every permission the Team module gives.
      */
     public function run(): void
     {
@@ -24,7 +27,12 @@ class DatabaseSeeder extends Seeder
 
         $this->call(RolesAndPermissionsSeeder::class);
 
-        $user->assignRole('Admin');
+        if (app(ModuleRegistry::class)->has('company')) {
+            $user->assignRole('Admin');
+        } else {
+            Role::findByName('Owner')->syncPermissions(Permission::all());
+            $user->assignRole('Owner');
+        }
 
         foreach (app(ModuleRegistry::class)->seeders() as $seeder) {
             $this->call($seeder);

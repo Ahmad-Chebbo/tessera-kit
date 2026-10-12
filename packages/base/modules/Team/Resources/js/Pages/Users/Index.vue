@@ -15,6 +15,7 @@ import DataTable from '@ahmad-chebbo/tessera-ui/Components/DataTable.vue';
 import CardGrid from '@ahmad-chebbo/tessera-ui/Components/CardGrid.vue';
 
 const props = defineProps({
+    features: { type: Object, default: () => ({ branches: true, employeeProfiles: true, activityLog: true }) },
     users: Object,
     branches: Array,
     roles: Array,
@@ -25,7 +26,7 @@ const { t } = useI18n();
 
 const tableColumns = computed(() => [
     { key: 'user', label: t('users.user') },
-    { key: 'branch', label: t('users.branch'), cellClass: 'text-sm text-muted' },
+    ...(props.features.branches ? [{ key: 'branch', label: t('users.branch'), cellClass: 'text-sm text-muted' }] : []),
     { key: 'role', label: t('users.role') },
     { key: 'status', label: t('common.status') },
     { key: 'actions', label: t('common.actions'), align: 'end' },
@@ -108,7 +109,7 @@ const deleteUser = async (user) => {
         </div>
 
         <div class="mb-6 flex flex-col gap-2">
-            <FilterTabs v-model="branchId" :tabs="branchTabs" />
+            <FilterTabs v-model="branchId" v-if="features.branches" :tabs="branchTabs" />
             <FilterTabs v-model="role" :tabs="roleTabs" />
         </div>
 
@@ -126,7 +127,7 @@ const deleteUser = async (user) => {
                     </div>
                     <div>
                         <Link :href="route('users.show', user.id)" class="font-medium text-fg hover:text-accent">{{ user.name }}</Link>
-                        <p class="text-sm text-muted">{{ user.employee_profile?.employee_number }} · {{ user.email }}</p>
+                        <p class="text-sm text-muted">{{ features.employeeProfiles ? `${user.employee_profile?.employee_number ?? ''} · ` : '' }}{{ user.email }}</p>
                     </div>
                 </div>
             </template>
@@ -173,7 +174,7 @@ const deleteUser = async (user) => {
                         </StatusBadge>
                     </template>
                     <template #meta>
-                        <div class="text-muted">{{ user.branch?.name || '-' }}</div>
+                        <div v-if="features.branches" class="text-muted">{{ user.branch?.name || '-' }}</div>
                         <StatusBadge v-if="user.roles?.length" status="info" class="mt-1">{{ user.roles[0].name }}</StatusBadge>
                     </template>
                     <template #actions>

@@ -9,17 +9,19 @@ php artisan module:add sales
 bun run build
 ```
 
-Start from the [starter](https://github.com/Ahmad-Chebbo/tessera-starter) to build an app. This repository is where Tessera itself is developed.
+Start from the [starter](https://github.com/Ahmad-Chebbo/tessera-starter) to build a multi-company app, or from [fresh](https://github.com/Ahmad-Chebbo/tessera-fresh) for a plain one with users and roles. This repository is where Tessera itself is developed.
 
 ## The pieces
 
 | Package | Repository | Installed with | What it is |
 |---|---|---|---|
 | Engine | [tessera-engine](https://github.com/Ahmad-Chebbo/tessera-engine) | Composer | Finds, orders and boots modules; `module:*` commands. Works in any Laravel app. |
-| Core | [tessera-core](https://github.com/Ahmad-Chebbo/tessera-core) | Composer | Auth, Company, Subscription and Team, plus the shared contracts. |
+| Base | [tessera-base](https://github.com/Ahmad-Chebbo/tessera-base) | Composer | Auth and Team (users, roles, permissions), plus the shared contracts. Works alone. |
+| Core | [tessera-core](https://github.com/Ahmad-Chebbo/tessera-core) | Composer | Company and Subscription: companies, branches, plans. Builds on the base. |
 | UI | [tessera-ui](https://github.com/Ahmad-Chebbo/tessera-ui) | bun / npm | Vue 3 components, composables and the theme. Standalone. |
 | Modules | `tessera-<key>` | Composer | Attendance, Catalog, Customers, Discounts, Expenses, Exports, Inventory, Reports, Sales, Shifts. |
-| Starter | [tessera-starter](https://github.com/Ahmad-Chebbo/tessera-starter) | `composer create-project` | A Laravel app with the engine, core, UI and application shell. |
+| Starter | [tessera-starter](https://github.com/Ahmad-Chebbo/tessera-starter) | `composer create-project` | A Laravel SaaS app with the engine, base, core, UI and application shell. |
+| Fresh | [tessera-fresh](https://github.com/Ahmad-Chebbo/tessera-fresh) | `composer create-project` | The same without companies and plans: sign-in, users, roles and permissions. |
 
 Every package has a README. They are read-only copies of folders here.
 

@@ -8,6 +8,10 @@
         },
         {
             "type": "vcs",
+            "url": "https://github.com/Ahmad-Chebbo/tessera-base"
+        },
+        {
+            "type": "vcs",
             "url": "https://github.com/Ahmad-Chebbo/tessera-core"
         },
         {
@@ -53,6 +57,10 @@
         {
             "type": "vcs",
             "url": "https://github.com/Ahmad-Chebbo/tessera-starter"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/Ahmad-Chebbo/tessera-fresh"
         }
     ],
     "require-all": true,
