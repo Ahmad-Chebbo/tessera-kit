@@ -1,0 +1,245 @@
+{
+    "discounts": {
+        "nav": "الخصومات",
+        "title": "قواعد الخصم",
+        "subtitle": "خصومات وقسائم تُطبَّق تلقائياً عند الدفع",
+        "addRule": "قاعدة جديدة",
+        "editRule": "تعديل القاعدة",
+        "simulator": "اختبار سلة",
+        "noRules": "لا توجد قواعد خصم بعد",
+        "name": "اسم القاعدة",
+        "description": "الوصف",
+        "priority": "الأولوية",
+        "priorityHint": "تعمل القواعد من الرقم الأصغر إلى الأكبر.",
+        "stackable": "يمكن دمجها مع قواعد أخرى",
+        "stackableHint": "عند التعطيل: بعد أن تخصم هذه القاعدة سطراً تتخطاه القواعد الأقل أولوية.",
+        "active": "مفعّلة",
+        "status": "الحالة",
+        "statuses": {
+            "active": "مفعّلة",
+            "paused": "متوقفة",
+            "scheduled": "مجدولة",
+            "expired": "منتهية"
+        },
+        "uses": "الطلبات",
+        "discounted": "إجمالي الخصم",
+        "action": "الخصم",
+        "schedule": "الجدولة",
+        "startsAt": "البداية",
+        "endsAt": "النهاية",
+        "scheduleHint": "اتركها فارغة لتعمل دائماً.",
+        "conditions": "الشروط",
+        "conditionsHint": "تُطبَّق القاعدة على السطر عند تحقق الشروط. اتركها فارغة للتطبيق على كل الأسطر.",
+        "matchAll": "كل",
+        "matchAny": "أي",
+        "matchPrefix": "تحقق",
+        "matchSuffix": "من هذه الشروط",
+        "addCondition": "إضافة شرط",
+        "addGroup": "إضافة مجموعة",
+        "removeCondition": "إزالة الشرط",
+        "removeGroup": "إزالة المجموعة",
+        "pickField": "اختر ما سيتم فحصه",
+        "pickValue": "اختر",
+        "add": "إضافة",
+        "withinDays": "خلال آخر (أيام)",
+        "allTime": "كل الأوقات",
+        "yes": "نعم",
+        "no": "لا",
+        "and": "و",
+        "weekdays": [
+            "الأحد",
+            "الاثنين",
+            "الثلاثاء",
+            "الأربعاء",
+            "الخميس",
+            "الجمعة",
+            "السبت"
+        ],
+        "payment": {
+            "cash": "نقد",
+            "debt": "آجل"
+        },
+        "expression": "تعبير مخصص (متقدم)",
+        "expressionHint": "اختياري. يجب أن يتحقق أيضاً لتُطبَّق القاعدة. مثال: customer.orders_count >= 10 and customer_spent(90) > 500",
+        "expressionFacts": "المتاح: customer و item و cart و context (مثل customer.orders_count و item.category_id) والدوال customer_orders(days) و customer_spent(days) و item_bought(days) و item_orders(days) و category_bought(days) و min() و max().",
+        "actionType": "ماذا تفعل",
+        "actionValue": "القيمة",
+        "percent": "نسبة خصم",
+        "fixed": "مبلغ ثابت",
+        "price": "سعر خاص",
+        "buy_x_get_y": "اشترِ X واحصل على Y",
+        "applyTo": "يُطبَّق المبلغ الثابت",
+        "each_unit": "على كل وحدة",
+        "each_line": "على كل سطر مطابق",
+        "total": "مرة واحدة موزعاً على الأسطر المطابقة",
+        "cap": "أقصى خصم من هذه القاعدة",
+        "buyQuantity": "يشتري العميل",
+        "getQuantity": "ويحصل على",
+        "getPercent": "الخصم على تلك الوحدات (%)",
+        "couponHint": "إن حُدد، تُطبَّق القاعدة فقط عندما يُدخل الكاشير هذا الرمز.",
+        "usageLimit": "إجمالي الاستخدامات",
+        "perCustomer": "الاستخدامات لكل عميل",
+        "confirmDelete": "حذف قاعدة الخصم هذه؟",
+        "duplicate": "نسخ",
+        "pause": "إيقاف",
+        "activate": "تفعيل",
+        "simulatorTitle": "اختبار سلة",
+        "simulatorSubtitle": "اعرف القواعد التي ستُطبَّق دون إتمام أي بيع",
+        "customer": "العميل",
+        "noCustomer": "بدون عميل",
+        "product": "المنتج",
+        "quantity": "الكمية",
+        "addLine": "إضافة صنف",
+        "run": "تشغيل",
+        "result": "النتيجة",
+        "subtotal": "المجموع الفرعي",
+        "totalDiscount": "إجمالي الخصم",
+        "netTotal": "الإجمالي بعد القواعد",
+        "appliedRules": "القواعد المطبّقة",
+        "noneApplied": "لم تُطبَّق أي قاعدة",
+        "couponStatus": {
+            "none": "",
+            "applied": "تم تطبيق القسيمة",
+            "unknown": "رمز القسيمة غير صالح",
+            "exhausted": "بلغت القسيمة حد الاستخدام",
+            "not_applicable": "القسيمة لا تنطبق على هذه الأصناف"
+        },
+        "facts": {
+            "customer": {
+                "is_selected": "تم اختيار عميل",
+                "id": "العميل",
+                "group_id": "مجموعة العميل",
+                "orders_count": "عدد طلبات العميل",
+                "total_spent": "إجمالي إنفاق العميل"
+            },
+            "item": {
+                "product_id": "المنتج",
+                "category_id": "فئة المنتج",
+                "quantity": "كمية الصنف",
+                "unit_price": "سعر وحدة الصنف",
+                "line_total": "إجمالي سطر الصنف",
+                "bought_quantity": "الكمية المشتراة سابقاً من هذا المنتج",
+                "bought_orders": "الطلبات السابقة التي احتوت هذا المنتج",
+                "category_bought_quantity": "الكمية المشتراة سابقاً من هذه الفئة"
+            },
+            "cart": {
+                "subtotal": "المجموع الفرعي للسلة",
+                "quantity": "إجمالي الكمية في السلة",
+                "lines": "عدد أسطر السلة"
+            },
+            "context": {
+                "branch_id": "الفرع",
+                "payment_type": "طريقة الدفع",
+                "weekday": "يوم الأسبوع",
+                "time": "وقت اليوم",
+                "date": "التاريخ"
+            }
+        },
+        "operators": {
+            "eq": "يساوي",
+            "neq": "لا يساوي",
+            "in": "أي من",
+            "not_in": "ليس أياً من",
+            "gt": "أكبر من",
+            "gte": "على الأقل",
+            "lt": "أقل من",
+            "lte": "على الأكثر",
+            "between": "بين"
+        },
+        "moduleName": "الخصومات والعروض",
+        "fromTemplate": "إضافة من قالب",
+        "templatesTitle": "قواعد جاهزة",
+        "templatesHint": "اختر عرضاً شائعاً واملأ القيم وسيُضاف كقاعدة عادية يمكنك تعديلها لاحقاً.",
+        "activateNow": "تفعيل فوراً",
+        "addTemplate": "إضافة القاعدة",
+        "back": "رجوع",
+        "templates": {
+            "happy_hour": {
+                "name": "ساعة التخفيضات",
+                "description": "نسبة خصم خلال فترة زمنية كل يوم."
+            },
+            "weekend": {
+                "name": "عرض نهاية الأسبوع",
+                "description": "نسبة خصم يومي السبت والأحد."
+            },
+            "bulk": {
+                "name": "خصم الكميات",
+                "description": "نسبة خصم على منتج عند شراء كمية كافية منه."
+            },
+            "buy_x_get_y": {
+                "name": "اشترِ X واحصل على Y مجاناً",
+                "description": "مثلاً اشترِ 10 واحصل على 1 مجاناً."
+            },
+            "spend_percent": {
+                "name": "أنفق أكثر ووفّر نسبة",
+                "description": "نسبة خصم عند وصول السلة إلى مبلغ معين."
+            },
+            "spend_amount": {
+                "name": "أنفق أكثر ووفّر مبلغاً",
+                "description": "مبلغ ثابت عند وصول السلة إلى مبلغ معين."
+            },
+            "loyalty": {
+                "name": "العملاء الأوفياء",
+                "description": "نسبة خصم للعملاء الذين قدموا طلبات كثيرة."
+            },
+            "repeat_buyer": {
+                "name": "المشتري المتكرر",
+                "description": "نسبة خصم على منتج اشتراه العميل مراراً."
+            },
+            "welcome": {
+                "name": "ترحيب بأول طلب",
+                "description": "نسبة خصم على أول طلب لعميل مسجل."
+            },
+            "category": {
+                "name": "عرض على فئة",
+                "description": "نسبة خصم على كل منتجات فئة."
+            },
+            "special_price": {
+                "name": "سعر خاص",
+                "description": "سعر بيع ثابت لمنتج واحد."
+            },
+            "group": {
+                "name": "خصم مجموعة عملاء",
+                "description": "نسبة خصم لأعضاء مجموعة مثل VIP أو الجملة."
+            },
+            "cash": {
+                "name": "خصم الدفع النقدي",
+                "description": "نسبة خصم عند الدفع نقداً."
+            },
+            "coupon": {
+                "name": "رمز قسيمة",
+                "description": "نسبة خصم للعملاء الذين يقدمون رمزاً."
+            },
+            "buy_get_item": {
+                "name": "اشترِ صنفاً واحصل على آخر مجاناً",
+                "description": "اختر الأصناف المطلوب شراؤها والأصناف المجانية، مثلاً اشترِ 2 برغر واحصل على مشروب مجاناً."
+            }
+        },
+        "templateParams": {
+            "percent": "الخصم (%)",
+            "amount": "المبلغ",
+            "quantity": "الكمية",
+            "days": "احتسب آخر (أيام) فقط — اختياري",
+            "time": "الوقت",
+            "code": "رمز القسيمة",
+            "category": "الفئة",
+            "group": "مجموعة العملاء",
+            "product": "المنتج",
+            "from": "من",
+            "to": "إلى",
+            "threshold": "إجمالي السلة على الأقل",
+            "buy": "اشترِ",
+            "get": "مجاناً",
+            "orders": "عدد الطلبات",
+            "purchases": "مرات الشراء",
+            "price": "سعر البيع",
+            "buy_products": "أصناف الشراء",
+            "get_products": "الأصناف المجانية"
+        },
+        "buyProducts": "عندما يشتري العميل",
+        "getProducts": "يحصل على (اختر الأصناف المجانية)",
+        "maxSets": "أقصى عدد مرات لكل طلب (اختياري)",
+        "freeItems": "مجاناً",
+        "buy_get_item": "اشترِ أصنافاً واحصل على أصناف أخرى"
+    }
+}

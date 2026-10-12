@@ -1,0 +1,89 @@
+<?php
+
+use Illuminate\Support\Facades\Process;
+
+/**
+ * The pages each module serves, reached with a user who holds every permission of the enabled modules.
+ *
+ * @var array<string, list<string>>
+ */
+const MODULE_PAGES = [
+    'team' => ['users', 'roles', 'activity'],
+    'company' => ['settings', 'branches', 'locations'],
+    'subscription' => ['subscription'],
+    'auth' => ['profile'],
+    'reports' => ['dashboard', 'reports/sales'],
+    'catalog' => ['products'],
+    'inventory' => ['inventory', 'suppliers'],
+    'customers' => ['customers'],
+    'sales' => ['orders', 'pos', 'pos-shifts'],
+    'discounts' => ['discounts'],
+    'expenses' => ['expenses'],
+    'shifts' => ['shifts'],
+    'attendance' => ['attendance'],
+    'exports' => ['exports'],
+];
+
+const ALWAYS_ON = ['team', 'company', 'subscription', 'auth'];
+
+/**
+ * Migrates an empty database with the given modules enabled, then asks every page of every module for its status.
+ *
+ * @return array{statuses: array<string, int>, routes: list<string>}
+ */
+function bootWithModules(string $enabled): array
+{
+    $database = tempnam(sys_get_temp_dir(), 'modset').'.sqlite';
+    touch($database);
+
+    $env = ['MODULES_ENABLED' => $enabled, 'DB_CONNECTION' => 'sqlite', 'DB_DATABASE' => $database, 'CACHE_STORE' => 'array', 'SESSION_DRIVER' => 'array'];
+    $paths = collect(MODULE_PAGES)->flatten()->push('home')->values()->all();
+
+    try {
+        $migrate = Process::path(base_path())->env($env)->run([PHP_BINARY, 'artisan', 'migrate:fresh', '--force']);
+        expect($migrate->successful())->toBeTrue($migrate->errorOutput().$migrate->output());
+
+        $routes = Process::path(base_path())->env($env)->run([PHP_BINARY, 'artisan', 'route:list', '--json']);
+        expect($routes->successful())->toBeTrue($routes->errorOutput());
+
+        $smoke = Process::path(base_path())->env([...$env, 'SMOKE_PATHS' => json_encode($paths)])->run([PHP_BINARY, base_path('tests/Support/module-smoke.php')]);
+        $output = trim($smoke->output());
+        expect($smoke->successful() && str_starts_with($output, '{'))->toBeTrue($smoke->errorOutput().$output);
+
+        return [
+            'statuses' => json_decode(substr($output, strpos($output, '{')), true),
+            'routes' => array_column(json_decode($routes->output(), true), 'name'),
+        ];
+    } finally {
+        @unlink($database);
+    }
+}
+
+dataset('module sets', [
+    'core only' => ['none', []],
+    'employee management' => ['shifts,attendance', ['shifts', 'attendance']],
+    'catalog and inventory' => ['catalog,inventory', ['catalog', 'inventory']],
+    'expenses on their own' => ['expenses', ['expenses']],
+    'point of sale' => ['catalog,inventory,customers,sales', ['catalog', 'inventory', 'customers', 'sales']],
+    'reports on sales' => ['catalog,customers,inventory,sales,reports', ['catalog', 'inventory', 'customers', 'sales', 'reports']],
+    'every module' => ['*', ['catalog', 'inventory', 'customers', 'sales', 'reports', 'discounts', 'expenses', 'shifts', 'attendance', 'exports']],
+]);
+
+it('boots, migrates and serves exactly the pages of the enabled modules', function (string $enabled, array $features) {
+    $result = bootWithModules($enabled);
+    $served = [...ALWAYS_ON, ...$features];
+
+    foreach (MODULE_PAGES as $module => $pages) {
+        foreach ($pages as $page) {
+            $status = $result['statuses'][$page] ?? null;
+
+            if (in_array($module, $served, true)) {
+                expect($status)->toBe(200, "{$page} should be served by the {$module} module");
+            } else {
+                expect($status)->toBe(404, "{$page} should not exist without the {$module} module");
+            }
+        }
+    }
+
+    expect($result['statuses']['home'])->toBe(302);
+})->with('module sets');

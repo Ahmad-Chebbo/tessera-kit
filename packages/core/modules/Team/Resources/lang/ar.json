@@ -1,0 +1,112 @@
+{
+    "users": {
+        "title": "المستخدمين",
+        "addUser": "إضافة مستخدم",
+        "editUser": "تعديل مستخدم",
+        "createUser": "إنشاء مستخدم",
+        "updateUser": "تحديث مستخدم",
+        "manageUsers": "إدارة مستخدمي النظام",
+        "createNewUser": "إنشاء حساب مستخدم جديد",
+        "user": "المستخدم",
+        "name": "الاسم",
+        "email": "البريد الإلكتروني",
+        "password": "كلمة المرور",
+        "newPassword": "كلمة المرور الجديدة",
+        "leaveBlank": "اتركه فارغاً للاحتفاظ بكلمة المرور الحالية",
+        "branch": "الفرع",
+        "role": "الدور",
+        "selectBranch": "اختر فرعاً",
+        "selectRole": "اختر دوراً",
+        "allBranches": "جميع الفروع",
+        "allRoles": "جميع الأدوار",
+        "noUsers": "لا يوجد مستخدمين",
+        "confirmDelete": "هل أنت متأكد من حذف هذا المستخدم؟"
+    },
+    "employees": {
+        "team": "الفريق",
+        "activity": "النشاط",
+        "employeeNumber": "رقم الموظف",
+        "jobTitle": "المسمى الوظيفي",
+        "phone": "الهاتف",
+        "hireDate": "تاريخ التعيين",
+        "birthDate": "تاريخ الميلاد",
+        "nationalId": "رقم الهوية",
+        "address": "العنوان",
+        "emergencyContactName": "جهة اتصال للطوارئ",
+        "emergencyContactPhone": "هاتف الطوارئ",
+        "notes": "ملاحظات",
+        "profileSection": "ملف الموظف",
+        "numberHint": "اتركه فارغاً لإنشاء الرقم التالي",
+        "overview": "نظرة عامة",
+        "activityTab": "النشاط",
+        "contact": "التواصل",
+        "emergency": "جهة اتصال للطوارئ",
+        "employment": "الوظيفة",
+        "noActivity": "لا يوجد نشاط مسجل بعد",
+        "activityTitle": "سجل النشاط",
+        "activitySubtitle": "ما يقوم به فريقك",
+        "allEmployees": "كل الموظفين",
+        "allEvents": "كل الأحداث",
+        "dateFrom": "من",
+        "dateTo": "إلى",
+        "event": "الحدث",
+        "employee": "الموظف",
+        "details": "التفاصيل",
+        "when": "الوقت",
+        "viewProfile": "عرض الملف",
+        "noActivityLogs": "لا يوجد نشاط مطابق لهذه الفلاتر",
+        "events": {
+            "auth": {
+                "login": "تسجيل دخول",
+                "logout": "تسجيل خروج"
+            },
+            "order": {
+                "created": "عملية بيع",
+                "voided": "إلغاء طلب"
+            },
+            "employee": {
+                "created": "إضافة موظف",
+                "updated": "تحديث موظف",
+                "deleted": "حذف موظف"
+            },
+            "shift": {
+                "opened": "فتح وردية",
+                "closed": "إغلاق وردية",
+                "assigned": "تعيين وردية"
+            },
+            "attendance": {
+                "check_in": "تسجيل حضور",
+                "check_out": "تسجيل انصراف",
+                "adjusted": "تعديل حضور"
+            },
+            "role": {
+                "created": "إنشاء دور",
+                "updated": "تحديث دور",
+                "deleted": "حذف دور"
+            }
+        }
+    },
+    "roles": {
+        "nav": "الأدوار",
+        "title": "الأدوار والصلاحيات",
+        "subtitle": "حدّد ما يستطيع كل دور فعله في شركتك",
+        "addRole": "دور جديد",
+        "editRole": "تعديل الدور",
+        "name": "اسم الدور",
+        "employees": "الموظفون",
+        "permissions": "الصلاحيات",
+        "noRoles": "لا توجد أدوار بعد",
+        "confirmDelete": "حذف هذا الدور؟",
+        "yourRole": "دورك",
+        "permissionsHint": "يمكنك منح الصلاحيات التي تملكها فقط. الصلاحيات الرمادية تبقى كما هي.",
+        "selectAll": "تحديد الكل",
+        "clear": "مسح",
+        "groups": {
+            "dashboard": "لوحة التحكم",
+            "sales": "المبيعات والعملاء",
+            "team": "الفريق",
+            "settings": "الإعدادات",
+            "other": "أخرى"
+        }
+    }
+}

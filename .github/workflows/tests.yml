@@ -1,0 +1,38 @@
+name: Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: mbstring, pdo_sqlite, gd, intl, zip
+
+      - uses: oven-sh/setup-bun@v2
+
+      - name: Install dependencies
+        run: |
+          cp .env.example .env
+          composer install --no-interaction --prefer-dist
+          php artisan key:generate
+          bun install --frozen-lockfile
+
+      - name: Build the frontend
+        run: bun run build
+
+      - name: PHP tests
+        run: php artisan test --compact
+
+      - name: JavaScript tests
+        run: bun run test
+
+      - name: Module portability
+        run: php artisan module:check --strict

@@ -1,0 +1,65 @@
+{
+    "products": {
+        "title": "Products",
+        "addProduct": "Add Product",
+        "editProduct": "Edit Product",
+        "productName": "Product Name",
+        "category": "Category",
+        "basePrice": "Base Price",
+        "salePrice": "Sale Price",
+        "costPrice": "Cost Price",
+        "currency": "Currency",
+        "active": "Active",
+        "inactive": "Inactive",
+        "noProducts": "No products found",
+        "manageProducts": "Manage Products",
+        "unlimitedQuantity": "Unlimited Quantity"
+    },
+    "categories": {
+        "title": "Categories",
+        "addCategory": "Add Category",
+        "editCategory": "Edit Category",
+        "categoryName": "Category Name",
+        "parentCategory": "Parent Category",
+        "noCategories": "No categories found"
+    },
+    "units": {
+        "title": "Units",
+        "addUnit": "Add Unit",
+        "editUnit": "Edit Unit",
+        "unitName": "Unit Name",
+        "abbreviation": "Abbreviation",
+        "type": "Type",
+        "system": "System",
+        "custom": "Custom",
+        "noUnits": "No units found",
+        "confirmDelete": "Are you sure you want to delete this unit?",
+        "productUnits": "Product Units",
+        "productUnitsDescription": "Define how this product is measured and sold",
+        "selectUnit": "Select unit...",
+        "conversionFactor": "Conversion Factor",
+        "allowedFor": "Allowed For",
+        "buyAndSell": "Buy & Sell",
+        "buyOnly": "Buy Only",
+        "sellOnly": "Sell Only",
+        "isBase": "Base",
+        "baseUnit": "Base Unit",
+        "setAsBase": "Set as Base",
+        "manageUnits": "Manage measurement units"
+    },
+    "roles": {
+        "groups": {
+            "catalog": "Catalog"
+        }
+    },
+    "pos": {
+        "inStock": "In Stock",
+        "lowStock": "Low Stock",
+        "outOfStock": "Out of Stock",
+        "selectCategory": "Select Category",
+        "sku": "SKU",
+        "barcode": "Barcode",
+        "unit": "Unit",
+        "allCategories": "All Categories"
+    }
+}

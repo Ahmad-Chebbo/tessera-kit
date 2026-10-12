@@ -1,0 +1,63 @@
+{
+    "settings": {
+        "title": "الإعدادات",
+        "language": "اللغة",
+        "english": "الإنجليزية",
+        "arabic": "العربية",
+        "currency": "العملة",
+        "timezone": "المنطقة الزمنية",
+        "taxRate": "نسبة الضريبة",
+        "receiptHeader": "ترويسة الفاتورة",
+        "receiptFooter": "تذييل الفاتورة",
+        "exchangeRates": "أسعار الصرف",
+        "requireShift": "اشتراط وردية مفتوحة للبيع",
+        "requireShiftHint": "يجب على الكاشير فتح وردية بنقد افتتاحي قبل إتمام البيع."
+    },
+    "branches": {
+        "title": "الفروع",
+        "addBranch": "إضافة فرع",
+        "editBranch": "تعديل فرع",
+        "name": "اسم الفرع",
+        "address": "العنوان",
+        "phone": "الهاتف",
+        "users": "المستخدمين",
+        "noBranches": "لا توجد فروع",
+        "manageBranches": "إدارة فروع الشركة"
+    },
+    "locations": {
+        "title": "المواقع",
+        "addLocation": "إضافة موقع",
+        "editLocation": "تعديل موقع",
+        "name": "اسم الموقع",
+        "branch": "الفرع",
+        "type": "النوع",
+        "warehouse": "المستودع",
+        "noLocations": "لا توجد مواقع",
+        "manageLocations": "إدارة مواقع التخزين"
+    },
+    "companies": {
+        "title": "الشركات",
+        "addCompany": "إضافة شركة",
+        "editCompany": "تعديل شركة",
+        "createCompany": "إنشاء شركة",
+        "updateCompany": "تحديث شركة",
+        "manageCompanies": "إدارة الشركات المسجلة",
+        "createNewCompany": "تسجيل شركة جديدة",
+        "company": "الشركة",
+        "companyName": "اسم الشركة",
+        "companyInfo": "معلومات الشركة",
+        "companyDetails": "تفاصيل الشركة",
+        "currency": "العملة",
+        "taxRate": "نسبة الضريبة (%)",
+        "branches": "الفروع",
+        "users": "المستخدمين",
+        "noCompanies": "لا توجد شركات",
+        "noBranches": "لا توجد فروع لهذه الشركة",
+        "noUsers": "لا يوجد مستخدمين لهذه الشركة",
+        "adminUser": "المستخدم المسؤول",
+        "adminName": "اسم المسؤول",
+        "adminEmail": "بريد المسؤول",
+        "adminPassword": "كلمة مرور المسؤول",
+        "confirmDelete": "هل أنت متأكد من حذف هذه الشركة؟"
+    }
+}

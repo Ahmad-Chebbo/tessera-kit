@@ -1,0 +1,25 @@
+<script setup>
+import { Head } from '@inertiajs/vue3';
+import { useI18n } from 'vue-i18n';
+import SidebarLayout from '@/Layouts/SidebarLayout.vue';
+import Card from '@/Components/Card.vue';
+
+const { t } = useI18n();
+</script>
+
+<template>
+    <Head :title="t('{{camel}}.title')" />
+
+    <SidebarLayout>
+        <template #header>
+            <div>
+                <h1 class="font-display text-xl font-normal text-fg">{{ t('{{camel}}.title') }}</h1>
+                <p class="text-sm text-muted">{{ t('{{camel}}.subtitle') }}</p>
+            </div>
+        </template>
+
+        <Card>
+            <p class="text-sm text-muted">{{ t('{{camel}}.empty') }}</p>
+        </Card>
+    </SidebarLayout>
+</template>

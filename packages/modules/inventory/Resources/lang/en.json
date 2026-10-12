@@ -1,0 +1,91 @@
+{
+    "inventory": {
+        "title": "Inventory",
+        "stockMovements": "Stock Movements",
+        "currentStock": "Current Stock",
+        "location": "Location",
+        "warehouse": "Warehouse",
+        "branch": "Branch",
+        "movementType": "Movement Type",
+        "purchase": "Purchase",
+        "sale": "Sale",
+        "transferIn": "Transfer In",
+        "transferOut": "Transfer Out",
+        "adjustment": "Adjustment",
+        "reference": "Reference"
+    },
+    "transfers": {
+        "title": "Transfers",
+        "createTransfer": "Create Transfer",
+        "fromLocation": "From Location",
+        "toLocation": "To Location",
+        "pending": "Pending",
+        "approved": "Approved",
+        "completed": "Completed",
+        "cancelled": "Cancelled",
+        "approve": "Approve",
+        "complete": "Complete",
+        "reject": "Reject",
+        "stockTransfer": "Stock Transfer",
+        "moveProducts": "Move products between locations",
+        "transferDetails": "Transfer Details",
+        "selectSource": "Select source...",
+        "selectDestination": "Select destination...",
+        "transferSummary": "Transfer Summary",
+        "transfer": "Transfer"
+    },
+    "purchases": {
+        "title": "Purchases",
+        "createPurchase": "Create Purchase",
+        "supplier": "Supplier",
+        "referenceNumber": "Reference Number",
+        "receivePurchase": "Receive Purchase",
+        "received": "Received",
+        "taxAmount": "Tax Amount",
+        "managePurchases": "Manage purchase orders",
+        "allSuppliers": "All Suppliers",
+        "allStatus": "All Status",
+        "noPurchases": "No purchases found",
+        "confirmReceive": "Receive this purchase and update stock levels?",
+        "createNewPurchase": "Create a new purchase order",
+        "purchaseDetails": "Purchase Details",
+        "selectSupplier": "Select supplier...",
+        "selectLocation": "Select location...",
+        "optional": "Optional",
+        "addProducts": "Add Products",
+        "selectProduct": "Select product...",
+        "qty": "Qty",
+        "cost": "Cost",
+        "addItem": "Add",
+        "product": "Product",
+        "unitCost": "Unit Cost",
+        "noProductsAdded": "No products added yet",
+        "orderSummary": "Order Summary",
+        "totalProducts": "Total Products",
+        "totalUnits": "Total Units",
+        "totalAmount": "Total Amount",
+        "optionalNotes": "Optional notes...",
+        "createOrder": "Create Order",
+        "purchaseCurrency": "Purchase Currency",
+        "exchangeRateInfo": "Exchange rate",
+        "noExchangeRate": "No exchange rate found for this currency pair. Costs will not be auto-converted.",
+        "productCostIn": "Original cost in"
+    },
+    "suppliers": {
+        "title": "Suppliers",
+        "addSupplier": "Add Supplier",
+        "editSupplier": "Edit Supplier",
+        "name": "Supplier Name",
+        "contactPerson": "Contact Person",
+        "noSuppliers": "No suppliers found",
+        "manageSuppliers": "Manage your suppliers"
+    },
+    "dashboard": {
+        "noLowStock": "No low stock products found."
+    },
+    "roles": {
+        "groups": {
+            "inventory": "Inventory & purchasing"
+        }
+    }
+}

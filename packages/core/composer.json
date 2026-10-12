@@ -1,0 +1,42 @@
+{
+    "name": "ahmad-chebbo/tessera-core",
+    "description": "The SaaS core of Tessera: sign-in, companies and branches, subscriptions and plans, users and roles.",
+    "type": "library",
+    "license": "proprietary",
+    "require": {
+        "php": "^8.4",
+        "ahmad-chebbo/tessera-engine": "^1.0",
+        "inertiajs/inertia-laravel": "*",
+        "tightenco/ziggy": "*",
+        "spatie/laravel-permission": "*",
+        "spatie/laravel-medialibrary": "*",
+        "laravel/sanctum": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Tessera\\Core\\": "src/",
+            "App\\Modules\\Auth\\": "modules/Auth/",
+            "App\\Modules\\Company\\": "modules/Company/",
+            "App\\Modules\\Subscription\\": "modules/Subscription/",
+            "App\\Modules\\Team\\": "modules/Team/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Tessera\\Core\\CoreServiceProvider"
+            ]
+        },
+        "tessera": {
+            "modules": [
+                "App\\Modules\\Auth\\AuthServiceProvider",
+                "App\\Modules\\Company\\CompanyServiceProvider",
+                "App\\Modules\\Subscription\\SubscriptionServiceProvider",
+                "App\\Modules\\Team\\TeamServiceProvider"
+            ]
+        },
+        "branch-alias": {
+            "dev-main": "1.x-dev"
+        }
+    }
+}

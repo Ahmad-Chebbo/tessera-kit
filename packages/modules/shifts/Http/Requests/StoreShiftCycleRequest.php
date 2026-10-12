@@ -1,0 +1,31 @@
+<?php
+
+namespace App\Modules\Shifts\Http\Requests;
+
+use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
+
+class StoreShiftCycleRequest extends FormRequest
+{
+    public function authorize(): bool
+    {
+        return $this->user()?->can('manage shifts') ?? false;
+    }
+
+    /**
+     * @return array<string, array<int, mixed>>
+     */
+    public function rules(): array
+    {
+        $companyId = $this->user()->company_id;
+
+        return [
+            'user_id' => ['required', 'integer', Rule::exists('users', 'id')->where('company_id', $companyId)],
+            'shift_template_id' => ['required', 'integer', Rule::exists('shift_templates', 'id')->where('company_id', $companyId)->where('is_active', true)],
+            'weekdays' => ['required', 'array', 'min:1', 'max:7'],
+            'weekdays.*' => ['integer', 'between:0,6', 'distinct'],
+            'starts_on' => ['required', 'date_format:Y-m-d'],
+            'ends_on' => ['nullable', 'date_format:Y-m-d', 'after_or_equal:starts_on'],
+        ];
+    }
+}

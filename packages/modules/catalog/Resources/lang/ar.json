@@ -1,0 +1,65 @@
+{
+    "products": {
+        "title": "المنتجات",
+        "addProduct": "إضافة منتج",
+        "editProduct": "تعديل منتج",
+        "productName": "اسم المنتج",
+        "category": "الفئة",
+        "basePrice": "السعر الأساسي",
+        "salePrice": "سعر البيع",
+        "costPrice": "سعر التكلفة",
+        "currency": "العملة",
+        "active": "نشط",
+        "inactive": "غير نشط",
+        "noProducts": "لا توجد منتجات",
+        "manageProducts": "إدارة المنتجات",
+        "unlimitedQuantity": "كمية لا محدودة"
+    },
+    "categories": {
+        "title": "الفئات",
+        "addCategory": "إضافة فئة",
+        "editCategory": "تعديل فئة",
+        "categoryName": "اسم الفئة",
+        "parentCategory": "الفئة الرئيسية",
+        "noCategories": "لا توجد فئات"
+    },
+    "units": {
+        "title": "الوحدات",
+        "addUnit": "إضافة وحدة",
+        "editUnit": "تعديل وحدة",
+        "unitName": "اسم الوحدة",
+        "abbreviation": "الاختصار",
+        "type": "النوع",
+        "system": "نظام",
+        "custom": "مخصص",
+        "noUnits": "لا توجد وحدات",
+        "confirmDelete": "هل أنت متأكد من حذف هذه الوحدة؟",
+        "productUnits": "وحدات المنتج",
+        "productUnitsDescription": "حدد كيفية قياس وبيع هذا المنتج",
+        "selectUnit": "اختر وحدة...",
+        "conversionFactor": "معامل التحويل",
+        "allowedFor": "مسموح لـ",
+        "buyAndSell": "شراء وبيع",
+        "buyOnly": "شراء فقط",
+        "sellOnly": "بيع فقط",
+        "isBase": "أساسي",
+        "baseUnit": "الوحدة الأساسية",
+        "setAsBase": "تعيين كأساسي",
+        "manageUnits": "إدارة وحدات القياس"
+    },
+    "roles": {
+        "groups": {
+            "catalog": "الكتالوج"
+        }
+    },
+    "pos": {
+        "inStock": "متوفر",
+        "lowStock": "كمية منخفضة",
+        "outOfStock": "نفذت الكمية",
+        "selectCategory": "اختر الفئة",
+        "sku": "رمز المنتج",
+        "barcode": "الباركود",
+        "unit": "الوحدة",
+        "allCategories": "جميع الفئات"
+    }
+}

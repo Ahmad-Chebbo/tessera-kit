@@ -1,0 +1,27 @@
+{
+    "name": "ahmad-chebbo/tessera-catalog",
+    "description": "The Catalog module of Tessera.",
+    "type": "library",
+    "license": "proprietary",
+    "require": {
+        "php": "^8.4",
+        "ahmad-chebbo/tessera-engine": "^1.0",
+        "ahmad-chebbo/tessera-core": "^1.0",
+        "spatie/laravel-medialibrary": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\Modules\\Catalog\\": ""
+        }
+    },
+    "extra": {
+        "tessera": {
+            "modules": [
+                "App\\Modules\\Catalog\\CatalogServiceProvider"
+            ]
+        },
+        "branch-alias": {
+            "dev-main": "1.x-dev"
+        }
+    }
+}

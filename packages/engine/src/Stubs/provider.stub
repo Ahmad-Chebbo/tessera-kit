@@ -1,0 +1,52 @@
+<?php
+
+namespace App\Modules\{{Studly}};
+
+use Tessera\Engine\MenuItem;
+use Tessera\Engine\ModuleManifest;
+use Tessera\Engine\ModuleServiceProvider;
+use Tessera\Engine\PlanFeature;
+
+/**
+ * {{label}} module.
+ */
+class {{Studly}}ServiceProvider extends ModuleServiceProvider
+{
+    public function manifest(): ModuleManifest
+    {
+        return new ModuleManifest(
+            key: '{{key}}',
+            name: '{{label}}',
+            requires: [{{requires}}],
+        );
+    }
+
+    public function features(): array
+    {
+        return [
+            new PlanFeature('{{key}}', '{{label}}', ['view {{words}}'], order: 200),
+        ];
+    }
+
+    public function permissionGroups(): array
+    {
+        return [
+            '{{key}}' => ['view {{words}}'],
+        ];
+    }
+
+    public function defaultRolePermissions(): array
+    {
+        return [
+            'Owner' => ['view {{words}}'],
+            'Manager' => ['view {{words}}'],
+        ];
+    }
+
+    public function menu(): array
+    {
+        return [
+            new MenuItem('{{group}}', '{{camel}}.nav', '{{key}}.index', 'list-chart', 'view {{words}}', ['{{key}}.*'], 200),
+        ];
+    }
+}

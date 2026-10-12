@@ -1,0 +1,37 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        Schema::create('pos_shifts', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('branch_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->unsignedBigInteger('open_user_id')->nullable()->unique();
+            $table->string('status', 16)->default('open');
+            $table->timestamp('opened_at');
+            $table->timestamp('closed_at')->nullable();
+            $table->decimal('opening_float', 12, 2)->default(0);
+            $table->decimal('expected_cash', 12, 2)->nullable();
+            $table->decimal('counted_cash', 12, 2)->nullable();
+            $table->decimal('variance', 12, 2)->nullable();
+            $table->text('notes')->nullable();
+            $table->json('summary')->nullable();
+            $table->timestamps();
+
+            $table->index(['company_id', 'opened_at']);
+            $table->index(['user_id', 'opened_at']);
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('pos_shifts');
+    }
+};

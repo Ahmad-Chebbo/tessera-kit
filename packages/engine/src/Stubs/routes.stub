@@ -1,0 +1,6 @@
+<?php
+
+use App\Modules\{{Studly}}\Http\Controllers\Web\{{Studly}}Controller;
+use Illuminate\Support\Facades\Route;
+
+Route::get('/{{key}}', [{{Studly}}Controller::class, 'index'])->middleware('can:view {{words}}')->name('{{key}}.index');

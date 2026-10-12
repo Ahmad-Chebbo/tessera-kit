@@ -1,0 +1,52 @@
+{
+    "shifts": {
+        "nav": "Shifts",
+        "rosterNav": "Roster",
+        "title": "Shift roster",
+        "subtitle": "Plan who works when",
+        "tabRoster": "Weekly roster",
+        "tabShifts": "Shifts",
+        "tabCycles": "Cycles",
+        "previousWeek": "Previous week",
+        "nextWeek": "Next week",
+        "thisWeek": "This week",
+        "employee": "Employee",
+        "assign": "Assign",
+        "assignEmployee": "Assign to shift",
+        "shift": "Shift",
+        "date": "Date",
+        "addShift": "New shift",
+        "editShift": "Edit shift",
+        "shiftName": "Shift name",
+        "startsAt": "Starts",
+        "endsAt": "Ends",
+        "hours": "Hours",
+        "noShifts": "No shifts yet",
+        "confirmDeleteShift": "Delete this shift and every assignment that uses it?",
+        "confirmRemoveAssignment": "Remove this assignment?",
+        "addCycle": "New cycle",
+        "cycleHint": "A cycle repeats a shift on chosen weekdays and fills the roster for the next eight weeks.",
+        "weekdays": "Repeats on",
+        "startsOn": "Starts on",
+        "endsOn": "Ends on (optional)",
+        "noCycles": "No cycles yet",
+        "generate": "Fill the next 8 weeks",
+        "confirmDeleteCycle": "Delete this cycle and its upcoming assignments?",
+        "days": [
+            "Sun",
+            "Mon",
+            "Tue",
+            "Wed",
+            "Thu",
+            "Fri",
+            "Sat"
+        ],
+        "untilFurtherNotice": "No end date",
+        "noEmployees": "No employees to schedule"
+    },
+    "roles": {
+        "groups": {
+            "shifts": "Shifts"
+        }
+    }
+}

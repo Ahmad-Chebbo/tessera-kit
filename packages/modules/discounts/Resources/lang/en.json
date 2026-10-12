@@ -1,0 +1,245 @@
+{
+    "discounts": {
+        "nav": "Discounts",
+        "title": "Discount rules",
+        "subtitle": "Automatic discounts and coupons, applied at checkout",
+        "addRule": "New rule",
+        "editRule": "Edit rule",
+        "simulator": "Test a cart",
+        "noRules": "No discount rules yet",
+        "name": "Rule name",
+        "description": "Description",
+        "priority": "Priority",
+        "priorityHint": "Rules run from the lowest number to the highest.",
+        "stackable": "Can combine with other rules",
+        "stackableHint": "Off: once this rule discounts a line, lower-priority rules skip it.",
+        "active": "Active",
+        "status": "Status",
+        "statuses": {
+            "active": "Active",
+            "paused": "Paused",
+            "scheduled": "Scheduled",
+            "expired": "Expired"
+        },
+        "uses": "Orders",
+        "discounted": "Total discounted",
+        "action": "Discount",
+        "schedule": "Schedule",
+        "startsAt": "Starts",
+        "endsAt": "Ends",
+        "scheduleHint": "Leave empty to run all the time.",
+        "conditions": "Conditions",
+        "conditionsHint": "The rule applies to a line when the conditions match. Leave empty to apply to every line.",
+        "matchAll": "all",
+        "matchAny": "any",
+        "matchPrefix": "Match",
+        "matchSuffix": "of these conditions",
+        "addCondition": "Add condition",
+        "addGroup": "Add group",
+        "removeCondition": "Remove condition",
+        "removeGroup": "Remove group",
+        "pickField": "Choose what to check",
+        "pickValue": "Choose",
+        "add": "Add",
+        "withinDays": "in the last (days)",
+        "allTime": "all time",
+        "yes": "Yes",
+        "no": "No",
+        "and": "and",
+        "weekdays": [
+            "Sunday",
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday",
+            "Saturday"
+        ],
+        "payment": {
+            "cash": "Cash",
+            "debt": "Credit"
+        },
+        "expression": "Custom expression (advanced)",
+        "expressionHint": "Optional. Must also be true for the rule to apply. Example: customer.orders_count >= 10 and customer_spent(90) > 500",
+        "expressionFacts": "Available: customer, item, cart, context (e.g. customer.orders_count, item.category_id) and customer_orders(days), customer_spent(days), item_bought(days), item_orders(days), category_bought(days), min(), max().",
+        "actionType": "What it does",
+        "actionValue": "Value",
+        "percent": "Percent off",
+        "fixed": "Fixed amount off",
+        "price": "Special price",
+        "buy_x_get_y": "Buy X get Y",
+        "applyTo": "Fixed amount applies",
+        "each_unit": "to each unit",
+        "each_line": "to each matching line",
+        "total": "once, shared across matching lines",
+        "cap": "Maximum discount from this rule",
+        "buyQuantity": "Customer buys",
+        "getQuantity": "Gets",
+        "getPercent": "Discount on those units (%)",
+        "couponHint": "If set, the rule only applies when the cashier enters this code.",
+        "usageLimit": "Total uses",
+        "perCustomer": "Uses per customer",
+        "confirmDelete": "Delete this discount rule?",
+        "duplicate": "Duplicate",
+        "pause": "Pause",
+        "activate": "Activate",
+        "simulatorTitle": "Test a cart",
+        "simulatorSubtitle": "See which rules would apply, without selling anything",
+        "customer": "Customer",
+        "noCustomer": "No customer",
+        "product": "Product",
+        "quantity": "Quantity",
+        "addLine": "Add item",
+        "run": "Run",
+        "result": "Result",
+        "subtotal": "Subtotal",
+        "totalDiscount": "Total discount",
+        "netTotal": "Total after rules",
+        "appliedRules": "Applied rules",
+        "noneApplied": "No rules applied",
+        "couponStatus": {
+            "none": "",
+            "applied": "Coupon applied",
+            "unknown": "This coupon code is not valid",
+            "exhausted": "This coupon has reached its usage limit",
+            "not_applicable": "This coupon does not apply to these items"
+        },
+        "facts": {
+            "customer": {
+                "is_selected": "A customer is selected",
+                "id": "Customer",
+                "group_id": "Customer group",
+                "orders_count": "Customer's number of orders",
+                "total_spent": "Customer's total spend"
+            },
+            "item": {
+                "product_id": "Product",
+                "category_id": "Product category",
+                "quantity": "Quantity of the item",
+                "unit_price": "Unit price of the item",
+                "line_total": "Line total of the item",
+                "bought_quantity": "Quantity of this product bought before",
+                "bought_orders": "Orders that contained this product before",
+                "category_bought_quantity": "Quantity of this category bought before"
+            },
+            "cart": {
+                "subtotal": "Cart subtotal",
+                "quantity": "Total quantity in the cart",
+                "lines": "Number of cart lines"
+            },
+            "context": {
+                "branch_id": "Branch",
+                "payment_type": "Payment type",
+                "weekday": "Day of the week",
+                "time": "Time of day",
+                "date": "Date"
+            }
+        },
+        "operators": {
+            "eq": "is",
+            "neq": "is not",
+            "in": "is any of",
+            "not_in": "is none of",
+            "gt": "is greater than",
+            "gte": "is at least",
+            "lt": "is less than",
+            "lte": "is at most",
+            "between": "is between"
+        },
+        "moduleName": "Discounts & promotions",
+        "fromTemplate": "Add from a template",
+        "templatesTitle": "Ready-made rules",
+        "templatesHint": "Pick a common promotion, fill in the values and it is added as a normal rule you can edit later.",
+        "activateNow": "Activate immediately",
+        "addTemplate": "Add rule",
+        "back": "Back",
+        "templates": {
+            "happy_hour": {
+                "name": "Happy hour",
+                "description": "Percent off during a time window every day."
+            },
+            "weekend": {
+                "name": "Weekend special",
+                "description": "Percent off on Saturdays and Sundays."
+            },
+            "bulk": {
+                "name": "Bulk discount",
+                "description": "Percent off a product when the customer buys enough of it."
+            },
+            "buy_x_get_y": {
+                "name": "Buy X get Y free",
+                "description": "For example buy 10, get 1 free."
+            },
+            "spend_percent": {
+                "name": "Spend more, save a percentage",
+                "description": "Percent off once the cart reaches an amount."
+            },
+            "spend_amount": {
+                "name": "Spend more, save an amount",
+                "description": "A fixed amount off once the cart reaches an amount."
+            },
+            "loyalty": {
+                "name": "Loyal customers",
+                "description": "Percent off for customers who already placed many orders."
+            },
+            "repeat_buyer": {
+                "name": "Repeat buyer",
+                "description": "Percent off a product the customer has bought many times."
+            },
+            "welcome": {
+                "name": "First-order welcome",
+                "description": "Percent off a registered customer's first order."
+            },
+            "category": {
+                "name": "Category promotion",
+                "description": "Percent off every product of a category."
+            },
+            "special_price": {
+                "name": "Special price",
+                "description": "A fixed selling price for one product."
+            },
+            "group": {
+                "name": "Customer group discount",
+                "description": "Percent off for members of a customer group, e.g. VIP or wholesale."
+            },
+            "cash": {
+                "name": "Cash payment discount",
+                "description": "Percent off when paying in cash."
+            },
+            "coupon": {
+                "name": "Coupon code",
+                "description": "Percent off for customers who present a code."
+            },
+            "buy_get_item": {
+                "name": "Buy an item, get another free",
+                "description": "Choose the items to buy and the items given free, e.g. buy 2 burgers, get 1 drink free."
+            }
+        },
+        "templateParams": {
+            "percent": "Discount (%)",
+            "amount": "Amount",
+            "quantity": "Quantity",
+            "days": "Only count the last (days) — optional",
+            "time": "Time",
+            "code": "Coupon code",
+            "category": "Category",
+            "group": "Customer group",
+            "product": "Product",
+            "from": "From",
+            "to": "To",
+            "threshold": "Cart total of at least",
+            "buy": "Buy",
+            "get": "Get free",
+            "orders": "Number of orders",
+            "purchases": "Times bought",
+            "price": "Selling price",
+            "buy_products": "Items to buy",
+            "get_products": "Items given free"
+        },
+        "buyProducts": "When the customer buys",
+        "getProducts": "They get (choose the free items)",
+        "maxSets": "Maximum times per order (optional)",
+        "freeItems": "free",
+        "buy_get_item": "Buy items, get other items"
+    }
+}

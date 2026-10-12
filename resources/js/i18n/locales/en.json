@@ -1,0 +1,61 @@
+{
+    "nav": {
+        "toggleTheme": "Toggle theme",
+        "collapse": "Collapse",
+        "expand": "Expand",
+        "openMenu": "Open menu",
+        "dashboard": "Dashboard",
+        "pos": "POS",
+        "products": "Products",
+        "categories": "Categories",
+        "inventory": "Inventory",
+        "orders": "Orders",
+        "purchases": "Purchases",
+        "transfers": "Transfers",
+        "suppliers": "Suppliers",
+        "expenses": "Expenses",
+        "reports": "Reports",
+        "settings": "Settings",
+        "profile": "Profile",
+        "logout": "Log Out",
+        "branches": "Branches",
+        "locations": "Locations",
+        "users": "Users",
+        "companies": "Companies",
+        "warehouse": "Warehouse",
+        "customers": "Customers"
+    },
+    "branchFilter": {
+        "label": "Branch",
+        "all": "All branches"
+    },
+    "exports": {
+        "failed": "The export could not be created.",
+        "ready": "Your file is ready",
+        "queued": "This export is large, so it is being prepared in the background. You will find it under My exports.",
+        "preparing": "Preparing your {format} file…",
+        "button": "Export",
+        "excel": "Excel (.xlsx)",
+        "pdf": "PDF",
+        "myExports": "My exports"
+    },
+    "attendance": {
+        "checkedInSince": "In since {time}",
+        "notCheckedIn": "Not checked in",
+        "checkIn": "Check in",
+        "checkOut": "Check out"
+    },
+    "shifts": {
+        "pos": {
+            "chip": "Shift open",
+            "chipClosed": "No shift"
+        }
+    },
+    "reports": {
+        "fromDate": "From Date",
+        "toDate": "To Date"
+    },
+    "expenses": {
+        "expensesCard": "Expenses counted"
+    }
+}

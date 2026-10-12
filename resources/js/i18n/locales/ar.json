@@ -1,0 +1,61 @@
+{
+    "nav": {
+        "toggleTheme": "تبديل المظهر",
+        "collapse": "طي القائمة",
+        "expand": "توسيع القائمة",
+        "openMenu": "فتح القائمة",
+        "dashboard": "لوحة التحكم",
+        "pos": "نقطة البيع",
+        "products": "المنتجات",
+        "categories": "الفئات",
+        "inventory": "المخزون",
+        "orders": "الطلبات",
+        "purchases": "المشتريات",
+        "transfers": "التحويلات",
+        "suppliers": "الموردين",
+        "expenses": "المصروفات",
+        "reports": "التقارير",
+        "settings": "الإعدادات",
+        "profile": "الملف الشخصي",
+        "logout": "تسجيل الخروج",
+        "branches": "الفروع",
+        "locations": "المواقع",
+        "users": "المستخدمين",
+        "companies": "الشركات",
+        "warehouse": "المستودع",
+        "customers": "العملاء"
+    },
+    "branchFilter": {
+        "label": "الفرع",
+        "all": "كل الفروع"
+    },
+    "exports": {
+        "failed": "تعذر إنشاء الملف.",
+        "ready": "ملفك جاهز",
+        "queued": "هذا التصدير كبير لذلك يُجهَّز في الخلفية. ستجده ضمن «ملفاتي المصدّرة».",
+        "preparing": "جارٍ تجهيز ملف {format}…",
+        "button": "تصدير",
+        "excel": "Excel (.xlsx)",
+        "pdf": "PDF",
+        "myExports": "ملفاتي المصدّرة"
+    },
+    "attendance": {
+        "checkedInSince": "حاضر منذ {time}",
+        "notCheckedIn": "غير مسجل حضور",
+        "checkIn": "تسجيل حضور",
+        "checkOut": "تسجيل انصراف"
+    },
+    "shifts": {
+        "pos": {
+            "chip": "وردية مفتوحة",
+            "chipClosed": "لا توجد وردية"
+        }
+    },
+    "reports": {
+        "fromDate": "من تاريخ",
+        "toDate": "إلى تاريخ"
+    },
+    "expenses": {
+        "expensesCard": "المصروفات المحتسبة"
+    }
+}

@@ -1,0 +1,44 @@
+{
+    "customers": {
+        "title": "Customers",
+        "addCustomer": "Add Customer",
+        "editCustomer": "Edit Customer",
+        "noCustomers": "No customers found",
+        "totalDebt": "Outstanding Debt",
+        "totalSpent": "Total Spent",
+        "paidDebt": "Paid Debt",
+        "confirmDelete": "Are you sure you want to delete this customer?",
+        "groupsNav": "Customer groups"
+    },
+    "discounts": {
+        "group": "Customer group",
+        "noGroup": "No group",
+        "groups": {
+            "title": "Customer groups",
+            "subtitle": "Group customers so discount rules can target them",
+            "add": "New group",
+            "edit": "Edit group",
+            "name": "Group name",
+            "description": "Description",
+            "customers": "Customers",
+            "none": "No groups yet",
+            "confirmDelete": "Delete this group? Its customers keep their data."
+        }
+    },
+    "orders": {
+        "title": "Orders",
+        "paymentType": "Payment Type",
+        "debtStatus": "Debt Status",
+        "paidDate": "Paid Date",
+        "noOrders": "No orders found",
+        "voided": "Voided",
+        "cash": "Cash",
+        "paid": "Paid",
+        "unpaid": "Unpaid",
+        "markPaid": "Mark as Paid"
+    },
+    "pos": {
+        "debt": "Debt",
+        "orderNumber": "Order #"
+    }
+}

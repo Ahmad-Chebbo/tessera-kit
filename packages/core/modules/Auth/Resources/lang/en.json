@@ -1,0 +1,13 @@
+{
+    "auth": {
+        "login": "Log In",
+        "register": "Register",
+        "forgotPassword": "Forgot Password?",
+        "resetPassword": "Reset Password",
+        "rememberMe": "Remember Me",
+        "email": "Email",
+        "password": "Password",
+        "confirmPassword": "Confirm Password",
+        "welcome": "Welcome back"
+    }
+}

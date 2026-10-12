@@ -1,0 +1,44 @@
+{
+    "customers": {
+        "title": "العملاء",
+        "addCustomer": "إضافة عميل",
+        "editCustomer": "تعديل عميل",
+        "noCustomers": "لا يوجد عملاء",
+        "totalDebt": "الديون المستحقة",
+        "totalSpent": "إجمالي الإنفاق",
+        "paidDebt": "الديون المسددة",
+        "confirmDelete": "هل أنت متأكد من حذف هذا العميل؟",
+        "groupsNav": "مجموعات العملاء"
+    },
+    "discounts": {
+        "group": "مجموعة العميل",
+        "noGroup": "بدون مجموعة",
+        "groups": {
+            "title": "مجموعات العملاء",
+            "subtitle": "جمّع العملاء لتستهدفهم قواعد الخصم",
+            "add": "مجموعة جديدة",
+            "edit": "تعديل المجموعة",
+            "name": "اسم المجموعة",
+            "description": "الوصف",
+            "customers": "العملاء",
+            "none": "لا توجد مجموعات بعد",
+            "confirmDelete": "حذف هذه المجموعة؟ يحتفظ عملاؤها ببياناتهم."
+        }
+    },
+    "orders": {
+        "title": "الطلبات",
+        "paymentType": "نوع الدفع",
+        "debtStatus": "حالة الدين",
+        "paidDate": "تاريخ السداد",
+        "noOrders": "لا توجد طلبات",
+        "voided": "ملغي",
+        "cash": "نقداً",
+        "paid": "مدفوع",
+        "unpaid": "غير مدفوع",
+        "markPaid": "تحديد كمدفوع"
+    },
+    "pos": {
+        "debt": "دين",
+        "orderNumber": "رقم الطلب"
+    }
+}

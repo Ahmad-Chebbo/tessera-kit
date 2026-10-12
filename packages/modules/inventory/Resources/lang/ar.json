@@ -1,0 +1,91 @@
+{
+    "inventory": {
+        "title": "المخزون",
+        "stockMovements": "حركات المخزون",
+        "currentStock": "المخزون الحالي",
+        "location": "الموقع",
+        "warehouse": "المستودع",
+        "branch": "الفرع",
+        "movementType": "نوع الحركة",
+        "purchase": "شراء",
+        "sale": "بيع",
+        "transferIn": "تحويل وارد",
+        "transferOut": "تحويل صادر",
+        "adjustment": "تسوية",
+        "reference": "المرجع"
+    },
+    "transfers": {
+        "title": "التحويلات",
+        "createTransfer": "إنشاء تحويل",
+        "fromLocation": "من موقع",
+        "toLocation": "إلى موقع",
+        "pending": "قيد الانتظار",
+        "approved": "معتمد",
+        "completed": "مكتمل",
+        "cancelled": "ملغي",
+        "approve": "اعتماد",
+        "complete": "إكمال",
+        "reject": "رفض",
+        "stockTransfer": "تحويل المخزون",
+        "moveProducts": "نقل المنتجات بين المواقع",
+        "transferDetails": "تفاصيل التحويل",
+        "selectSource": "اختر المصدر...",
+        "selectDestination": "اختر الوجهة...",
+        "transferSummary": "ملخص التحويل",
+        "transfer": "تحويل"
+    },
+    "purchases": {
+        "title": "المشتريات",
+        "createPurchase": "إنشاء طلب شراء",
+        "supplier": "المورد",
+        "referenceNumber": "رقم المرجع",
+        "receivePurchase": "استلام المشتريات",
+        "received": "مستلم",
+        "taxAmount": "قيمة الضريبة",
+        "managePurchases": "إدارة طلبات الشراء",
+        "allSuppliers": "جميع الموردين",
+        "allStatus": "جميع الحالات",
+        "noPurchases": "لا توجد مشتريات",
+        "confirmReceive": "استلام هذه المشتريات وتحديث مستويات المخزون؟",
+        "createNewPurchase": "إنشاء طلب شراء جديد",
+        "purchaseDetails": "تفاصيل الشراء",
+        "selectSupplier": "اختر المورد...",
+        "selectLocation": "اختر الموقع...",
+        "optional": "اختياري",
+        "addProducts": "إضافة منتجات",
+        "selectProduct": "اختر المنتج...",
+        "qty": "الكمية",
+        "cost": "التكلفة",
+        "addItem": "إضافة",
+        "product": "المنتج",
+        "unitCost": "تكلفة الوحدة",
+        "noProductsAdded": "لم تتم إضافة منتجات بعد",
+        "orderSummary": "ملخص الطلب",
+        "totalProducts": "إجمالي المنتجات",
+        "totalUnits": "إجمالي الوحدات",
+        "totalAmount": "المبلغ الإجمالي",
+        "optionalNotes": "ملاحظات اختيارية...",
+        "createOrder": "إنشاء الطلب",
+        "purchaseCurrency": "عملة الشراء",
+        "exchangeRateInfo": "سعر الصرف",
+        "noExchangeRate": "لا يوجد سعر صرف لزوج العملات هذا. لن يتم تحويل التكاليف تلقائياً.",
+        "productCostIn": "التكلفة الأصلية بـ"
+    },
+    "suppliers": {
+        "title": "الموردين",
+        "addSupplier": "إضافة مورد",
+        "editSupplier": "تعديل مورد",
+        "name": "اسم المورد",
+        "contactPerson": "شخص الاتصال",
+        "noSuppliers": "لا يوجد موردين",
+        "manageSuppliers": "إدارة الموردين"
+    },
+    "dashboard": {
+        "noLowStock": "لا توجد منتجات منخفضة المخزون."
+    },
+    "roles": {
+        "groups": {
+            "inventory": "المخزون والمشتريات"
+        }
+    }
+}

@@ -1,0 +1,30 @@
+<?php
+
+use App\Modules\Company\Models\Branch;
+use App\Modules\Company\Models\Company;
+use App\Modules\Team\Models\User;
+use Inertia\Testing\AssertableInertia as Assert;
+use Spatie\Permission\Models\Permission;
+
+beforeEach(function () {
+    $this->company = Company::factory()->create();
+    $this->branch = Branch::factory()->create(['company_id' => $this->company->id]);
+    $this->user = User::factory()->create(['company_id' => $this->company->id, 'branch_id' => $this->branch->id])
+        ->givePermissionTo(Permission::findOrCreate('view {{words}}'));
+});
+
+it('sends guests to the login page', function () {
+    $this->get(route('{{key}}.index'))->assertRedirect(route('login'));
+});
+
+it('shows the {{words}} page to people who may view it', function () {
+    $this->actingAs($this->user)->get(route('{{key}}.index'))
+        ->assertOk()
+        ->assertInertia(fn (Assert $page) => $page->component('{{Studly}}/Index'));
+});
+
+it('keeps the page from people without the permission', function () {
+    $stranger = User::factory()->create(['company_id' => $this->company->id, 'branch_id' => $this->branch->id]);
+
+    $this->actingAs($stranger)->get(route('{{key}}.index'))->assertForbidden();
+});

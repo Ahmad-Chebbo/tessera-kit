@@ -1,0 +1,8 @@
+@import "tailwindcss";
+@import "@ahmad-chebbo/tessera-ui/theme.css";
+@plugin "@tailwindcss/forms";
+
+@source "../views";
+@source "../js";
+@source "../../app/Modules";
+@source "../../vendor/ahmad-chebbo";

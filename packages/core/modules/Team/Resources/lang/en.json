@@ -1,0 +1,112 @@
+{
+    "users": {
+        "title": "Users",
+        "addUser": "Add User",
+        "editUser": "Edit User",
+        "createUser": "Create User",
+        "updateUser": "Update User",
+        "manageUsers": "Manage system users",
+        "createNewUser": "Create a new user account",
+        "user": "User",
+        "name": "Name",
+        "email": "Email",
+        "password": "Password",
+        "newPassword": "New Password",
+        "leaveBlank": "Leave blank to keep current password",
+        "branch": "Branch",
+        "role": "Role",
+        "selectBranch": "Select a branch",
+        "selectRole": "Select a role",
+        "allBranches": "All Branches",
+        "allRoles": "All Roles",
+        "noUsers": "No users found",
+        "confirmDelete": "Are you sure you want to delete this user?"
+    },
+    "employees": {
+        "team": "Team",
+        "activity": "Activity",
+        "employeeNumber": "Employee no.",
+        "jobTitle": "Job title",
+        "phone": "Phone",
+        "hireDate": "Hire date",
+        "birthDate": "Birth date",
+        "nationalId": "National ID",
+        "address": "Address",
+        "emergencyContactName": "Emergency contact",
+        "emergencyContactPhone": "Emergency phone",
+        "notes": "Notes",
+        "profileSection": "Employee profile",
+        "numberHint": "Leave blank to generate the next number",
+        "overview": "Overview",
+        "activityTab": "Activity",
+        "contact": "Contact",
+        "emergency": "Emergency contact",
+        "employment": "Employment",
+        "noActivity": "No activity recorded yet",
+        "activityTitle": "Activity log",
+        "activitySubtitle": "What your team has been doing",
+        "allEmployees": "All employees",
+        "allEvents": "All events",
+        "dateFrom": "From",
+        "dateTo": "To",
+        "event": "Event",
+        "employee": "Employee",
+        "details": "Details",
+        "when": "When",
+        "viewProfile": "View profile",
+        "noActivityLogs": "No activity matches these filters",
+        "events": {
+            "auth": {
+                "login": "Signed in",
+                "logout": "Signed out"
+            },
+            "order": {
+                "created": "Sale",
+                "voided": "Order voided"
+            },
+            "employee": {
+                "created": "Employee added",
+                "updated": "Employee updated",
+                "deleted": "Employee removed"
+            },
+            "shift": {
+                "opened": "Shift opened",
+                "closed": "Shift closed",
+                "assigned": "Shift assigned"
+            },
+            "attendance": {
+                "check_in": "Checked in",
+                "check_out": "Checked out",
+                "adjusted": "Attendance adjusted"
+            },
+            "role": {
+                "created": "Role created",
+                "updated": "Role updated",
+                "deleted": "Role deleted"
+            }
+        }
+    },
+    "roles": {
+        "nav": "Roles",
+        "title": "Roles & permissions",
+        "subtitle": "Decide what each role can do in your company",
+        "addRole": "New role",
+        "editRole": "Edit role",
+        "name": "Role name",
+        "employees": "Employees",
+        "permissions": "Permissions",
+        "noRoles": "No roles yet",
+        "confirmDelete": "Delete this role?",
+        "yourRole": "Your role",
+        "permissionsHint": "You can only grant permissions you hold yourself. Greyed-out ones are kept as they are.",
+        "selectAll": "Select all",
+        "clear": "Clear",
+        "groups": {
+            "dashboard": "Dashboard",
+            "sales": "Sales & customers",
+            "team": "Team",
+            "settings": "Settings",
+            "other": "Other"
+        }
+    }
+}

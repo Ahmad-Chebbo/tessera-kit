@@ -1,0 +1,28 @@
+{
+    "name": "ahmad-chebbo/tessera-engine",
+    "description": "The Tessera module engine: finds, orders and boots modules, and the tools to make, check and package them.",
+    "type": "library",
+    "license": "proprietary",
+    "require": {
+        "php": "^8.4",
+        "illuminate/support": "^13.0"
+    },
+    "suggest": {
+        "inertiajs/inertia-laravel": "Needed for modules that have web pages"
+    },
+    "autoload": {
+        "psr-4": {
+            "Tessera\\Engine\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Tessera\\Engine\\EngineServiceProvider"
+            ]
+        },
+        "branch-alias": {
+            "dev-main": "1.x-dev"
+        }
+    }
+}
