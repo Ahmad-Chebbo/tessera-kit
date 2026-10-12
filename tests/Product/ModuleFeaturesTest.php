@@ -54,7 +54,7 @@ describe('permissions', function () {
     });
 
     it('keeps the plan feature keys and their order', function () {
-        expect(array_keys(app(ModuleRegistry::class)->features()))->toBe(['pos', 'catalog', 'inventory', 'customers', 'expenses', 'reports', 'branches', 'shifts', 'attendance', 'activity', 'roles', 'discounts', 'exports'])
+        expect(array_keys(app(ModuleRegistry::class)->features()))->toBe(['pos', 'orders', 'catalog', 'inventory', 'customers', 'expenses', 'reports', 'branches', 'shifts', 'attendance', 'activity', 'roles', 'discounts', 'exports'])
             ->and(Module::values())->toBe(array_keys(app(ModuleRegistry::class)->features()));
     });
 
@@ -62,7 +62,8 @@ describe('permissions', function () {
         $registry = app(ModuleRegistry::class);
 
         expect($registry->featureForPermission('access pos'))->toBe('pos')
-            ->and($registry->featureForPermission('view all orders'))->toBe('pos')
+            ->and($registry->featureForPermission('view all orders'))->toBe('orders')
+            ->and($registry->featureForPermission('void orders'))->toBe('orders')
             ->and($registry->featureForPermission('open pos shift'))->toBe('shifts')
             ->and($registry->featureForPermission('view shift reports'))->toBe('shifts')
             ->and($registry->featureForPermission('manage shifts'))->toBe('shifts')
@@ -75,7 +76,8 @@ describe('permissions', function () {
     });
 
     it('labels features for plan screens', function () {
-        expect(Module::Pos->label())->toBe('Point of sale & orders')
+        expect(Module::Pos->label())->toBe('Point of sale')
+            ->and(Module::Orders->label())->toBe('Orders')
             ->and(Module::Shifts->label())->toBe('Shifts & cash drawer')
             ->and(Module::Exports->permissions())->toBe(['export reports']);
     });

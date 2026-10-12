@@ -57,6 +57,15 @@ php artisan module:check --strict
 
 Rules that keep modules reusable (checked by `module:check`): a module imports another module only when its manifest requires it; contracts replace direct dependencies on optional modules; class names stay under `App\Modules\<Name>\` because the database stores them.
 
+## Upgrading from 3.x
+
+Version 4 split the Sales module in two: [`tessera-orders`](https://github.com/Tessera-kit/tessera-orders) keeps the order records and screens, and [`tessera-pos`](https://github.com/Tessera-kit/tessera-pos) is the till. `tessera-sales` stays as a bundle that installs both, so `php artisan module:add sales` and `MODULES_ENABLED=...sales` keep working once the two modules are listed too. `composer update` installs the new packages and `php artisan migrate` rewrites the class names stored in the database. In your own code:
+
+- `App\Modules\Sales\Models\Order`, `OrderItem` and `Payment` (and the order services, actions, enum and export) are now under `App\Modules\Orders\`; `PosShift`, `HeldOrder`, `CheckoutAction` and the till's controllers are under `App\Modules\Pos\`.
+- A module of yours that has `requires: ['sales']` and reads orders should require `orders`.
+- The `pos` plan feature no longer includes the orders: they are the `orders` feature. The migration gives every plan that had `pos` the `orders` feature too.
+- Checkout from your own code: `PlaceOrderAction` in Orders places an order; the Pos module's `CheckoutAction` wraps it with the shift check.
+
 ## Upgrading from 2.x
 
 Version 3 renamed *company* to *tenant* everywhere and split the SaaS package in two: [`tessera-tenant`](https://github.com/Tessera-kit/tessera-tenant) holds the business (branches, stock locations, currencies, settings) and works for one business or many, and `tessera-saas` keeps plans, subscriptions and the screens to manage tenants. The modules no longer need the SaaS package, only the tenant one. Users, roles and the other base tables no longer have tenant columns of their own; the tenant package adds them.
@@ -83,7 +92,7 @@ Each new package declares that it replaces the old one, so Composer drops the ol
 
 ## Release
 
-Tag the monorepo (`git tag v3.0.0 && git push --tags`). The **Split** workflow copies each package to its repository with the same tag and publishes the starter; the **Repository** workflow then rebuilds the Composer repository at `https://tessera-kit.github.io/tessera-kit` that lists every package. The **Tests** workflow runs on every push. The workflows need a repository secret `SPLIT_TOKEN` (a token that may push to the package repositories).
+Tag the monorepo (`git tag v4.0.0 && git push --tags`). The **Split** workflow copies each package to its repository with the same tag and publishes the starter; the **Repository** workflow then rebuilds the Composer repository at `https://tessera-kit.github.io/tessera-kit` that lists every package. The **Tests** workflow runs on every push. The workflows need a repository secret `SPLIT_TOKEN` (a token that may push to the package repositories).
 
 ## Add a module
 

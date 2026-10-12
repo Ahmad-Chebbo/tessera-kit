@@ -240,6 +240,9 @@
         "getProducts": "They get (choose the free items)",
         "maxSets": "Maximum times per order (optional)",
         "freeItems": "free",
-        "buy_get_item": "Buy items, get other items"
+        "buy_get_item": "Buy items, get other items",
+        "coupon": "Coupon",
+        "couponCode": "Coupon code",
+        "promotions": "Promotions"
     }
 }

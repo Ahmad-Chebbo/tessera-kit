@@ -6,7 +6,7 @@ use App\Modules\Customers\Models\Customer;
 use App\Modules\Customers\Models\CustomerGroup;
 use App\Modules\Discounts\Models\DiscountApplication;
 use App\Modules\Discounts\Models\DiscountRule;
-use App\Modules\Sales\Models\Order;
+use App\Modules\Orders\Models\Order;
 use App\Modules\Subscription\Enums\Module;
 use App\Modules\Subscription\Models\Plan;
 use App\Modules\Subscription\Models\Subscription;

@@ -22,7 +22,7 @@ Requirements: PHP 8.4, Composer, [bun](https://bun.sh), a database supported by 
 ## Add modules
 
 ```bash
-php artisan module:add sales       # also installs catalog, customers and inventory
+php artisan module:add sales       # the till and the orders; also installs catalog, customers and inventory
 php artisan module:add expenses
 php artisan module:add reports
 bun run build
@@ -30,7 +30,9 @@ bun run build
 
 | Module | What it adds |
 |---|---|
-| [`sales`](https://github.com/Tessera-kit/tessera-sales) | point of sale, orders, cash-drawer shifts |
+| [`sales`](https://github.com/Tessera-kit/tessera-sales) | the till and the orders together |
+| [`orders`](https://github.com/Tessera-kit/tessera-orders) | orders, voiding, credit sales, receipts |
+| [`pos`](https://github.com/Tessera-kit/tessera-pos) | the till, held orders, offline sales, cash-drawer shifts |
 | [`catalog`](https://github.com/Tessera-kit/tessera-catalog) | products and categories |
 | [`inventory`](https://github.com/Tessera-kit/tessera-inventory) | stock, transfers, suppliers, purchases |
 | [`customers`](https://github.com/Tessera-kit/tessera-customers) | customers and groups |

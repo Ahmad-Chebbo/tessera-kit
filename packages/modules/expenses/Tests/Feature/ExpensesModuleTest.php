@@ -11,7 +11,7 @@ use App\Modules\Expenses\Services\ProfitStatement;
 use App\Modules\Expenses\Services\RecurringExpenseRunner;
 use App\Modules\Inventory\Models\Purchase;
 use App\Modules\Inventory\Models\Supplier;
-use App\Modules\Sales\Models\Order;
+use App\Modules\Orders\Models\Order;
 use App\Modules\Subscription\Enums\Module;
 use App\Modules\Subscription\Models\Plan;
 use App\Modules\Subscription\Models\Subscription;

@@ -2,8 +2,8 @@
 
 namespace App\Modules\Discounts\Models;
 
-use App\Modules\Sales\Models\Order;
-use App\Modules\Sales\Models\OrderItem;
+use App\Modules\Orders\Models\Order;
+use App\Modules\Orders\Models\OrderItem;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 

@@ -5,7 +5,7 @@ namespace App\Modules\Discounts\Engine;
 use App\Modules\Catalog\Models\Product;
 use App\Modules\Discounts\Models\DiscountApplication;
 use App\Modules\Discounts\Models\DiscountRule;
-use App\Modules\Sales\Enums\OrderStatus;
+use App\Modules\Orders\Enums\OrderStatus;
 use Tessera\Core\Contracts\PlanLimits;
 use Tessera\Core\Pricing\CartLine;
 use Tessera\Core\Pricing\DiscountResult;

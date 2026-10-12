@@ -79,13 +79,13 @@ describe('module:package', function () {
         expect($composer['require'])->toHaveKeys(['mpdf/mpdf', 'openspout/openspout'])
             ->and($composer['version'])->toBe('1.0.0');
 
-        $this->artisan('module:package', ['key' => 'sales', '--path' => 'packages-test'])->assertSuccessful();
-        $sales = json_decode(file_get_contents(base_path('packages-test/sales/composer.json')), true);
+        $this->artisan('module:package', ['key' => 'pos', '--path' => 'packages-test'])->assertSuccessful();
+        $sales = json_decode(file_get_contents(base_path('packages-test/pos/composer.json')), true);
 
-        expect($sales['require'])->toHaveKeys(['tessera/tessera-catalog', 'tessera/tessera-inventory', 'tessera/tessera-customers'])->not->toHaveKey('tessera/tessera-team')
+        expect($sales['require'])->toHaveKeys(['tessera/tessera-orders', 'tessera/tessera-catalog', 'tessera/tessera-inventory', 'tessera/tessera-customers'])->not->toHaveKey('tessera/tessera-team')
             ->and($sales['require'])->toHaveKey('tessera/tessera-tenant')->not->toHaveKey('tessera/tessera-saas')
             ->and($composer['require'])->not->toHaveKey('tessera/tessera-tenant');
-    })->skip(fn () => ! moduleInstalled('exports') || ! moduleInstalled('sales'), 'Needs Exports and Sales');
+    })->skip(fn () => ! moduleInstalled('exports') || ! moduleInstalled('pos'), 'Needs Exports and Pos');
 
     it('refuses core modules, unknown keys and existing folders', function () {
         $this->artisan('module:package', ['key' => 'team'])->assertFailed();

@@ -14,7 +14,7 @@ use App\Modules\Discounts\Models\DiscountApplication;
 use App\Modules\Discounts\Models\DiscountRule;
 use App\Modules\Discounts\Services\DiscountPreview;
 use App\Modules\Discounts\Templates\DiscountTemplates;
-use App\Modules\Sales\Enums\OrderStatus;
+use App\Modules\Orders\Enums\OrderStatus;
 use App\Modules\Tenant\Models\Branch;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;

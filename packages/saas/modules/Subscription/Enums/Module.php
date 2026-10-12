@@ -11,6 +11,7 @@ use Tessera\Engine\ModuleRegistry;
 enum Module: string
 {
     case Pos = 'pos';
+    case Orders = 'orders';
     case Catalog = 'catalog';
     case Inventory = 'inventory';
     case Customers = 'customers';

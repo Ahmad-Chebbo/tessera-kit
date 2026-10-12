@@ -1,8 +1,8 @@
 <?php
 
-use App\Modules\Sales\Http\Controllers\Web\OrderController;
-use App\Modules\Sales\Http\Controllers\Web\POSController;
-use App\Modules\Sales\Http\Controllers\Web\PosShiftController;
+use App\Modules\Orders\Http\Controllers\Web\OrderController;
+use App\Modules\Pos\Http\Controllers\Web\POSController;
+use App\Modules\Pos\Http\Controllers\Web\PosShiftController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('can:access pos')->group(function () {

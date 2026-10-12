@@ -1,8 +1,13 @@
 # Tessera Sales
 
-The point of sale and orders: cart, checkout, receipts, offline queue, voiding, and cash-drawer shifts with closing reports.
+The point of sale and the orders together, for a project that wants both. It adds nothing of its own except a demo store to try them with:
 
-A module for [Tessera](https://github.com/Tessera-kit/tessera-kit). It needs a project made from the [Tessera starter](https://github.com/Tessera-kit/tessera-starter) (the engine, the core and the interface kit).
+- [`tessera-orders`](https://github.com/Tessera-kit/tessera-orders): orders, lines, payments, voiding, credit sales, receipts.
+- [`tessera-pos`](https://github.com/Tessera-kit/tessera-pos): the till, held orders, offline sales and cash-drawer shifts.
+
+Install Orders or Pos alone when only one is needed. A storefront, for example, needs the orders and not the till.
+
+A module for [Tessera](https://github.com/Tessera-kit/tessera-kit).
 
 ## Install
 
@@ -11,44 +16,7 @@ php artisan module:add sales
 bun run build
 ```
 
-`module:add` requires `tessera/tessera-sales`, runs the migrations and gives the roles of every tenant the new permissions. Without it:
-
-```bash
-composer config repositories.tessera composer https://tessera-kit.github.io/tessera-kit
-composer require tessera/tessera-sales
-php artisan migrate
-php artisan modules:sync
-bun run build
-```
-
-## What it needs
-
-- Other Tessera modules: `catalog`, `tenant`, `customers`, `inventory`, `subscription`, `team`. Composer installs them for you.
-
-## What it adds
-
-| Plan feature | Permissions |
-|---|---|
-| Point of sale & orders | access pos, apply discounts, void orders, view orders, view all orders, export orders |
-| Shifts & cash drawer | view shift reports, open pos shift |
-
-Menu entries: POS, POS shifts, Orders.
-
-- Exports orders, POS shifts and the shift closing report.
-- Works without Discounts (no automatic discounts) and without Reports.
-- Fills the `CustomerActivity` and `RevenueSource` contracts: customers show their orders and net profit can use sales revenue.
-
-## Notes
-
-- The POS keeps a queue in the browser (localForage) so a till can keep selling while offline and syncs later.
-
-## Turn it off without removing it
-
-Set `MODULES_ENABLED` in `.env` to the modules you want, for example `MODULES_ENABLED=catalog,sales`. Core modules are always on. A module that is left out disappears from the menu, the routes and the plan features.
-
-## Develop
-
-The module lives in `packages/modules/sales` of the monorepo, with its tests in `Tests/Feature`. Run `php artisan module:check` after changing it: it verifies that the module only uses what it declares.
+This installs `tessera/tessera-sales`, which requires the two modules, and their own requirements (`catalog`, `customers`, `inventory`). `php artisan db:seed` then also seeds a demo store with products and stock.
 
 ## Part of Tessera
 

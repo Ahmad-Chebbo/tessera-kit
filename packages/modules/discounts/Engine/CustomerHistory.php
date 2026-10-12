@@ -2,9 +2,9 @@
 
 namespace App\Modules\Discounts\Engine;
 
-use App\Modules\Sales\Enums\OrderStatus;
-use App\Modules\Sales\Models\Order;
-use App\Modules\Sales\Models\OrderItem;
+use App\Modules\Orders\Enums\OrderStatus;
+use App\Modules\Orders\Models\Order;
+use App\Modules\Orders\Models\OrderItem;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Builder;
 

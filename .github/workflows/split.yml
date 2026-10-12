@@ -32,6 +32,8 @@ jobs:
           - { path: packages/modules/exports, repo: tessera-exports }
           - { path: packages/modules/inventory, repo: tessera-inventory }
           - { path: packages/modules/reports, repo: tessera-reports }
+          - { path: packages/modules/orders, repo: tessera-orders }
+          - { path: packages/modules/pos, repo: tessera-pos }
           - { path: packages/modules/sales, repo: tessera-sales }
           - { path: packages/modules/shifts, repo: tessera-shifts }
     steps:

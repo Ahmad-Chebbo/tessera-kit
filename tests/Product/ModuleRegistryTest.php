@@ -43,8 +43,8 @@ describe('discovery', function () {
     it('finds every module of the application and enables them all by default', function () {
         $registry = app(ModuleRegistry::class);
 
-        expect($registry->all())->toHaveCount(14)
-            ->and($registry->enabled())->toHaveCount(14)
+        expect($registry->all())->toHaveCount(16)
+            ->and($registry->enabled())->toHaveCount(16)
             ->and($registry->has('expenses'))->toBeTrue()
             ->and($registry->get('sales')->manifest()->key)->toBe('sales');
     });
@@ -62,7 +62,7 @@ describe('discovery', function () {
     it('finds the route files of the enabled modules in module name order', function () {
         $files = app(ModuleRegistry::class)->routeFiles('web.php');
 
-        expect($files)->toHaveCount(14)
+        expect($files)->toHaveCount(16)
             ->and(array_map(fn (string $file): string => basename(dirname($file, 2)), $files))->toBe(collect(moduleFolders())->keys()->map(fn (string $name): string => basename(moduleFolders()[$name]))->sortBy(fn (string $name): string => strtolower($name))->values()->all())
             ->and(app(ModuleRegistry::class)->routeFiles('guest.php'))->toHaveCount(1);
     });

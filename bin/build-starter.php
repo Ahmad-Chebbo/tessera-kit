@@ -114,7 +114,7 @@ foreach (array_keys($composer['require']) as $package) {
     }
 }
 
-$constraint = $options['source'] === 'path' ? '@dev' : '^3.0';
+$constraint = $options['source'] === 'path' ? '@dev' : '^4.0';
 $composer['name'] = $fresh ? "{$composerVendor}/tessera-fresh" : "{$composerVendor}/tessera-starter";
 $composer['description'] = $fresh
     ? 'A Laravel application with sign-in, users, roles and permissions, ready for Tessera modules.'

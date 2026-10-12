@@ -4,7 +4,7 @@ namespace App\Modules\Discounts;
 
 use App\Modules\Discounts\Models\DiscountApplication;
 use App\Modules\Discounts\Services\RuleCartPricing;
-use App\Modules\Sales\Models\Order;
+use App\Modules\Orders\Models\Order;
 use Tessera\Core\Contracts\CartPricing;
 use Tessera\Engine\MenuItem;
 use Tessera\Engine\ModuleManifest;
@@ -21,7 +21,7 @@ class DiscountsServiceProvider extends ModuleServiceProvider
         return new ModuleManifest(
             key: 'discounts',
             name: 'Discounts',
-            requires: ['catalog', 'tenant', 'customers', 'sales', 'team'],
+            requires: ['catalog', 'tenant', 'customers', 'orders', 'team'],
         );
     }
 

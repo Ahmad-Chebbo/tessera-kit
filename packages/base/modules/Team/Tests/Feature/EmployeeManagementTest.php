@@ -2,7 +2,7 @@
 
 use App\Modules\Catalog\Models\Product;
 use App\Modules\Inventory\Models\StockMovement;
-use App\Modules\Sales\Models\Order;
+use App\Modules\Orders\Models\Order;
 use App\Modules\Team\Models\ActivityLog;
 use App\Modules\Team\Models\EmployeeProfile;
 use App\Modules\Team\Models\User;

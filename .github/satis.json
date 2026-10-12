@@ -48,6 +48,14 @@
         },
         {
             "type": "vcs",
+            "url": "https://github.com/Tessera-kit/tessera-orders"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/Tessera-kit/tessera-pos"
+        },
+        {
+            "type": "vcs",
             "url": "https://github.com/Tessera-kit/tessera-reports"
         },
         {

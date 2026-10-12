@@ -32,6 +32,8 @@
         "tessera/tessera-expenses": "@dev",
         "tessera/tessera-exports": "@dev",
         "tessera/tessera-inventory": "@dev",
+        "tessera/tessera-orders": "@dev",
+        "tessera/tessera-pos": "@dev",
         "tessera/tessera-reports": "@dev",
         "tessera/tessera-sales": "@dev",
         "tessera/tessera-shifts": "@dev"
