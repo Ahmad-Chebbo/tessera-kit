@@ -1,5 +1,6 @@
 <?php
 
+use App\Modules\Subscription\Enums\Module;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
@@ -26,7 +27,7 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        $modules = ['pos', 'catalog', 'inventory', 'customers', 'expenses', 'reports', 'branches', 'shifts', 'attendance', 'activity', 'roles'];
+        $modules = Module::values();
 
         DB::table('plans')->insert([
             'name' => 'Legacy (all modules)',

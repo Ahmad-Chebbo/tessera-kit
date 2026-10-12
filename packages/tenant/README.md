@@ -29,7 +29,7 @@ Permissions it declares: manage settings, manage branches, manage locations, vie
 - **One business** (no `tessera-saas`): `Tenant::default()` is the only tenant. New users are put in it and in its main branch, and the roles (Owner, Manager, …) are shared by everyone.
 - **Many tenants** (with `tessera-saas`): every tenant has its own users, branches, stock and roles, and a platform admin creates them.
 
-Moving from one to the other is `composer require tessera/tessera-saas`: the first tenant becomes the first of many.
+Moving from one to the other is `composer require tessera/tessera-saas`, `php artisan migrate` and `php artisan saas:install --admin-email=you@example.com`: the business becomes the first of many tenants, with its own roles and a plan, and the platform admin is created.
 
 ## How it plugs into the base
 

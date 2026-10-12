@@ -4,6 +4,7 @@ use App\Modules\Team\Enums\ActivityEvent;
 use App\Modules\Team\Models\ActivityLog;
 use App\Modules\Team\Models\User;
 use App\Modules\Team\Services\ActivityLogger;
+use App\Modules\Team\Services\PermissionSynchronizer;
 use App\Modules\Team\Services\TeamFeatures;
 use Illuminate\Support\Facades\DB;
 use Inertia\Testing\AssertableInertia as Assert;
@@ -109,4 +110,17 @@ it('follows the Tenant module for the optional parts unless the config decides',
 
     expect(app(TeamFeatures::class)->employeeProfiles())->toBeFalse()
         ->and(app(TeamFeatures::class)->activityLog())->toBeTrue();
+});
+
+it('keeps a role the way people edited it when the permissions are synced again', function () {
+    app(PermissionSynchronizer::class)->sync();
+
+    $owner = Role::findByName('Owner');
+    expect($owner->hasPermissionTo('view users'))->toBeTrue();
+
+    $owner->revokePermissionTo('view users');
+    app(PermissionSynchronizer::class)->sync();
+
+    expect(Role::findByName('Owner')->hasPermissionTo('view users'))->toBeFalse()
+        ->and(Role::findByName('Owner')->hasPermissionTo('manage roles'))->toBeTrue();
 });

@@ -37,7 +37,10 @@ class PermissionSynchronizer
 
         foreach ($this->registry->defaultRolePermissions() as $roleName => $permissions) {
             $template = Role::query()->firstOrCreate(['name' => $roleName, 'guard_name' => 'web', ...$this->tenancy->attributes(null)]);
-            $template->givePermissionTo($permissions);
+
+            // Roles people edit keep what they were left with: they get the defaults when new, and then only the
+            // permissions that did not exist before. Templates nobody edits always carry all of them.
+            $template->givePermissionTo($template->wasRecentlyCreated || ! $this->tenancy->sharesRoles() ? $permissions : array_values(array_intersect($permissions, $created)));
             $roles[] = $roleName;
 
             if ($this->tenancy->available() && ($fresh = array_values(array_intersect($permissions, $created)))) {

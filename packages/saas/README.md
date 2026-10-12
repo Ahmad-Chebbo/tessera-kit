@@ -8,8 +8,18 @@ It builds on [`tessera-tenant`](https://github.com/Tessera-kit/tessera-tenant) (
 composer config repositories.tessera composer https://tessera-kit.github.io/tessera-kit
 composer require tessera/tessera-saas
 php artisan migrate
-php artisan modules:sync
+php artisan saas:install --admin-email=you@example.com
 ```
+
+## Turning a single business into the first tenant
+
+`php artisan saas:install` is for a project that ran as one business and now serves many. The business becomes the first tenant and keeps working:
+
+- it gets its own copy of the standard roles and its users move onto them, and the roles it made for itself become its own;
+- it is subscribed to the *Legacy (all modules)* plan, brought up to date with every module installed now;
+- with `--admin-email` the platform admin is created outside every tenant (a password is made and shown once, or give `--admin-password`), or the Admin role is given to an existing user who belongs to no tenant.
+
+It can be run again without changing anything that is already done. Until a platform admin exists nobody can open the Tenants and Plans pages, because only the *Admin* role holds *manage tenants*.
 
 ## The Subscription module
 

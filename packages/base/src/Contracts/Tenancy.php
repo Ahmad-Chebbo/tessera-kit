@@ -46,6 +46,12 @@ interface Tenancy
     public function sameTenant(Model $first, Model $second): bool;
 
     /**
+     * Whether everyone uses the same roles, so the people who edit them are editing the roles of the whole project. With
+     * many tenants the shared roles are only templates that each tenant copies.
+     */
+    public function sharesRoles(): bool;
+
+    /**
      * The tenant that owns the actor's roles, or null when roles are shared by everyone: always the case in a project
      * with a single business.
      */

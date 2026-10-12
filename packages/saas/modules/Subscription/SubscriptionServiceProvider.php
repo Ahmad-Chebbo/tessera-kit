@@ -2,6 +2,7 @@
 
 namespace App\Modules\Subscription;
 
+use App\Modules\Subscription\Console\SaasInstallCommand;
 use App\Modules\Subscription\Database\Factories\GivesTenantsAPlan;
 use App\Modules\Subscription\Database\Seeders\PlanSeeder;
 use App\Modules\Subscription\Http\Middleware\EnsureSubscriptionIsUsable;
@@ -72,6 +73,10 @@ class SubscriptionServiceProvider extends ModuleServiceProvider
     public function boot(): void
     {
         parent::boot();
+
+        if ($this->app->runningInConsole()) {
+            $this->commands([SaasInstallCommand::class]);
+        }
 
         TenantFactory::$hooks[] = fn (Tenant $tenant) => GivesTenantsAPlan::for($tenant);
 

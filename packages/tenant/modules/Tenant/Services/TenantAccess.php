@@ -42,6 +42,11 @@ class TenantAccess implements Tenancy
         return $first->getAttribute('tenant_id') === $second->getAttribute('tenant_id');
     }
 
+    public function sharesRoles(): bool
+    {
+        return ! $this->isMultiTenant();
+    }
+
     public function roleOwner(User $actor): ?int
     {
         return $this->isMultiTenant() ? $actor->tenant_id : null;

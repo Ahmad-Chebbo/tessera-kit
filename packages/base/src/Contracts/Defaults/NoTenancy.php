@@ -35,6 +35,11 @@ class NoTenancy implements Tenancy
         return true;
     }
 
+    public function sharesRoles(): bool
+    {
+        return true;
+    }
+
     public function roleOwner(User $actor): ?int
     {
         return null;
