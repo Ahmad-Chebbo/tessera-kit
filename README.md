@@ -57,6 +57,10 @@ php artisan module:check --strict
 
 Rules that keep modules reusable (checked by `module:check`): a module imports another module only when its manifest requires it; contracts replace direct dependencies on optional modules; class names stay under `App\Modules\<Name>\` because the database stores them.
 
+## Changing a module
+
+`php artisan module:publish <key>` takes an installed module into your project (`app/Modules/<Name>`) so you can edit its models, migrations, services, pages and translations, and stops it updating through Composer. `php artisan module:publish <key> --pages` copies only its Vue pages into `resources/js/Pages`, where they replace the module's pages of the same name and the module keeps updating. See the [engine README](packages/engine/README.md) for the details. A project made before version 4 needs the new `resources/js/utils/pages.js` for page overrides.
+
 ## Upgrading from 3.x
 
 Version 4 split the Sales module in two: [`tessera-orders`](https://github.com/Tessera-kit/tessera-orders) keeps the order records and screens, and [`tessera-pos`](https://github.com/Tessera-kit/tessera-pos) is the till. `tessera-sales` stays as a bundle that installs both, so `php artisan module:add sales` and `MODULES_ENABLED=...sales` keep working once the two modules are listed too. `composer update` installs the new packages and `php artisan migrate` rewrites the class names stored in the database. In your own code:

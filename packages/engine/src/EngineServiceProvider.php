@@ -8,6 +8,7 @@ use Tessera\Engine\Console\ModuleCheckCommand;
 use Tessera\Engine\Console\ModuleListCommand;
 use Tessera\Engine\Console\ModuleMakeCommand;
 use Tessera\Engine\Console\ModulePackageCommand;
+use Tessera\Engine\Console\ModulePublishCommand;
 
 /**
  * Finds the module providers in app/Modules, builds the registry and registers the enabled modules.
@@ -40,7 +41,7 @@ class EngineServiceProvider extends ServiceProvider
                 __DIR__.'/../config/tessera.php' => config_path('tessera.php'),
             ], ['tessera-config', 'tessera-engine-config']);
 
-            $this->commands([ModuleAddCommand::class, ModuleListCommand::class, ModuleMakeCommand::class, ModuleCheckCommand::class, ModulePackageCommand::class]);
+            $this->commands([ModuleAddCommand::class, ModuleListCommand::class, ModuleMakeCommand::class, ModuleCheckCommand::class, ModulePackageCommand::class, ModulePublishCommand::class]);
         }
 
         $this->registerPagePaths();

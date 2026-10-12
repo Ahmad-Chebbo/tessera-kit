@@ -500,6 +500,7 @@ php artisan module:package invoices</pre><button class="copy" type="button">Copy
         <div>
             <h2 style="margin-bottom:1.25rem">Write your own module</h2>
             <p class="prose">A module is a folder with a service provider. Routes, migrations, translations, Vue pages and config load from the usual places, and the provider says what the module adds to the menu, the permissions and the plans.</p>
+            <p class="prose">Need to change a module you installed? <code style="font-family:var(--mono);color:var(--accent)">module:publish catalog</code> takes it into your project to edit its models, migrations and pages, and <code style="font-family:var(--mono);color:var(--accent)">module:publish catalog --pages</code> copies only the screens, so the module keeps updating while your pages replace its own.</p>
             <p class="prose"><code style="font-family:var(--mono);color:var(--accent)">module:make</code> creates the folder with a controller, a page, English and Arabic texts and a passing test. <code style="font-family:var(--mono);color:var(--accent)">module:check</code> keeps it portable.</p>
         </div>
         <div class="code"><pre><span class="tok-k">class</span> InvoicesServiceProvider <span class="tok-k">extends</span> ModuleServiceProvider

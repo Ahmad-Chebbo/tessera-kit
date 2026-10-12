@@ -11,11 +11,22 @@ describe('indexPages', () => {
         expect(Object.keys(pages)).toEqual(['Auth/Login', 'Expenses/Index']);
     });
 
-    it('refuses two files with the same page name', () => {
+    it('refuses two modules that provide the same page', () => {
         expect(() => indexPages(
-            { './Pages/Expenses/Index.vue': () => 1 },
-            { '../../app/Modules/Expenses/Resources/js/Pages/Expenses/Index.vue': () => 2 },
+            {},
+            { '../../app/Modules/Expenses/Resources/js/Pages/Expenses/Index.vue': () => 1 },
+            { '../../vendor/tessera/tessera-expenses/Resources/js/Pages/Expenses/Index.vue': () => 2 },
         )).toThrow('Two files provide the page "Expenses/Index"');
+    });
+
+    it('lets a page of the project replace the page of a module with the same name', () => {
+        const pages = indexPages(
+            { './Pages/Expenses/Index.vue': () => 'mine' },
+            { '../../vendor/tessera/tessera-expenses/Resources/js/Pages/Expenses/Index.vue': () => 'module', '../../vendor/tessera/tessera-expenses/Resources/js/Pages/Expenses/Create.vue': () => 'create' },
+        );
+
+        expect(resolvePage(pages, 'Expenses/Index')).toBe('mine');
+        expect(resolvePage(pages, 'Expenses/Create')).toBe('create');
     });
 
     it('loads a page by name and fails clearly for an unknown one', () => {

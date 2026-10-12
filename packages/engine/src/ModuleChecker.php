@@ -195,11 +195,12 @@ class ModuleChecker
             foreach ($this->filesIn($root, 'vue') as $path) {
                 $name = substr(str_replace('\\', '/', $path), strlen(str_replace('\\', '/', $root)) + 1);
 
-                if (isset($seen[$name])) {
+                // A page the project has itself replaces the module's page of the same name on purpose.
+                if (isset($seen[$name]) && $seen[$name] !== 'core') {
                     $this->add(self::ERROR, $owner, "the page [{$name}] also exists in {$seen[$name]}");
                 }
 
-                $seen[$name] = $owner;
+                $seen[$name] ??= $owner;
             }
         }
     }
