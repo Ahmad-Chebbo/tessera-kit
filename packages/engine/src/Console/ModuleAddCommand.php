@@ -20,10 +20,8 @@ class ModuleAddCommand extends Command
         $vendor = (string) config('tessera.vendor');
         $package = $vendor.'/'.config('tessera.package_prefix').$key;
 
-        if (! $this->hasRepository($package)) {
-            $url = str_replace(['{vendor}', '{package}'], [$vendor, config('tessera.package_prefix').$key], (string) config('tessera.repository'));
-
-            if (! $this->runProcess([$this->composer(), 'config', "repositories.{$package}", 'vcs', $url])) {
+        if (! $this->hasRepository()) {
+            if (! $this->runProcess([$this->composer(), 'config', 'repositories.tessera', 'composer', (string) config('tessera.repository')])) {
                 return self::FAILURE;
             }
         }
@@ -60,16 +58,18 @@ class ModuleAddCommand extends Command
         return PHP_OS_FAMILY === 'Windows' ? 'composer.bat' : 'composer';
     }
 
-    private function hasRepository(string $package): bool
+    /**
+     * Whether composer.json already reaches the packages: through the Tessera repository or a path repository that
+     * covers the packages folder of a monorepo.
+     */
+    private function hasRepository(): bool
     {
         $composer = json_decode((string) @file_get_contents(base_path('composer.json')), true) ?? [];
 
-        foreach ($composer['repositories'] ?? [] as $name => $repository) {
-            if (($repository['name'] ?? $name) === $package || ($repository['url'] ?? '') === str_replace(['{vendor}', '{package}'], explode('/', $package), (string) config('tessera.repository'))) {
-                return true;
-            }
+        foreach ($composer['repositories'] ?? [] as $repository) {
+            $url = (string) ($repository['url'] ?? '');
 
-            if (($repository['type'] ?? '') === 'path' && str_contains((string) ($repository['url'] ?? ''), '*')) {
+            if ($url === config('tessera.repository') || (($repository['type'] ?? '') === 'path' && str_contains($url, '*'))) {
                 return true;
             }
         }

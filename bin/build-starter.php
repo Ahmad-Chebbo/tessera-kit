@@ -110,8 +110,7 @@ if ($options['source'] === 'path') {
     ];
 } else {
     $composer['repositories'] = [
-        ['type' => 'vcs', 'url' => "https://github.com/{$vendor}/tessera-engine"],
-        ['type' => 'vcs', 'url' => "https://github.com/{$vendor}/tessera-core"],
+        ['type' => 'composer', 'url' => 'https://'.strtolower($vendor).'.github.io/tessera-kit'],
     ];
 }
 

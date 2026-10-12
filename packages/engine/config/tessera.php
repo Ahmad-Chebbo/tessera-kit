@@ -7,7 +7,8 @@ return [
     | Where modules are published
     |--------------------------------------------------------------------------
     |
-    | `module:add expenses` requires "{vendor}/{package_prefix}expenses" from the repository below.
+    | `module:add expenses` requires "{vendor}/{package_prefix}expenses" from the Composer repository below, which lists
+    | every package at once. It is added to composer.json when the project does not have it yet.
     |
     */
 
@@ -15,7 +16,7 @@ return [
 
     'package_prefix' => 'tessera-',
 
-    'repository' => 'https://github.com/{vendor}/{package}',
+    'repository' => 'https://ahmad-chebbo.github.io/tessera-kit',
 
     /*
     |--------------------------------------------------------------------------

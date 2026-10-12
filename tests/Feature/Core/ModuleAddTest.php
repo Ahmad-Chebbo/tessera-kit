@@ -15,12 +15,12 @@ it('requires the package, migrates and syncs permissions, in that order', functi
     mkdir($project);
     file_put_contents($project.'/composer.json', '{}');
     app()->setBasePath($project);
-    config(['tessera.repository' => 'https://example.test/{vendor}/{package}', 'tessera.package_prefix' => 'tessera-']);
+    config(['tessera.repository' => 'https://example.test/packages', 'tessera.package_prefix' => 'tessera-']);
 
     $this->artisan('module:add', ['key' => 'invoices'])->assertSuccessful();
 
     Process::assertRanInOrder([
-        commandContains('config repositories.ahmad-chebbo/tessera-invoices vcs https://example.test/ahmad-chebbo/tessera-invoices'),
+        commandContains('config repositories.tessera composer https://example.test/packages'),
         commandContains('require ahmad-chebbo/tessera-invoices --no-interaction'),
         commandContains('artisan migrate'),
         commandContains('artisan modules:sync'),
@@ -39,7 +39,7 @@ it('does not add a repository the project already has', function () {
     Process::fake();
     $project = sys_get_temp_dir().'/tessera-add-'.uniqid();
     mkdir($project);
-    file_put_contents($project.'/composer.json', json_encode(['repositories' => [['name' => 'ahmad-chebbo/tessera-expenses', 'type' => 'vcs', 'url' => 'https://example.test/x']]]));
+    file_put_contents($project.'/composer.json', json_encode(['repositories' => [['type' => 'composer', 'url' => config('tessera.repository')]]]));
     app()->setBasePath($project);
 
     $this->artisan('module:add', ['key' => 'expenses'])->assertSuccessful();

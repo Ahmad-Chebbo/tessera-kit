@@ -1,0 +1,63 @@
+{
+    "name": "ahmad-chebbo/tessera",
+    "homepage": "https://ahmad-chebbo.github.io/tessera-kit",
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/Ahmad-Chebbo/tessera-engine"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/Ahmad-Chebbo/tessera-core"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/Ahmad-Chebbo/tessera-attendance"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/Ahmad-Chebbo/tessera-catalog"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/Ahmad-Chebbo/tessera-customers"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/Ahmad-Chebbo/tessera-discounts"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/Ahmad-Chebbo/tessera-expenses"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/Ahmad-Chebbo/tessera-exports"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/Ahmad-Chebbo/tessera-inventory"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/Ahmad-Chebbo/tessera-reports"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/Ahmad-Chebbo/tessera-sales"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/Ahmad-Chebbo/tessera-shifts"
+        }
+    ],
+    "require-all": true,
+    "require-dependencies": false,
+    "minimum-stability": "dev",
+    "archive": {
+        "directory": "dist",
+        "format": "zip",
+        "skip-dev": true
+    },
+    "output-html": false
+}

@@ -1,0 +1,48 @@
+name: Repository
+
+# Publishes the Composer repository at https://ahmad-chebbo.github.io/tessera-kit that lists every package, so a project
+# adds one repository and then `composer require`s any module. Runs after each split.
+
+on:
+  workflow_run:
+    workflows: [Split]
+    types: [completed]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+
+      - name: Install Satis
+        run: composer create-project composer/satis --stability=dev --no-interaction "$RUNNER_TEMP/satis"
+
+      - name: Build the repository
+        env:
+          COMPOSER_AUTH: '{"github-oauth": {"github.com": "${{ secrets.SPLIT_TOKEN }}"}}'
+        run: php "$RUNNER_TEMP/satis/bin/satis" build .github/satis.json public --no-interaction
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: public
+
+      - id: deployment
+        uses: actions/deploy-pages@v4
