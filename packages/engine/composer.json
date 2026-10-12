@@ -1,5 +1,5 @@
 {
-    "name": "ahmad-chebbo/tessera-engine",
+    "name": "tessera/tessera-engine",
     "description": "The Tessera module engine: finds, orders and boots modules, and the tools to make, check and package them.",
     "type": "library",
     "license": "proprietary",
@@ -22,7 +22,10 @@
             ]
         },
         "branch-alias": {
-            "dev-main": "1.x-dev"
+            "dev-main": "2.x-dev"
         }
+    },
+    "replace": {
+        "ahmad-chebbo/tessera-engine": "self.version"
     }
 }

@@ -2,9 +2,9 @@
 import { ref, watch } from 'vue';
 import { router } from '@inertiajs/vue3';
 import { useI18n } from 'vue-i18n';
-import DatePicker from '@ahmad-chebbo/tessera-ui/Components/DatePicker.vue';
-import PeriodPresets from '@ahmad-chebbo/tessera-ui/Components/PeriodPresets.vue';
-import Select from '@ahmad-chebbo/tessera-ui/Components/Select.vue';
+import DatePicker from '@tessera/tessera-ui/Components/DatePicker.vue';
+import PeriodPresets from '@tessera/tessera-ui/Components/PeriodPresets.vue';
+import Select from '@tessera/tessera-ui/Components/Select.vue';
 
 const props = defineProps({
     routeName: { type: String, required: true },

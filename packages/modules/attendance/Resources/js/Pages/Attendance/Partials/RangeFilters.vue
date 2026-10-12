@@ -3,8 +3,8 @@ import { ref, watch } from 'vue';
 import { router } from '@inertiajs/vue3';
 import { useI18n } from 'vue-i18n';
 import BranchFilter from '@/Components/BranchFilter.vue';
-import DatePicker from '@ahmad-chebbo/tessera-ui/Components/DatePicker.vue';
-import Select from '@ahmad-chebbo/tessera-ui/Components/Select.vue';
+import DatePicker from '@tessera/tessera-ui/Components/DatePicker.vue';
+import Select from '@tessera/tessera-ui/Components/Select.vue';
 
 const props = defineProps({
     routeName: { type: String, required: true },

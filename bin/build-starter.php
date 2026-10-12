@@ -4,16 +4,18 @@
  * Builds a starter project from this monorepo: the host application without the packages folder, to which modules are
  * added with `php artisan module:add`.
  *
- *     php bin/build-starter.php <target-folder> [--flavor=saas|fresh] [--source=vcs|path] [--vendor=ahmad-chebbo]
+ *     php bin/build-starter.php <target-folder> [--flavor=saas|fresh] [--source=vcs|path] [--vendor=tessera] [--org=Tessera-kit]
  *
- * --flavor=saas   (default) tessera-starter: the engine, the base and the core, so companies, branches and plans.
+ * --flavor=saas   (default) tessera-starter: the engine, the base and the SaaS package, so companies, branches and plans.
  * --flavor=fresh  tessera-fresh: the engine and the base only, so sign-in, users, roles and permissions.
  * --source=vcs    requires the packages from their GitHub repositories (what a release does).
+ * --vendor        the Composer vendor of the packages.
+ * --org           the GitHub organization that holds the repositories and the Composer repository site.
  * --source=path   requires them from the packages folder of this monorepo, copied, so the build can be tried offline.
  */
 $arguments = array_slice($argv, 1);
 $target = null;
-$options = ['source' => 'vcs', 'vendor' => 'ahmad-chebbo', 'flavor' => 'saas'];
+$options = ['source' => 'vcs', 'vendor' => 'tessera', 'org' => 'Tessera-kit', 'flavor' => 'saas'];
 
 foreach ($arguments as $argument) {
     if (preg_match('/^--(\w+)=(.+)$/', $argument, $match)) {
@@ -37,6 +39,7 @@ $fresh = $options['flavor'] === 'fresh';
 
 $root = dirname(__DIR__);
 $vendor = $options['vendor'];
+$org = $options['org'];
 $composerVendor = strtolower($vendor);
 $excluded = [
     '.git', '.claude', '.cursor', '.agents', '.superpowers', '.phpunit.cache', 'vendor', 'node_modules', 'packages', 'docs', 'bin',
@@ -111,7 +114,7 @@ foreach (array_keys($composer['require']) as $package) {
     }
 }
 
-$constraint = $options['source'] === 'path' ? '@dev' : '^1.0';
+$constraint = $options['source'] === 'path' ? '@dev' : '^2.0';
 $composer['name'] = $fresh ? "{$composerVendor}/tessera-fresh" : "{$composerVendor}/tessera-starter";
 $composer['description'] = $fresh
     ? 'A Laravel application with sign-in, users, roles and permissions, ready for Tessera modules.'
@@ -134,7 +137,7 @@ if ($options['source'] === 'path') {
     );
 } else {
     $composer['repositories'] = [
-        ['type' => 'composer', 'url' => 'https://'.strtolower($vendor).'.github.io/tessera-kit'],
+        ['type' => 'composer', 'url' => 'https://'.strtolower($org).'.github.io/tessera-kit'],
     ];
 }
 
@@ -150,7 +153,7 @@ writeJson($target.'/composer.json', $composer);
 $package = json_decode(file_get_contents($root.'/package.json'), true);
 unset($package['workspaces']);
 $package['name'] = $fresh ? 'tessera-fresh' : 'tessera-starter';
-$package['dependencies']['@ahmad-chebbo/tessera-ui'] = $options['source'] === 'path' ? 'file:'.$root.'/packages/ui' : "github:{$vendor}/tessera-ui".(isset($options['uiref']) ? '#'.$options['uiref'] : '');
+$package['dependencies']['@tessera/tessera-ui'] = $options['source'] === 'path' ? 'file:'.$root.'/packages/ui' : "github:{$org}/tessera-ui".(isset($options['uiref']) ? '#'.$options['uiref'] : '');
 writeJson($target.'/package.json', $package);
 
 // ---------------------------------------------------------------- tests of the monorepo that need its packages folder

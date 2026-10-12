@@ -12,11 +12,11 @@ return [
     |
     */
 
-    'vendor' => 'ahmad-chebbo',
+    'vendor' => 'tessera',
 
     'package_prefix' => 'tessera-',
 
-    'repository' => 'https://ahmad-chebbo.github.io/tessera-kit',
+    'repository' => 'https://tessera-kit.github.io/tessera-kit',
 
     /*
     |--------------------------------------------------------------------------
@@ -42,7 +42,7 @@ return [
 
     'translation_files' => [
         resource_path('js/i18n/locales/en.json'),
-        base_path('node_modules/@ahmad-chebbo/tessera-ui/src/locales/en.json'),
+        base_path('node_modules/@tessera/tessera-ui/src/locales/en.json'),
     ],
 
     /*

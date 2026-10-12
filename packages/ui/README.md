@@ -1,13 +1,13 @@
 # Tessera UI
 
-The interface kit of [Tessera](https://github.com/Ahmad-Chebbo/tessera-kit): Vue 3 components, composables, chart helpers and the theme, for Inertia and Vite projects. It does not need the Tessera engine or core, so it also suits a plain Laravel + Inertia project such as a CMS.
+The interface kit of [Tessera](https://github.com/Tessera-kit/tessera-kit): Vue 3 components, composables, chart helpers and the theme, for Inertia and Vite projects. It does not need the Tessera engine or core, so it also suits a plain Laravel + Inertia project such as a CMS.
 
 It ships source files (no build step); Vite compiles them with your app.
 
 ## Install
 
 ```bash
-bun add github:Ahmad-Chebbo/tessera-ui#v1.0.2
+bun add github:Tessera-kit/tessera-ui#v1.0.2
 ```
 
 Peer dependencies: `vue`, `vue-i18n`, `@inertiajs/vue3`, `lucide-vue-next`, `chart.js`, `vue-chartjs`, `tailwindcss` 4 and `@tailwindcss/forms`.
@@ -18,7 +18,7 @@ In `resources/css/app.css` (Tailwind 4):
 
 ```css
 @import "tailwindcss";
-@import "@ahmad-chebbo/tessera-ui/theme.css";
+@import "@tessera/tessera-ui/theme.css";
 @plugin "@tailwindcss/forms";
 ```
 
@@ -27,7 +27,7 @@ In `resources/css/app.css` (Tailwind 4):
 In `resources/js/app.js`, create the i18n instance with the UI texts and your own:
 
 ```js
-import { createTesseraI18n, uiMessages } from '@ahmad-chebbo/tessera-ui/i18n';
+import { createTesseraI18n, uiMessages } from '@tessera/tessera-ui/i18n';
 import en from './locales/en.json';
 
 const i18n = createTesseraI18n({ en: { ...uiMessages.en, ...en } });
@@ -38,8 +38,8 @@ const i18n = createTesseraI18n({ en: { ...uiMessages.en, ...en } });
 ## What is inside
 
 ```js
-import Card from '@ahmad-chebbo/tessera-ui/Components/Card.vue';
-import { useToast } from '@ahmad-chebbo/tessera-ui/Composables/useToast';
+import Card from '@tessera/tessera-ui/Components/Card.vue';
+import { useToast } from '@tessera/tessera-ui/Composables/useToast';
 ```
 
 - **Components**: `Card`, `StatCard`, `ChartCard`, `DataTable`, `CardGrid`, `GridCard`, `Pagination`, `FilterTabs`, `ViewToggle`, `Select`, `DatePicker` (with optional time), `FileUpload`, `TextInput`, `InputLabel`, `InputError`, `Checkbox`, `PrimaryButton`, `SecondaryButton`, `DangerButton`, `IconButton`, `Modal`, `ConfirmDialog`, `Dropdown`, `DropdownLink`, `NavLink`, `ResponsiveNavLink`, `PageHeader`, `EmptyState`, `StatusBadge`, `ScrollArea`, `PeriodPresets`, `ToastContainer`, `ThemeToggle`, `LanguageToggle`, and the charts `BarChart`, `LineChart`, `DoughnutChart`, `TrendChart`.
@@ -54,7 +54,7 @@ The package's tests live in `src/**/__tests__` and run with Vitest from the mono
 
 ## Part of Tessera
 
-This repository is a read-only copy of a folder in the [tessera-kit](https://github.com/Ahmad-Chebbo/tessera-kit) monorepo. Open issues and pull requests there, not here.
+This repository is a read-only copy of a folder in the [tessera-kit](https://github.com/Tessera-kit/tessera-kit) monorepo. Open issues and pull requests there, not here.
 
 ## License
 

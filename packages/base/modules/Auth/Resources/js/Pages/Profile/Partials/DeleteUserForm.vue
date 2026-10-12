@@ -1,10 +1,10 @@
 <script setup>
-import DangerButton from '@ahmad-chebbo/tessera-ui/Components/DangerButton.vue';
-import InputError from '@ahmad-chebbo/tessera-ui/Components/InputError.vue';
-import InputLabel from '@ahmad-chebbo/tessera-ui/Components/InputLabel.vue';
-import Modal from '@ahmad-chebbo/tessera-ui/Components/Modal.vue';
-import SecondaryButton from '@ahmad-chebbo/tessera-ui/Components/SecondaryButton.vue';
-import TextInput from '@ahmad-chebbo/tessera-ui/Components/TextInput.vue';
+import DangerButton from '@tessera/tessera-ui/Components/DangerButton.vue';
+import InputError from '@tessera/tessera-ui/Components/InputError.vue';
+import InputLabel from '@tessera/tessera-ui/Components/InputLabel.vue';
+import Modal from '@tessera/tessera-ui/Components/Modal.vue';
+import SecondaryButton from '@tessera/tessera-ui/Components/SecondaryButton.vue';
+import TextInput from '@tessera/tessera-ui/Components/TextInput.vue';
 import { useForm } from '@inertiajs/vue3';
 import { nextTick, ref } from 'vue';
 

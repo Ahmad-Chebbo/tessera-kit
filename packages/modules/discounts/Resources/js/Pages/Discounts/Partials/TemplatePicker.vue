@@ -3,12 +3,12 @@ import { computed, ref } from 'vue';
 import { router, useForm } from '@inertiajs/vue3';
 import { useI18n } from 'vue-i18n';
 import { ArrowLeft, Banknote, BadgeCheck, Calendar, Clock, Gift, Heart, Layers, Receipt, Repeat, Sparkles, Tag, Ticket, Users } from 'lucide-vue-next';
-import Modal from '@ahmad-chebbo/tessera-ui/Components/Modal.vue';
-import Select from '@ahmad-chebbo/tessera-ui/Components/Select.vue';
-import TextInput from '@ahmad-chebbo/tessera-ui/Components/TextInput.vue';
-import InputLabel from '@ahmad-chebbo/tessera-ui/Components/InputLabel.vue';
-import InputError from '@ahmad-chebbo/tessera-ui/Components/InputError.vue';
-import PrimaryButton from '@ahmad-chebbo/tessera-ui/Components/PrimaryButton.vue';
+import Modal from '@tessera/tessera-ui/Components/Modal.vue';
+import Select from '@tessera/tessera-ui/Components/Select.vue';
+import TextInput from '@tessera/tessera-ui/Components/TextInput.vue';
+import InputLabel from '@tessera/tessera-ui/Components/InputLabel.vue';
+import InputError from '@tessera/tessera-ui/Components/InputError.vue';
+import PrimaryButton from '@tessera/tessera-ui/Components/PrimaryButton.vue';
 import MultiPick from '@modules/Discounts/Resources/js/Components/MultiPick.vue';
 
 const props = defineProps({

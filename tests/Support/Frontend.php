@@ -30,7 +30,7 @@ function moduleFolders(): array
     $folders = [];
     $patterns = [
         'app/Modules/*', 'packages/modules/*', 'packages/base/modules/*', 'packages/saas/modules/*',
-        'vendor/ahmad-chebbo/*', 'vendor/ahmad-chebbo/*/modules/*',
+        'vendor/tessera/*', 'vendor/tessera/*/modules/*',
     ];
 
     foreach ($patterns as $pattern) {
@@ -52,7 +52,7 @@ function moduleFolders(): array
  */
 function uiSource(): ?string
 {
-    foreach (['/packages/ui/src', '/node_modules/@ahmad-chebbo/tessera-ui/src'] as $path) {
+    foreach (['/packages/ui/src', '/node_modules/@tessera/tessera-ui/src'] as $path) {
         if (is_dir(projectRoot().$path)) {
             return realpath(projectRoot().$path);
         }

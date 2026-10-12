@@ -1,6 +1,6 @@
 name: Repository
 
-# Publishes the Composer repository at https://ahmad-chebbo.github.io/tessera-kit that lists every package, so a project
+# Publishes the Composer repository at https://tessera-kit.github.io/tessera-kit that lists every package, so a project
 # adds one repository and then `composer require`s any module. Runs after each split.
 
 on:

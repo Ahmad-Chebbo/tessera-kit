@@ -6,15 +6,15 @@ import { createApp, h } from 'vue';
 import { ZiggyVue } from '../../vendor/tightenco/ziggy';
 import i18n from './i18n';
 import { indexPages, resolvePage } from './utils/pages';
-import { useToast } from '@ahmad-chebbo/tessera-ui/Composables/useToast';
-import { registerInertiaToasts } from '@ahmad-chebbo/tessera-ui/toasts';
-import { resolveConfirm } from '@ahmad-chebbo/tessera-ui/Composables/useConfirm';
+import { useToast } from '@tessera/tessera-ui/Composables/useToast';
+import { registerInertiaToasts } from '@tessera/tessera-ui/toasts';
+import { resolveConfirm } from '@tessera/tessera-ui/Composables/useConfirm';
 
 const pages = indexPages(
     import.meta.glob('./Pages/**/*.vue'),
     import.meta.glob('../../app/Modules/*/Resources/js/Pages/**/*.vue'),
-    import.meta.glob('../../vendor/ahmad-chebbo/*/Resources/js/Pages/**/*.vue'),
-    import.meta.glob('../../vendor/ahmad-chebbo/*/modules/*/Resources/js/Pages/**/*.vue'),
+    import.meta.glob('../../vendor/tessera/*/Resources/js/Pages/**/*.vue'),
+    import.meta.glob('../../vendor/tessera/*/modules/*/Resources/js/Pages/**/*.vue'),
 );
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';

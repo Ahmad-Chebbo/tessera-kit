@@ -6,13 +6,13 @@ import { useI18n } from 'vue-i18n';
 import SidebarLayout from '@/Layouts/SidebarLayout.vue';
 import debounce from 'lodash/debounce';
 import { Mail, Pencil, Phone, Plus, Trash2, Truck } from 'lucide-vue-next';
-import IconButton from '@ahmad-chebbo/tessera-ui/Components/IconButton.vue';
-import ViewToggle from '@ahmad-chebbo/tessera-ui/Components/ViewToggle.vue';
-import GridCard from '@ahmad-chebbo/tessera-ui/Components/GridCard.vue';
-import { useViewMode } from '@ahmad-chebbo/tessera-ui/Composables/useViewMode';
-import { useConfirm } from '@ahmad-chebbo/tessera-ui/Composables/useConfirm';
-import DataTable from '@ahmad-chebbo/tessera-ui/Components/DataTable.vue';
-import CardGrid from '@ahmad-chebbo/tessera-ui/Components/CardGrid.vue';
+import IconButton from '@tessera/tessera-ui/Components/IconButton.vue';
+import ViewToggle from '@tessera/tessera-ui/Components/ViewToggle.vue';
+import GridCard from '@tessera/tessera-ui/Components/GridCard.vue';
+import { useViewMode } from '@tessera/tessera-ui/Composables/useViewMode';
+import { useConfirm } from '@tessera/tessera-ui/Composables/useConfirm';
+import DataTable from '@tessera/tessera-ui/Components/DataTable.vue';
+import CardGrid from '@tessera/tessera-ui/Components/CardGrid.vue';
 
 const props = defineProps({
     suppliers: Object,

@@ -1,7 +1,7 @@
 import { ref, computed, onMounted, onUnmounted } from 'vue';
 import localforage from 'localforage';
 import axios from 'axios';
-import { useToast } from '@ahmad-chebbo/tessera-ui/Composables/useToast';
+import { useToast } from '@tessera/tessera-ui/Composables/useToast';
 import i18n from '@/i18n';
 
 const OFFLINE_QUEUE_KEY = 'pos_offline_sales';

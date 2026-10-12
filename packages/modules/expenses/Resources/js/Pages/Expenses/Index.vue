@@ -4,14 +4,14 @@ import { Head, Link, router } from '@inertiajs/vue3';
 import { useI18n } from 'vue-i18n';
 import { FileText, Paperclip, Pencil, Plus, Repeat, Trash2 } from 'lucide-vue-next';
 import SidebarLayout from '@/Layouts/SidebarLayout.vue';
-import DataTable from '@ahmad-chebbo/tessera-ui/Components/DataTable.vue';
-import IconButton from '@ahmad-chebbo/tessera-ui/Components/IconButton.vue';
-import StatCard from '@ahmad-chebbo/tessera-ui/Components/StatCard.vue';
-import StatusBadge from '@ahmad-chebbo/tessera-ui/Components/StatusBadge.vue';
+import DataTable from '@tessera/tessera-ui/Components/DataTable.vue';
+import IconButton from '@tessera/tessera-ui/Components/IconButton.vue';
+import StatCard from '@tessera/tessera-ui/Components/StatCard.vue';
+import StatusBadge from '@tessera/tessera-ui/Components/StatusBadge.vue';
 import ExportMenu from '@/Components/ExportMenu.vue';
 import ExpensesTabs from '@modules/Expenses/Resources/js/Pages/Expenses/Partials/ExpensesTabs.vue';
 import ExpenseFilters from '@modules/Expenses/Resources/js/Pages/Expenses/Partials/ExpenseFilters.vue';
-import { useConfirm } from '@ahmad-chebbo/tessera-ui/Composables/useConfirm';
+import { useConfirm } from '@tessera/tessera-ui/Composables/useConfirm';
 import { useCurrency } from '@/Composables/useCurrency';
 
 const props = defineProps({

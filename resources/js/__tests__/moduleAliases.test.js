@@ -16,7 +16,7 @@ describe('moduleAliases', () => {
         for (const { find, replacement } of moduleAliases().slice(0, -1)) {
             const name = find.source.match(/@modules\\?\/(\w+)/)[1];
 
-            expect(slashes(replacement)).toContain('/vendor/ahmad-chebbo/');
+            expect(slashes(replacement)).toContain('/vendor/tessera/');
             expect(find.test(`@modules/${name}/Resources/x.vue`)).toBe(true);
             expect(find.test(`@modules/${name}Plus/x.vue`)).toBe(false);
         }

@@ -7,7 +7,7 @@ import { useCurrency } from '@/Composables/useCurrency';
 import CartItem from './CartItem.vue';
 import DiscountInput from './DiscountInput.vue';
 import { LoaderCircle, Percent, ShoppingCart, Ticket, User, X } from 'lucide-vue-next';
-import { useToast } from '@ahmad-chebbo/tessera-ui/Composables/useToast';
+import { useToast } from '@tessera/tessera-ui/Composables/useToast';
 
 const props = defineProps({
     currency: {

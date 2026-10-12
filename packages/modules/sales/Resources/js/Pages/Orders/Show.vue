@@ -4,7 +4,7 @@ import { useI18n } from 'vue-i18n';
 import { useCurrency } from '@/Composables/useCurrency';
 import SidebarLayout from '@/Layouts/SidebarLayout.vue';
 import { ArrowLeft, Printer } from 'lucide-vue-next';
-import { useConfirm } from '@ahmad-chebbo/tessera-ui/Composables/useConfirm';
+import { useConfirm } from '@tessera/tessera-ui/Composables/useConfirm';
 
 const props = defineProps({
     order: Object,

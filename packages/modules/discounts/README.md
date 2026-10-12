@@ -2,7 +2,7 @@
 
 Discount rules and promotion templates with a condition builder and a simulator, applied automatically at the till.
 
-A module for [Tessera](https://github.com/Ahmad-Chebbo/tessera-kit). It needs a project made from the [Tessera starter](https://github.com/Ahmad-Chebbo/tessera-starter) (the engine, the core and the interface kit).
+A module for [Tessera](https://github.com/Tessera-kit/tessera-kit). It needs a project made from the [Tessera starter](https://github.com/Tessera-kit/tessera-starter) (the engine, the core and the interface kit).
 
 ## Install
 
@@ -11,11 +11,11 @@ php artisan module:add discounts
 bun run build
 ```
 
-`module:add` requires `ahmad-chebbo/tessera-discounts`, runs the migrations and gives the roles of every company the new permissions. Without it:
+`module:add` requires `tessera/tessera-discounts`, runs the migrations and gives the roles of every company the new permissions. Without it:
 
 ```bash
-composer config repositories.tessera composer https://ahmad-chebbo.github.io/tessera-kit
-composer require ahmad-chebbo/tessera-discounts
+composer config repositories.tessera composer https://tessera-kit.github.io/tessera-kit
+composer require tessera/tessera-discounts
 php artisan migrate
 php artisan modules:sync
 bun run build
@@ -49,7 +49,7 @@ The module lives in `packages/modules/discounts` of the monorepo, with its tests
 
 ## Part of Tessera
 
-This repository is a read-only copy of a folder in the [tessera-kit](https://github.com/Ahmad-Chebbo/tessera-kit) monorepo. Open issues and pull requests there, not here.
+This repository is a read-only copy of a folder in the [tessera-kit](https://github.com/Tessera-kit/tessera-kit) monorepo. Open issues and pull requests there, not here.
 
 ## License
 

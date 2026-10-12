@@ -12,7 +12,7 @@ vi.mock('@inertiajs/vue3', () => ({
     Link: { props: ['href'], template: '<a :href="href"><slot /></a>' },
 }));
 vi.mock('axios', () => ({ default: { post: (...args) => post(...args) } }));
-vi.mock('@ahmad-chebbo/tessera-ui/Composables/useToast', () => ({ useToast: () => toast }));
+vi.mock('@tessera/tessera-ui/Composables/useToast', () => ({ useToast: () => toast }));
 
 import ExportMenu from '@/Components/ExportMenu.vue';
 

@@ -1,11 +1,11 @@
 {
-    "name": "ahmad-chebbo/tessera-base",
+    "name": "tessera/tessera-base",
     "description": "The base of Tessera: sign-in, users, roles and permissions. Add tessera-saas on top for companies, branches and subscriptions.",
     "type": "library",
     "license": "proprietary",
     "require": {
         "php": "^8.4",
-        "ahmad-chebbo/tessera-engine": "^1.0",
+        "tessera/tessera-engine": "^2.0",
         "inertiajs/inertia-laravel": "*",
         "tightenco/ziggy": "*",
         "spatie/laravel-permission": "*",
@@ -32,7 +32,10 @@
             ]
         },
         "branch-alias": {
-            "dev-main": "1.x-dev"
+            "dev-main": "2.x-dev"
         }
+    },
+    "replace": {
+        "ahmad-chebbo/tessera-base": "self.version"
     }
 }

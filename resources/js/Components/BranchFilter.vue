@@ -2,7 +2,7 @@
 import { computed } from 'vue';
 import { usePage } from '@inertiajs/vue3';
 import { useI18n } from 'vue-i18n';
-import Select from '@ahmad-chebbo/tessera-ui/Components/Select.vue';
+import Select from '@tessera/tessera-ui/Components/Select.vue';
 
 defineProps({
     modelValue: { type: [String, Number], default: '' },

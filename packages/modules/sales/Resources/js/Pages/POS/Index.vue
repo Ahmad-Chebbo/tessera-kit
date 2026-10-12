@@ -15,13 +15,13 @@ import { useOfflineQueue } from '@modules/Sales/Resources/js/Composables/useOffl
 import { useCurrency } from '@/Composables/useCurrency';
 import { Calculator, ClipboardList, LogOut, Plus, Trash2, X } from 'lucide-vue-next';
 import FloatingCalculator from '@modules/Sales/Resources/js/Components/POS/FloatingCalculator.vue';
-import IconButton from '@ahmad-chebbo/tessera-ui/Components/IconButton.vue';
-import { useToast } from '@ahmad-chebbo/tessera-ui/Composables/useToast';
-import ToastContainer from '@ahmad-chebbo/tessera-ui/Components/ToastContainer.vue';
-import ConfirmDialog from '@ahmad-chebbo/tessera-ui/Components/ConfirmDialog.vue';
-import { useConfirm } from '@ahmad-chebbo/tessera-ui/Composables/useConfirm';
-import LanguageToggle from '@ahmad-chebbo/tessera-ui/Components/LanguageToggle.vue';
-import ThemeToggle from '@ahmad-chebbo/tessera-ui/Components/ThemeToggle.vue';
+import IconButton from '@tessera/tessera-ui/Components/IconButton.vue';
+import { useToast } from '@tessera/tessera-ui/Composables/useToast';
+import ToastContainer from '@tessera/tessera-ui/Components/ToastContainer.vue';
+import ConfirmDialog from '@tessera/tessera-ui/Components/ConfirmDialog.vue';
+import { useConfirm } from '@tessera/tessera-ui/Composables/useConfirm';
+import LanguageToggle from '@tessera/tessera-ui/Components/LanguageToggle.vue';
+import ThemeToggle from '@tessera/tessera-ui/Components/ThemeToggle.vue';
 import AttendanceToggle from '@/Components/AttendanceToggle.vue';
 
 const props = defineProps({

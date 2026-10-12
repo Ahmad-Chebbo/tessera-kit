@@ -10,7 +10,7 @@ on:
     tags: ['v*']
 
 env:
-  VENDOR: Ahmad-Chebbo
+  ORG: Tessera-kit
 
 jobs:
   packages:
@@ -42,7 +42,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.SPLIT_TOKEN }}
         with:
           package_directory: ${{ matrix.path }}
-          repository_organization: ${{ env.VENDOR }}
+          repository_organization: ${{ env.ORG }}
           repository_name: ${{ matrix.repo }}
           branch: main
           tag: ${{ startsWith(github.ref, 'refs/tags/') && github.ref_name || '' }}
@@ -67,7 +67,7 @@ jobs:
           php-version: '8.4'
 
       - name: Build the starter
-        run: php bin/build-starter.php "$RUNNER_TEMP/starter" --flavor=${{ matrix.flavor }} --source=vcs --vendor=${{ env.VENDOR }} --uiref=${{ github.ref_name }}
+        run: php bin/build-starter.php "$RUNNER_TEMP/starter" --flavor=${{ matrix.flavor }} --source=vcs --org=${{ env.ORG }} --uiref=${{ github.ref_name }}
 
       - name: Publish the starter
         working-directory: ${{ runner.temp }}/starter
@@ -80,5 +80,5 @@ jobs:
           git add -A
           git commit -m "${{ matrix.repo }} ${{ github.ref_name }}"
           git tag "${{ github.ref_name }}"
-          git remote add origin "https://x-access-token:${SPLIT_TOKEN}@github.com/${{ env.VENDOR }}/${{ matrix.repo }}.git"
+          git remote add origin "https://x-access-token:${SPLIT_TOKEN}@github.com/${{ env.ORG }}/${{ matrix.repo }}.git"
           git push --force origin main "${{ github.ref_name }}"

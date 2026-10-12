@@ -1,15 +1,15 @@
 <script setup>
-import Checkbox from '@ahmad-chebbo/tessera-ui/Components/Checkbox.vue';
-import InputError from '@ahmad-chebbo/tessera-ui/Components/InputError.vue';
-import InputLabel from '@ahmad-chebbo/tessera-ui/Components/InputLabel.vue';
-import PrimaryButton from '@ahmad-chebbo/tessera-ui/Components/PrimaryButton.vue';
-import TextInput from '@ahmad-chebbo/tessera-ui/Components/TextInput.vue';
-import LanguageToggle from '@ahmad-chebbo/tessera-ui/Components/LanguageToggle.vue';
-import ThemeToggle from '@ahmad-chebbo/tessera-ui/Components/ThemeToggle.vue';
+import Checkbox from '@tessera/tessera-ui/Components/Checkbox.vue';
+import InputError from '@tessera/tessera-ui/Components/InputError.vue';
+import InputLabel from '@tessera/tessera-ui/Components/InputLabel.vue';
+import PrimaryButton from '@tessera/tessera-ui/Components/PrimaryButton.vue';
+import TextInput from '@tessera/tessera-ui/Components/TextInput.vue';
+import LanguageToggle from '@tessera/tessera-ui/Components/LanguageToggle.vue';
+import ThemeToggle from '@tessera/tessera-ui/Components/ThemeToggle.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
 import { useI18n } from 'vue-i18n';
 import { AtSign, ChartColumn, CircleDollarSign, ClipboardList, LoaderCircle, Lock, Zap } from 'lucide-vue-next';
-import ToastContainer from '@ahmad-chebbo/tessera-ui/Components/ToastContainer.vue';
+import ToastContainer from '@tessera/tessera-ui/Components/ToastContainer.vue';
 
 defineProps({
     canResetPassword: {

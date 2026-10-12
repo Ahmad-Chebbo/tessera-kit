@@ -1,15 +1,15 @@
 {
-    "name": "ahmad-chebbo/tessera-discounts",
+    "name": "tessera/tessera-discounts",
     "description": "The Discounts module of Tessera.",
     "type": "library",
     "license": "proprietary",
     "require": {
         "php": "^8.4",
-        "ahmad-chebbo/tessera-engine": "^1.0",
-        "ahmad-chebbo/tessera-saas": "^1.2",
-        "ahmad-chebbo/tessera-catalog": "^1.0",
-        "ahmad-chebbo/tessera-customers": "^1.0",
-        "ahmad-chebbo/tessera-sales": "^1.0"
+        "tessera/tessera-engine": "^2.0",
+        "tessera/tessera-saas": "^2.0",
+        "tessera/tessera-catalog": "^2.0",
+        "tessera/tessera-customers": "^2.0",
+        "tessera/tessera-sales": "^2.0"
     },
     "autoload": {
         "psr-4": {
@@ -23,7 +23,10 @@
             ]
         },
         "branch-alias": {
-            "dev-main": "1.x-dev"
+            "dev-main": "2.x-dev"
         }
+    },
+    "replace": {
+        "ahmad-chebbo/tessera-discounts": "self.version"
     }
 }

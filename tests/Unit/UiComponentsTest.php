@@ -22,7 +22,7 @@ it('gives the sidebar navigation a scroll area with fade indicators', function (
     $sidebar = uiFile('resources/js/Layouts/SidebarLayout.vue');
 
     expect($sidebar)
-        ->toContain("import ScrollArea from '@ahmad-chebbo/tessera-ui/Components/ScrollArea.vue'")
+        ->toContain("import ScrollArea from '@tessera/tessera-ui/Components/ScrollArea.vue'")
         ->toContain('<ScrollArea')
         ->not->toContain('overflow-y-auto px-3 py-4');
 });

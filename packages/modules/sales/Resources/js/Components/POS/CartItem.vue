@@ -1,7 +1,7 @@
 <script setup>
 import { useCurrency } from '@/Composables/useCurrency';
 import { Minus, Plus, Trash2 } from 'lucide-vue-next';
-import Select from '@ahmad-chebbo/tessera-ui/Components/Select.vue';
+import Select from '@tessera/tessera-ui/Components/Select.vue';
 
 const props = defineProps({
     item: {

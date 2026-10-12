@@ -1,12 +1,12 @@
 # Tessera Engine
 
-The module engine of [Tessera](https://github.com/Ahmad-Chebbo/tessera-kit). It finds the modules of a Laravel project, puts them in dependency order, boots the enabled ones and gives you the commands to make, check, package and install modules. It has no web pages and no database tables of its own, so any Laravel 13 application can use it, with or without Inertia.
+The module engine of [Tessera](https://github.com/Tessera-kit/tessera-kit). It finds the modules of a Laravel project, puts them in dependency order, boots the enabled ones and gives you the commands to make, check, package and install modules. It has no web pages and no database tables of its own, so any Laravel 13 application can use it, with or without Inertia.
 
 ## Install
 
 ```bash
-composer config repositories.tessera composer https://ahmad-chebbo.github.io/tessera-kit
-composer require ahmad-chebbo/tessera-engine
+composer config repositories.tessera composer https://tessera-kit.github.io/tessera-kit
+composer require tessera/tessera-engine
 ```
 
 Laravel discovers the service provider by itself.
@@ -66,7 +66,7 @@ Two files are merged by the engine (publish them to change defaults):
 
 ## Part of Tessera
 
-This repository is a read-only copy of a folder in the [tessera-kit](https://github.com/Ahmad-Chebbo/tessera-kit) monorepo. Open issues and pull requests there, not here.
+This repository is a read-only copy of a folder in the [tessera-kit](https://github.com/Tessera-kit/tessera-kit) monorepo. Open issues and pull requests there, not here.
 
 ## License
 

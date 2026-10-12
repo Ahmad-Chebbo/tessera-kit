@@ -1,12 +1,12 @@
 # Tessera Base
 
-The base of [Tessera](https://github.com/Ahmad-Chebbo/tessera-kit): sign-in, users, roles and permissions, plus the shared contracts that let feature modules work together without depending on each other. It has no companies, branches or plans, so it fits a project that only needs people and access control. Add [`tessera-saas`](https://github.com/Ahmad-Chebbo/tessera-saas) on top when you need those.
+The base of [Tessera](https://github.com/Tessera-kit/tessera-kit): sign-in, users, roles and permissions, plus the shared contracts that let feature modules work together without depending on each other. It has no companies, branches or plans, so it fits a project that only needs people and access control. Add [`tessera-saas`](https://github.com/Tessera-kit/tessera-saas) on top when you need those.
 
-It needs [`tessera-engine`](https://github.com/Ahmad-Chebbo/tessera-engine) and installs with the [fresh starter](https://github.com/Ahmad-Chebbo/tessera-fresh). To add it to an existing project:
+It needs [`tessera-engine`](https://github.com/Tessera-kit/tessera-engine) and installs with the [fresh starter](https://github.com/Tessera-kit/tessera-fresh). To add it to an existing project:
 
 ```bash
-composer config repositories.tessera composer https://ahmad-chebbo.github.io/tessera-kit
-composer require ahmad-chebbo/tessera-base
+composer config repositories.tessera composer https://tessera-kit.github.io/tessera-kit
+composer require tessera/tessera-base
 php artisan migrate
 php artisan modules:sync
 ```
@@ -39,7 +39,7 @@ It also holds the value objects of pricing (`CartLine`, `PricingContext`, `Disco
 
 ## Part of Tessera
 
-This repository is a read-only copy of a folder in the [tessera-kit](https://github.com/Ahmad-Chebbo/tessera-kit) monorepo. Open issues and pull requests there, not here.
+This repository is a read-only copy of a folder in the [tessera-kit](https://github.com/Tessera-kit/tessera-kit) monorepo. Open issues and pull requests there, not here.
 
 ## License
 

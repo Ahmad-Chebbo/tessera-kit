@@ -9,7 +9,7 @@ use Tessera\Engine\ModuleRegistry;
 class ModulePackageCommand extends Command
 {
     protected $signature = 'module:package {key : The key of the module, for example expenses}
-        {--vendor=ahmad-chebbo : The Composer vendor name}
+        {--vendor=tessera : The Composer vendor name}
         {--prefix=tessera- : Put before the module key to make the package name}
         {--path=packages : The folder, relative to the project, to write the package to}
         {--force : Replace a package folder that already exists}';
@@ -49,10 +49,10 @@ class ModulePackageCommand extends Command
 
         $vendor = (string) $this->option('vendor');
         $prefix = (string) $this->option('prefix');
-        $requires = ['php' => '^8.4', "{$vendor}/{$prefix}engine" => '^1.0', "{$vendor}/{$prefix}base" => '^1.0'];
+        $requires = ['php' => '^8.4', "{$vendor}/{$prefix}engine" => '^2.0', "{$vendor}/{$prefix}base" => '^2.0'];
 
         if (array_intersect($manifest->requires, (array) config('tessera.saas_modules', []))) {
-            $requires["{$vendor}/{$prefix}saas"] = '^1.2';
+            $requires["{$vendor}/{$prefix}saas"] = '^2.0';
         }
 
         foreach ($manifest->packages as $package) {

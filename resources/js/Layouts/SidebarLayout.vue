@@ -42,14 +42,14 @@ import {
     Lock,
     LockOpen,
 } from 'lucide-vue-next';
-import LanguageToggle from '@ahmad-chebbo/tessera-ui/Components/LanguageToggle.vue';
-import ScrollArea from '@ahmad-chebbo/tessera-ui/Components/ScrollArea.vue';
-import ThemeToggle from '@ahmad-chebbo/tessera-ui/Components/ThemeToggle.vue';
+import LanguageToggle from '@tessera/tessera-ui/Components/LanguageToggle.vue';
+import ScrollArea from '@tessera/tessera-ui/Components/ScrollArea.vue';
+import ThemeToggle from '@tessera/tessera-ui/Components/ThemeToggle.vue';
 import AttendanceToggle from '@/Components/AttendanceToggle.vue';
-import Dropdown from '@ahmad-chebbo/tessera-ui/Components/Dropdown.vue';
-import DropdownLink from '@ahmad-chebbo/tessera-ui/Components/DropdownLink.vue';
-import ToastContainer from '@ahmad-chebbo/tessera-ui/Components/ToastContainer.vue';
-import ConfirmDialog from '@ahmad-chebbo/tessera-ui/Components/ConfirmDialog.vue';
+import Dropdown from '@tessera/tessera-ui/Components/Dropdown.vue';
+import DropdownLink from '@tessera/tessera-ui/Components/DropdownLink.vue';
+import ToastContainer from '@tessera/tessera-ui/Components/ToastContainer.vue';
+import ConfirmDialog from '@tessera/tessera-ui/Components/ConfirmDialog.vue';
 import { useNavigation } from '@/Composables/useNavigation';
 
 const { t } = useI18n();

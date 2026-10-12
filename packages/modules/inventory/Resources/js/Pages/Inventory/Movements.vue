@@ -6,14 +6,14 @@ import BranchFilter from '@/Components/BranchFilter.vue';
 import { useI18n } from 'vue-i18n';
 import debounce from 'lodash/debounce';
 import SidebarLayout from '@/Layouts/SidebarLayout.vue';
-import Select from '@ahmad-chebbo/tessera-ui/Components/Select.vue';
-import ViewToggle from '@ahmad-chebbo/tessera-ui/Components/ViewToggle.vue';
-import GridCard from '@ahmad-chebbo/tessera-ui/Components/GridCard.vue';
-import { useViewMode } from '@ahmad-chebbo/tessera-ui/Composables/useViewMode';
-import FilterTabs from '@ahmad-chebbo/tessera-ui/Components/FilterTabs.vue';
-import DataTable from '@ahmad-chebbo/tessera-ui/Components/DataTable.vue';
-import CardGrid from '@ahmad-chebbo/tessera-ui/Components/CardGrid.vue';
-import DatePicker from '@ahmad-chebbo/tessera-ui/Components/DatePicker.vue';
+import Select from '@tessera/tessera-ui/Components/Select.vue';
+import ViewToggle from '@tessera/tessera-ui/Components/ViewToggle.vue';
+import GridCard from '@tessera/tessera-ui/Components/GridCard.vue';
+import { useViewMode } from '@tessera/tessera-ui/Composables/useViewMode';
+import FilterTabs from '@tessera/tessera-ui/Components/FilterTabs.vue';
+import DataTable from '@tessera/tessera-ui/Components/DataTable.vue';
+import CardGrid from '@tessera/tessera-ui/Components/CardGrid.vue';
+import DatePicker from '@tessera/tessera-ui/Components/DatePicker.vue';
 
 const props = defineProps({
     movements: Object,

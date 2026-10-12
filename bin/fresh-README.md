@@ -1,13 +1,13 @@
 # Tessera Fresh
 
-A Laravel 13 application with sign-in, registration, password reset, a profile page, and users with roles and permissions, ready for [Tessera](https://github.com/Ahmad-Chebbo/tessera-kit) modules. It has no companies, branches or subscriptions: use the [SaaS starter](https://github.com/Ahmad-Chebbo/tessera-starter) when you need those.
+A Laravel 13 application with sign-in, registration, password reset, a profile page, and users with roles and permissions, ready for [Tessera](https://github.com/Tessera-kit/tessera-kit) modules. It has no companies, branches or subscriptions: use the [SaaS starter](https://github.com/Tessera-kit/tessera-starter) when you need those.
 
 It contains the module engine, the base package (Auth and Team), the interface kit and the application shell (sidebar layout, language and theme toggles).
 
 ## Create a project
 
 ```bash
-composer create-project ahmad-chebbo/tessera-fresh app --repository-url=https://ahmad-chebbo.github.io/tessera-kit
+composer create-project tessera/tessera-fresh app --repository-url=https://tessera-kit.github.io/tessera-kit
 cd app
 bun install
 ```
@@ -68,7 +68,7 @@ bun run test
 
 ## Part of Tessera
 
-This repository is a read-only copy built from the [tessera-kit](https://github.com/Ahmad-Chebbo/tessera-kit) monorepo. Open issues and pull requests there, not here.
+This repository is a read-only copy built from the [tessera-kit](https://github.com/Tessera-kit/tessera-kit) monorepo. Open issues and pull requests there, not here.
 
 ## License
 

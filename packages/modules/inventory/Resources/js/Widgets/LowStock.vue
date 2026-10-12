@@ -2,8 +2,8 @@
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { Pencil } from 'lucide-vue-next';
-import DataTable from '@ahmad-chebbo/tessera-ui/Components/DataTable.vue';
-import IconButton from '@ahmad-chebbo/tessera-ui/Components/IconButton.vue';
+import DataTable from '@tessera/tessera-ui/Components/DataTable.vue';
+import IconButton from '@tessera/tessera-ui/Components/IconButton.vue';
 
 defineProps({
     data: { type: Array, default: () => [] },

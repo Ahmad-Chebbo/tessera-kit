@@ -6,15 +6,15 @@ import { useCurrency } from '@/Composables/useCurrency';
 import debounce from 'lodash/debounce';
 import SidebarLayout from '@/Layouts/SidebarLayout.vue';
 import { Package, Pencil, Plus, Trash2 } from 'lucide-vue-next';
-import IconButton from '@ahmad-chebbo/tessera-ui/Components/IconButton.vue';
-import ViewToggle from '@ahmad-chebbo/tessera-ui/Components/ViewToggle.vue';
-import GridCard from '@ahmad-chebbo/tessera-ui/Components/GridCard.vue';
-import { useViewMode } from '@ahmad-chebbo/tessera-ui/Composables/useViewMode';
-import FilterTabs from '@ahmad-chebbo/tessera-ui/Components/FilterTabs.vue';
-import StatusBadge from '@ahmad-chebbo/tessera-ui/Components/StatusBadge.vue';
-import { useConfirm } from '@ahmad-chebbo/tessera-ui/Composables/useConfirm';
-import DataTable from '@ahmad-chebbo/tessera-ui/Components/DataTable.vue';
-import CardGrid from '@ahmad-chebbo/tessera-ui/Components/CardGrid.vue';
+import IconButton from '@tessera/tessera-ui/Components/IconButton.vue';
+import ViewToggle from '@tessera/tessera-ui/Components/ViewToggle.vue';
+import GridCard from '@tessera/tessera-ui/Components/GridCard.vue';
+import { useViewMode } from '@tessera/tessera-ui/Composables/useViewMode';
+import FilterTabs from '@tessera/tessera-ui/Components/FilterTabs.vue';
+import StatusBadge from '@tessera/tessera-ui/Components/StatusBadge.vue';
+import { useConfirm } from '@tessera/tessera-ui/Composables/useConfirm';
+import DataTable from '@tessera/tessera-ui/Components/DataTable.vue';
+import CardGrid from '@tessera/tessera-ui/Components/CardGrid.vue';
 
 const props = defineProps({
     products: Object,

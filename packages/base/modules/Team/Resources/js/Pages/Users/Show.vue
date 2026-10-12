@@ -4,11 +4,11 @@ import { Head, Link } from '@inertiajs/vue3';
 import { useI18n } from 'vue-i18n';
 import SidebarLayout from '@/Layouts/SidebarLayout.vue';
 import { ArrowLeft, Pencil } from 'lucide-vue-next';
-import IconButton from '@ahmad-chebbo/tessera-ui/Components/IconButton.vue';
-import FilterTabs from '@ahmad-chebbo/tessera-ui/Components/FilterTabs.vue';
-import Card from '@ahmad-chebbo/tessera-ui/Components/Card.vue';
-import StatusBadge from '@ahmad-chebbo/tessera-ui/Components/StatusBadge.vue';
-import DataTable from '@ahmad-chebbo/tessera-ui/Components/DataTable.vue';
+import IconButton from '@tessera/tessera-ui/Components/IconButton.vue';
+import FilterTabs from '@tessera/tessera-ui/Components/FilterTabs.vue';
+import Card from '@tessera/tessera-ui/Components/Card.vue';
+import StatusBadge from '@tessera/tessera-ui/Components/StatusBadge.vue';
+import DataTable from '@tessera/tessera-ui/Components/DataTable.vue';
 
 const props = defineProps({
     features: { type: Object, default: () => ({ branches: true, employeeProfiles: true, activityLog: true }) },

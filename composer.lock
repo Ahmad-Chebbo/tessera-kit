@@ -4,540 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "67a2871b0ec05ff624beb1fd9daa0657",
+    "content-hash": "7078b8a0bb3f040cf88820d35ab9ea76",
     "packages": [
-        {
-            "name": "ahmad-chebbo/tessera-attendance",
-            "version": "dev-main",
-            "dist": {
-                "type": "path",
-                "url": "packages/modules/attendance",
-                "reference": "afdcfdb832594993a9cdceff54ef4c50889af995"
-            },
-            "require": {
-                "ahmad-chebbo/tessera-engine": "^1.0",
-                "ahmad-chebbo/tessera-saas": "^1.2",
-                "ahmad-chebbo/tessera-shifts": "^1.0",
-                "php": "^8.4"
-            },
-            "type": "library",
-            "extra": {
-                "tessera": {
-                    "modules": [
-                        "App\\Modules\\Attendance\\AttendanceServiceProvider"
-                    ]
-                },
-                "branch-alias": {
-                    "dev-main": "1.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "App\\Modules\\Attendance\\": ""
-                }
-            },
-            "license": [
-                "proprietary"
-            ],
-            "description": "The Attendance module of Tessera.",
-            "transport-options": {
-                "symlink": true,
-                "relative": true
-            }
-        },
-        {
-            "name": "ahmad-chebbo/tessera-base",
-            "version": "dev-main",
-            "dist": {
-                "type": "path",
-                "url": "packages/base",
-                "reference": "8b5af0610a0d37fc3b4b79f86747213d28f4b36c"
-            },
-            "require": {
-                "ahmad-chebbo/tessera-engine": "^1.0",
-                "inertiajs/inertia-laravel": "*",
-                "laravel/sanctum": "*",
-                "php": "^8.4",
-                "spatie/laravel-medialibrary": "*",
-                "spatie/laravel-permission": "*",
-                "tightenco/ziggy": "*"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "Tessera\\Core\\CoreServiceProvider"
-                    ]
-                },
-                "tessera": {
-                    "modules": [
-                        "App\\Modules\\Auth\\AuthServiceProvider",
-                        "App\\Modules\\Team\\TeamServiceProvider"
-                    ]
-                },
-                "branch-alias": {
-                    "dev-main": "1.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Tessera\\Core\\": "src/",
-                    "App\\Modules\\Auth\\": "modules/Auth/",
-                    "App\\Modules\\Team\\": "modules/Team/"
-                }
-            },
-            "license": [
-                "proprietary"
-            ],
-            "description": "The base of Tessera: sign-in, users, roles and permissions. Add tessera-saas on top for companies, branches and subscriptions.",
-            "transport-options": {
-                "symlink": true,
-                "relative": true
-            }
-        },
-        {
-            "name": "ahmad-chebbo/tessera-catalog",
-            "version": "dev-main",
-            "dist": {
-                "type": "path",
-                "url": "packages/modules/catalog",
-                "reference": "3cde88f52a96bbd6f12eb8ef62851ad4e1da998d"
-            },
-            "require": {
-                "ahmad-chebbo/tessera-engine": "^1.0",
-                "ahmad-chebbo/tessera-saas": "^1.2",
-                "php": "^8.4",
-                "spatie/laravel-medialibrary": "*"
-            },
-            "type": "library",
-            "extra": {
-                "tessera": {
-                    "modules": [
-                        "App\\Modules\\Catalog\\CatalogServiceProvider"
-                    ]
-                },
-                "branch-alias": {
-                    "dev-main": "1.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "App\\Modules\\Catalog\\": ""
-                }
-            },
-            "license": [
-                "proprietary"
-            ],
-            "description": "The Catalog module of Tessera.",
-            "transport-options": {
-                "symlink": true,
-                "relative": true
-            }
-        },
-        {
-            "name": "ahmad-chebbo/tessera-customers",
-            "version": "dev-main",
-            "dist": {
-                "type": "path",
-                "url": "packages/modules/customers",
-                "reference": "48e65a567921a9add93a5c085168ee329c30fe7e"
-            },
-            "require": {
-                "ahmad-chebbo/tessera-engine": "^1.0",
-                "ahmad-chebbo/tessera-saas": "^1.2",
-                "php": "^8.4"
-            },
-            "type": "library",
-            "extra": {
-                "tessera": {
-                    "modules": [
-                        "App\\Modules\\Customers\\CustomersServiceProvider"
-                    ]
-                },
-                "branch-alias": {
-                    "dev-main": "1.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "App\\Modules\\Customers\\": ""
-                }
-            },
-            "license": [
-                "proprietary"
-            ],
-            "description": "The Customers module of Tessera.",
-            "transport-options": {
-                "symlink": true,
-                "relative": true
-            }
-        },
-        {
-            "name": "ahmad-chebbo/tessera-discounts",
-            "version": "dev-main",
-            "dist": {
-                "type": "path",
-                "url": "packages/modules/discounts",
-                "reference": "b6f0425723b1db99a707421facb94c55efe027df"
-            },
-            "require": {
-                "ahmad-chebbo/tessera-catalog": "^1.0",
-                "ahmad-chebbo/tessera-customers": "^1.0",
-                "ahmad-chebbo/tessera-engine": "^1.0",
-                "ahmad-chebbo/tessera-saas": "^1.2",
-                "ahmad-chebbo/tessera-sales": "^1.0",
-                "php": "^8.4"
-            },
-            "type": "library",
-            "extra": {
-                "tessera": {
-                    "modules": [
-                        "App\\Modules\\Discounts\\DiscountsServiceProvider"
-                    ]
-                },
-                "branch-alias": {
-                    "dev-main": "1.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "App\\Modules\\Discounts\\": ""
-                }
-            },
-            "license": [
-                "proprietary"
-            ],
-            "description": "The Discounts module of Tessera.",
-            "transport-options": {
-                "symlink": true,
-                "relative": true
-            }
-        },
-        {
-            "name": "ahmad-chebbo/tessera-engine",
-            "version": "dev-main",
-            "dist": {
-                "type": "path",
-                "url": "packages/engine",
-                "reference": "4fd075d0df0bbb4c62433fab0ad26c19621bdc25"
-            },
-            "require": {
-                "illuminate/support": "^13.0",
-                "php": "^8.4"
-            },
-            "suggest": {
-                "inertiajs/inertia-laravel": "Needed for modules that have web pages"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "Tessera\\Engine\\EngineServiceProvider"
-                    ]
-                },
-                "branch-alias": {
-                    "dev-main": "1.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Tessera\\Engine\\": "src/"
-                }
-            },
-            "license": [
-                "proprietary"
-            ],
-            "description": "The Tessera module engine: finds, orders and boots modules, and the tools to make, check and package them.",
-            "transport-options": {
-                "symlink": true,
-                "relative": true
-            }
-        },
-        {
-            "name": "ahmad-chebbo/tessera-expenses",
-            "version": "dev-main",
-            "dist": {
-                "type": "path",
-                "url": "packages/modules/expenses",
-                "reference": "d022ff06456137f5ec279db1cbd80093dd1cdbc7"
-            },
-            "require": {
-                "ahmad-chebbo/tessera-engine": "^1.0",
-                "ahmad-chebbo/tessera-saas": "^1.2",
-                "php": "^8.4",
-                "spatie/laravel-medialibrary": "*"
-            },
-            "type": "library",
-            "extra": {
-                "tessera": {
-                    "modules": [
-                        "App\\Modules\\Expenses\\ExpensesServiceProvider"
-                    ]
-                },
-                "branch-alias": {
-                    "dev-main": "1.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "App\\Modules\\Expenses\\": ""
-                }
-            },
-            "license": [
-                "proprietary"
-            ],
-            "description": "The Expenses module of Tessera.",
-            "transport-options": {
-                "symlink": true,
-                "relative": true
-            }
-        },
-        {
-            "name": "ahmad-chebbo/tessera-exports",
-            "version": "dev-main",
-            "dist": {
-                "type": "path",
-                "url": "packages/modules/exports",
-                "reference": "f92dcc4112bf93f8ae7a8f9dff574ffde2fdec9a"
-            },
-            "require": {
-                "ahmad-chebbo/tessera-engine": "^1.0",
-                "ahmad-chebbo/tessera-saas": "^1.2",
-                "mpdf/mpdf": "*",
-                "openspout/openspout": "*",
-                "php": "^8.4"
-            },
-            "type": "library",
-            "extra": {
-                "tessera": {
-                    "modules": [
-                        "App\\Modules\\Exports\\ExportsServiceProvider"
-                    ]
-                },
-                "branch-alias": {
-                    "dev-main": "1.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "App\\Modules\\Exports\\": ""
-                }
-            },
-            "license": [
-                "proprietary"
-            ],
-            "description": "The Exports module of Tessera.",
-            "transport-options": {
-                "symlink": true,
-                "relative": true
-            }
-        },
-        {
-            "name": "ahmad-chebbo/tessera-inventory",
-            "version": "dev-main",
-            "dist": {
-                "type": "path",
-                "url": "packages/modules/inventory",
-                "reference": "9313bc76cf67d7e9018e5e1b411f64484f3a184a"
-            },
-            "require": {
-                "ahmad-chebbo/tessera-catalog": "^1.0",
-                "ahmad-chebbo/tessera-engine": "^1.0",
-                "ahmad-chebbo/tessera-saas": "^1.2",
-                "php": "^8.4"
-            },
-            "type": "library",
-            "extra": {
-                "tessera": {
-                    "modules": [
-                        "App\\Modules\\Inventory\\InventoryServiceProvider"
-                    ]
-                },
-                "branch-alias": {
-                    "dev-main": "1.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "App\\Modules\\Inventory\\": ""
-                }
-            },
-            "license": [
-                "proprietary"
-            ],
-            "description": "The Inventory module of Tessera.",
-            "transport-options": {
-                "symlink": true,
-                "relative": true
-            }
-        },
-        {
-            "name": "ahmad-chebbo/tessera-reports",
-            "version": "dev-main",
-            "dist": {
-                "type": "path",
-                "url": "packages/modules/reports",
-                "reference": "360f3cc8f5a95feb84634160b8361e611b61e66b"
-            },
-            "require": {
-                "ahmad-chebbo/tessera-catalog": "^1.0",
-                "ahmad-chebbo/tessera-engine": "^1.0",
-                "ahmad-chebbo/tessera-saas": "^1.2",
-                "ahmad-chebbo/tessera-sales": "^1.0",
-                "php": "^8.4"
-            },
-            "type": "library",
-            "extra": {
-                "tessera": {
-                    "modules": [
-                        "App\\Modules\\Reports\\ReportsServiceProvider"
-                    ]
-                },
-                "branch-alias": {
-                    "dev-main": "1.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "App\\Modules\\Reports\\": ""
-                }
-            },
-            "license": [
-                "proprietary"
-            ],
-            "description": "The Reports module of Tessera.",
-            "transport-options": {
-                "symlink": true,
-                "relative": true
-            }
-        },
-        {
-            "name": "ahmad-chebbo/tessera-saas",
-            "version": "dev-main",
-            "dist": {
-                "type": "path",
-                "url": "packages/saas",
-                "reference": "2147c2c018c71b9d1ef2372a8be3f4146b2ba9f5"
-            },
-            "require": {
-                "ahmad-chebbo/tessera-base": "^1.0",
-                "ahmad-chebbo/tessera-engine": "^1.0",
-                "inertiajs/inertia-laravel": "*",
-                "laravel/sanctum": "*",
-                "php": "^8.4",
-                "spatie/laravel-medialibrary": "*",
-                "spatie/laravel-permission": "*",
-                "tightenco/ziggy": "*"
-            },
-            "replace": {
-                "ahmad-chebbo/tessera-core": "self.version"
-            },
-            "type": "library",
-            "extra": {
-                "tessera": {
-                    "modules": [
-                        "App\\Modules\\Company\\CompanyServiceProvider",
-                        "App\\Modules\\Subscription\\SubscriptionServiceProvider"
-                    ]
-                },
-                "branch-alias": {
-                    "dev-main": "1.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "App\\Modules\\Company\\": "modules/Company/",
-                    "App\\Modules\\Subscription\\": "modules/Subscription/"
-                }
-            },
-            "license": [
-                "proprietary"
-            ],
-            "description": "The SaaS layer of Tessera: companies with branches and locations, subscriptions with plans and limits. Builds on tessera-base.",
-            "transport-options": {
-                "symlink": true,
-                "relative": true
-            }
-        },
-        {
-            "name": "ahmad-chebbo/tessera-sales",
-            "version": "dev-main",
-            "dist": {
-                "type": "path",
-                "url": "packages/modules/sales",
-                "reference": "24e98e1279098689e16a81b162ff9187a0e92e1e"
-            },
-            "require": {
-                "ahmad-chebbo/tessera-catalog": "^1.0",
-                "ahmad-chebbo/tessera-customers": "^1.0",
-                "ahmad-chebbo/tessera-engine": "^1.0",
-                "ahmad-chebbo/tessera-inventory": "^1.0",
-                "ahmad-chebbo/tessera-saas": "^1.2",
-                "php": "^8.4"
-            },
-            "type": "library",
-            "extra": {
-                "tessera": {
-                    "modules": [
-                        "App\\Modules\\Sales\\SalesServiceProvider"
-                    ]
-                },
-                "branch-alias": {
-                    "dev-main": "1.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "App\\Modules\\Sales\\": ""
-                }
-            },
-            "license": [
-                "proprietary"
-            ],
-            "description": "The Sales module of Tessera.",
-            "transport-options": {
-                "symlink": true,
-                "relative": true
-            }
-        },
-        {
-            "name": "ahmad-chebbo/tessera-shifts",
-            "version": "dev-main",
-            "dist": {
-                "type": "path",
-                "url": "packages/modules/shifts",
-                "reference": "b617d32ec2be90cf73edab35bfc09a55d6faa9db"
-            },
-            "require": {
-                "ahmad-chebbo/tessera-engine": "^1.0",
-                "ahmad-chebbo/tessera-saas": "^1.2",
-                "php": "^8.4"
-            },
-            "type": "library",
-            "extra": {
-                "tessera": {
-                    "modules": [
-                        "App\\Modules\\Shifts\\ShiftsServiceProvider"
-                    ]
-                },
-                "branch-alias": {
-                    "dev-main": "1.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "App\\Modules\\Shifts\\": ""
-                }
-            },
-            "license": [
-                "proprietary"
-            ],
-            "description": "The Shifts module of Tessera.",
-            "transport-options": {
-                "symlink": true,
-                "relative": true
-            }
-        },
         {
             "name": "brick/math",
             "version": "1.0.0",
@@ -8139,6 +7607,575 @@
             "time": "2026-08-29T06:30:03+00:00"
         },
         {
+            "name": "tessera/tessera-attendance",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "packages/modules/attendance",
+                "reference": "aee3796242094b5b1759b6c0ec3341ab6cf57ee2"
+            },
+            "require": {
+                "php": "^8.4",
+                "tessera/tessera-engine": "^2.0",
+                "tessera/tessera-saas": "^2.0",
+                "tessera/tessera-shifts": "^2.0"
+            },
+            "replace": {
+                "ahmad-chebbo/tessera-attendance": "self.version"
+            },
+            "type": "library",
+            "extra": {
+                "tessera": {
+                    "modules": [
+                        "App\\Modules\\Attendance\\AttendanceServiceProvider"
+                    ]
+                },
+                "branch-alias": {
+                    "dev-main": "2.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "App\\Modules\\Attendance\\": ""
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "description": "The Attendance module of Tessera.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "tessera/tessera-base",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "packages/base",
+                "reference": "90783b146f9e4d70c53572256933bfa446070b4f"
+            },
+            "require": {
+                "inertiajs/inertia-laravel": "*",
+                "laravel/sanctum": "*",
+                "php": "^8.4",
+                "spatie/laravel-medialibrary": "*",
+                "spatie/laravel-permission": "*",
+                "tessera/tessera-engine": "^2.0",
+                "tightenco/ziggy": "*"
+            },
+            "replace": {
+                "ahmad-chebbo/tessera-base": "self.version"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Tessera\\Core\\CoreServiceProvider"
+                    ]
+                },
+                "tessera": {
+                    "modules": [
+                        "App\\Modules\\Auth\\AuthServiceProvider",
+                        "App\\Modules\\Team\\TeamServiceProvider"
+                    ]
+                },
+                "branch-alias": {
+                    "dev-main": "2.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Tessera\\Core\\": "src/",
+                    "App\\Modules\\Auth\\": "modules/Auth/",
+                    "App\\Modules\\Team\\": "modules/Team/"
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "description": "The base of Tessera: sign-in, users, roles and permissions. Add tessera-saas on top for companies, branches and subscriptions.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "tessera/tessera-catalog",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "packages/modules/catalog",
+                "reference": "844c94834cc3f4f1520a078e3ac651e8077bc9b6"
+            },
+            "require": {
+                "php": "^8.4",
+                "spatie/laravel-medialibrary": "*",
+                "tessera/tessera-engine": "^2.0",
+                "tessera/tessera-saas": "^2.0"
+            },
+            "replace": {
+                "ahmad-chebbo/tessera-catalog": "self.version"
+            },
+            "type": "library",
+            "extra": {
+                "tessera": {
+                    "modules": [
+                        "App\\Modules\\Catalog\\CatalogServiceProvider"
+                    ]
+                },
+                "branch-alias": {
+                    "dev-main": "2.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "App\\Modules\\Catalog\\": ""
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "description": "The Catalog module of Tessera.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "tessera/tessera-customers",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "packages/modules/customers",
+                "reference": "f2561156157991359d7ef813cbc6a4123660eb4a"
+            },
+            "require": {
+                "php": "^8.4",
+                "tessera/tessera-engine": "^2.0",
+                "tessera/tessera-saas": "^2.0"
+            },
+            "replace": {
+                "ahmad-chebbo/tessera-customers": "self.version"
+            },
+            "type": "library",
+            "extra": {
+                "tessera": {
+                    "modules": [
+                        "App\\Modules\\Customers\\CustomersServiceProvider"
+                    ]
+                },
+                "branch-alias": {
+                    "dev-main": "2.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "App\\Modules\\Customers\\": ""
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "description": "The Customers module of Tessera.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "tessera/tessera-discounts",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "packages/modules/discounts",
+                "reference": "99aebba928510ec05b60b4bb79d14b2b5f3c195e"
+            },
+            "require": {
+                "php": "^8.4",
+                "tessera/tessera-catalog": "^2.0",
+                "tessera/tessera-customers": "^2.0",
+                "tessera/tessera-engine": "^2.0",
+                "tessera/tessera-saas": "^2.0",
+                "tessera/tessera-sales": "^2.0"
+            },
+            "replace": {
+                "ahmad-chebbo/tessera-discounts": "self.version"
+            },
+            "type": "library",
+            "extra": {
+                "tessera": {
+                    "modules": [
+                        "App\\Modules\\Discounts\\DiscountsServiceProvider"
+                    ]
+                },
+                "branch-alias": {
+                    "dev-main": "2.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "App\\Modules\\Discounts\\": ""
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "description": "The Discounts module of Tessera.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "tessera/tessera-engine",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "packages/engine",
+                "reference": "ff052efd1d8020008923cbf587a903f345e1de31"
+            },
+            "require": {
+                "illuminate/support": "^13.0",
+                "php": "^8.4"
+            },
+            "replace": {
+                "ahmad-chebbo/tessera-engine": "self.version"
+            },
+            "suggest": {
+                "inertiajs/inertia-laravel": "Needed for modules that have web pages"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Tessera\\Engine\\EngineServiceProvider"
+                    ]
+                },
+                "branch-alias": {
+                    "dev-main": "2.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Tessera\\Engine\\": "src/"
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "description": "The Tessera module engine: finds, orders and boots modules, and the tools to make, check and package them.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "tessera/tessera-expenses",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "packages/modules/expenses",
+                "reference": "e65fb67a06d6d1a1930f5e4f639d4f42361b2c6e"
+            },
+            "require": {
+                "php": "^8.4",
+                "spatie/laravel-medialibrary": "*",
+                "tessera/tessera-engine": "^2.0",
+                "tessera/tessera-saas": "^2.0"
+            },
+            "replace": {
+                "ahmad-chebbo/tessera-expenses": "self.version"
+            },
+            "type": "library",
+            "extra": {
+                "tessera": {
+                    "modules": [
+                        "App\\Modules\\Expenses\\ExpensesServiceProvider"
+                    ]
+                },
+                "branch-alias": {
+                    "dev-main": "2.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "App\\Modules\\Expenses\\": ""
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "description": "The Expenses module of Tessera.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "tessera/tessera-exports",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "packages/modules/exports",
+                "reference": "7397e4161d7454288b6086beeb358c6a9a14bef7"
+            },
+            "require": {
+                "mpdf/mpdf": "*",
+                "openspout/openspout": "*",
+                "php": "^8.4",
+                "tessera/tessera-engine": "^2.0",
+                "tessera/tessera-saas": "^2.0"
+            },
+            "replace": {
+                "ahmad-chebbo/tessera-exports": "self.version"
+            },
+            "type": "library",
+            "extra": {
+                "tessera": {
+                    "modules": [
+                        "App\\Modules\\Exports\\ExportsServiceProvider"
+                    ]
+                },
+                "branch-alias": {
+                    "dev-main": "2.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "App\\Modules\\Exports\\": ""
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "description": "The Exports module of Tessera.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "tessera/tessera-inventory",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "packages/modules/inventory",
+                "reference": "13f9c2b55dfe9ba0e73b92c622fb99d5c60db9f2"
+            },
+            "require": {
+                "php": "^8.4",
+                "tessera/tessera-catalog": "^2.0",
+                "tessera/tessera-engine": "^2.0",
+                "tessera/tessera-saas": "^2.0"
+            },
+            "replace": {
+                "ahmad-chebbo/tessera-inventory": "self.version"
+            },
+            "type": "library",
+            "extra": {
+                "tessera": {
+                    "modules": [
+                        "App\\Modules\\Inventory\\InventoryServiceProvider"
+                    ]
+                },
+                "branch-alias": {
+                    "dev-main": "2.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "App\\Modules\\Inventory\\": ""
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "description": "The Inventory module of Tessera.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "tessera/tessera-reports",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "packages/modules/reports",
+                "reference": "4625494700922971a68919ed7e2885b8fb32bdf8"
+            },
+            "require": {
+                "php": "^8.4",
+                "tessera/tessera-catalog": "^2.0",
+                "tessera/tessera-engine": "^2.0",
+                "tessera/tessera-saas": "^2.0",
+                "tessera/tessera-sales": "^2.0"
+            },
+            "replace": {
+                "ahmad-chebbo/tessera-reports": "self.version"
+            },
+            "type": "library",
+            "extra": {
+                "tessera": {
+                    "modules": [
+                        "App\\Modules\\Reports\\ReportsServiceProvider"
+                    ]
+                },
+                "branch-alias": {
+                    "dev-main": "2.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "App\\Modules\\Reports\\": ""
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "description": "The Reports module of Tessera.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "tessera/tessera-saas",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "packages/saas",
+                "reference": "a9c55c7c24397f465440d3d659e64ef26c39a770"
+            },
+            "require": {
+                "inertiajs/inertia-laravel": "*",
+                "laravel/sanctum": "*",
+                "php": "^8.4",
+                "spatie/laravel-medialibrary": "*",
+                "spatie/laravel-permission": "*",
+                "tessera/tessera-base": "^2.0",
+                "tessera/tessera-engine": "^2.0",
+                "tightenco/ziggy": "*"
+            },
+            "replace": {
+                "ahmad-chebbo/tessera-core": "self.version",
+                "ahmad-chebbo/tessera-saas": "self.version"
+            },
+            "type": "library",
+            "extra": {
+                "tessera": {
+                    "modules": [
+                        "App\\Modules\\Company\\CompanyServiceProvider",
+                        "App\\Modules\\Subscription\\SubscriptionServiceProvider"
+                    ]
+                },
+                "branch-alias": {
+                    "dev-main": "2.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "App\\Modules\\Company\\": "modules/Company/",
+                    "App\\Modules\\Subscription\\": "modules/Subscription/"
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "description": "The SaaS layer of Tessera: companies with branches and locations, subscriptions with plans and limits. Builds on tessera-base.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "tessera/tessera-sales",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "packages/modules/sales",
+                "reference": "feb98eb4be441f414696115474dc976cf8a5def9"
+            },
+            "require": {
+                "php": "^8.4",
+                "tessera/tessera-catalog": "^2.0",
+                "tessera/tessera-customers": "^2.0",
+                "tessera/tessera-engine": "^2.0",
+                "tessera/tessera-inventory": "^2.0",
+                "tessera/tessera-saas": "^2.0"
+            },
+            "replace": {
+                "ahmad-chebbo/tessera-sales": "self.version"
+            },
+            "type": "library",
+            "extra": {
+                "tessera": {
+                    "modules": [
+                        "App\\Modules\\Sales\\SalesServiceProvider"
+                    ]
+                },
+                "branch-alias": {
+                    "dev-main": "2.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "App\\Modules\\Sales\\": ""
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "description": "The Sales module of Tessera.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "tessera/tessera-shifts",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "packages/modules/shifts",
+                "reference": "c4eae0c0b073d8821ec64ed66d2ef19ad51b4eb4"
+            },
+            "require": {
+                "php": "^8.4",
+                "tessera/tessera-engine": "^2.0",
+                "tessera/tessera-saas": "^2.0"
+            },
+            "replace": {
+                "ahmad-chebbo/tessera-shifts": "self.version"
+            },
+            "type": "library",
+            "extra": {
+                "tessera": {
+                    "modules": [
+                        "App\\Modules\\Shifts\\ShiftsServiceProvider"
+                    ]
+                },
+                "branch-alias": {
+                    "dev-main": "2.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "App\\Modules\\Shifts\\": ""
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "description": "The Shifts module of Tessera.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
             "name": "tightenco/ziggy",
             "version": "v2.6.4",
             "source": {
@@ -12169,19 +12206,19 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "ahmad-chebbo/tessera-attendance": 20,
-        "ahmad-chebbo/tessera-base": 20,
-        "ahmad-chebbo/tessera-catalog": 20,
-        "ahmad-chebbo/tessera-customers": 20,
-        "ahmad-chebbo/tessera-discounts": 20,
-        "ahmad-chebbo/tessera-engine": 20,
-        "ahmad-chebbo/tessera-expenses": 20,
-        "ahmad-chebbo/tessera-exports": 20,
-        "ahmad-chebbo/tessera-inventory": 20,
-        "ahmad-chebbo/tessera-reports": 20,
-        "ahmad-chebbo/tessera-saas": 20,
-        "ahmad-chebbo/tessera-sales": 20,
-        "ahmad-chebbo/tessera-shifts": 20
+        "tessera/tessera-attendance": 20,
+        "tessera/tessera-base": 20,
+        "tessera/tessera-catalog": 20,
+        "tessera/tessera-customers": 20,
+        "tessera/tessera-discounts": 20,
+        "tessera/tessera-engine": 20,
+        "tessera/tessera-expenses": 20,
+        "tessera/tessera-exports": 20,
+        "tessera/tessera-inventory": 20,
+        "tessera/tessera-reports": 20,
+        "tessera/tessera-saas": 20,
+        "tessera/tessera-sales": 20,
+        "tessera/tessera-shifts": 20
     },
     "prefer-stable": true,
     "prefer-lowest": false,

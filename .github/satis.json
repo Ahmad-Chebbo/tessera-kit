@@ -1,66 +1,66 @@
 {
-    "name": "ahmad-chebbo/tessera",
-    "homepage": "https://ahmad-chebbo.github.io/tessera-kit",
+    "name": "tessera/tessera",
+    "homepage": "https://tessera-kit.github.io/tessera-kit",
     "repositories": [
         {
             "type": "vcs",
-            "url": "https://github.com/Ahmad-Chebbo/tessera-engine"
+            "url": "https://github.com/Tessera-kit/tessera-engine"
         },
         {
             "type": "vcs",
-            "url": "https://github.com/Ahmad-Chebbo/tessera-base"
+            "url": "https://github.com/Tessera-kit/tessera-base"
         },
         {
             "type": "vcs",
-            "url": "https://github.com/Ahmad-Chebbo/tessera-saas"
+            "url": "https://github.com/Tessera-kit/tessera-saas"
         },
         {
             "type": "vcs",
-            "url": "https://github.com/Ahmad-Chebbo/tessera-attendance"
+            "url": "https://github.com/Tessera-kit/tessera-attendance"
         },
         {
             "type": "vcs",
-            "url": "https://github.com/Ahmad-Chebbo/tessera-catalog"
+            "url": "https://github.com/Tessera-kit/tessera-catalog"
         },
         {
             "type": "vcs",
-            "url": "https://github.com/Ahmad-Chebbo/tessera-customers"
+            "url": "https://github.com/Tessera-kit/tessera-customers"
         },
         {
             "type": "vcs",
-            "url": "https://github.com/Ahmad-Chebbo/tessera-discounts"
+            "url": "https://github.com/Tessera-kit/tessera-discounts"
         },
         {
             "type": "vcs",
-            "url": "https://github.com/Ahmad-Chebbo/tessera-expenses"
+            "url": "https://github.com/Tessera-kit/tessera-expenses"
         },
         {
             "type": "vcs",
-            "url": "https://github.com/Ahmad-Chebbo/tessera-exports"
+            "url": "https://github.com/Tessera-kit/tessera-exports"
         },
         {
             "type": "vcs",
-            "url": "https://github.com/Ahmad-Chebbo/tessera-inventory"
+            "url": "https://github.com/Tessera-kit/tessera-inventory"
         },
         {
             "type": "vcs",
-            "url": "https://github.com/Ahmad-Chebbo/tessera-reports"
+            "url": "https://github.com/Tessera-kit/tessera-reports"
         },
         {
             "type": "vcs",
-            "url": "https://github.com/Ahmad-Chebbo/tessera-sales"
+            "url": "https://github.com/Tessera-kit/tessera-sales"
         },
         {
             "type": "vcs",
-            "url": "https://github.com/Ahmad-Chebbo/tessera-shifts"
+            "url": "https://github.com/Tessera-kit/tessera-shifts"
         },
         {
             "type": "vcs",
-            "url": "https://github.com/Ahmad-Chebbo/tessera-starter"
+            "url": "https://github.com/Tessera-kit/tessera-starter"
         },
         {
             "type": "vcs",
-            "url": "https://github.com/Ahmad-Chebbo/tessera-fresh"
+            "url": "https://github.com/Tessera-kit/tessera-fresh"
         }
     ],
     "require-all": true,

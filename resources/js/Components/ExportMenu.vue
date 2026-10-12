@@ -4,7 +4,7 @@ import { Link, usePage } from '@inertiajs/vue3';
 import axios from 'axios';
 import { useI18n } from 'vue-i18n';
 import { ChevronDown, Download, FileSpreadsheet, FileText, FolderDown, LoaderCircle } from 'lucide-vue-next';
-import { useToast } from '@ahmad-chebbo/tessera-ui/Composables/useToast';
+import { useToast } from '@tessera/tessera-ui/Composables/useToast';
 
 const props = defineProps({
     report: { type: String, required: true },

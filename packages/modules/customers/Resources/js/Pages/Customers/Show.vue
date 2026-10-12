@@ -4,8 +4,8 @@ import { Head, router } from '@inertiajs/vue3';
 import { useI18n } from 'vue-i18n';
 import { useCurrency } from '@/Composables/useCurrency';
 import SidebarLayout from '@/Layouts/SidebarLayout.vue';
-import Pagination from '@ahmad-chebbo/tessera-ui/Components/Pagination.vue';
-import DataTable from '@ahmad-chebbo/tessera-ui/Components/DataTable.vue';
+import Pagination from '@tessera/tessera-ui/Components/Pagination.vue';
+import DataTable from '@tessera/tessera-ui/Components/DataTable.vue';
 
 const props = defineProps({
     customer: Object,

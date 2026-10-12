@@ -2,7 +2,7 @@
 import { computed } from 'vue';
 import { router } from '@inertiajs/vue3';
 import { useI18n } from 'vue-i18n';
-import FilterTabs from '@ahmad-chebbo/tessera-ui/Components/FilterTabs.vue';
+import FilterTabs from '@tessera/tessera-ui/Components/FilterTabs.vue';
 
 const props = defineProps({
     current: { type: String, required: true },

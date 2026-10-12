@@ -1,7 +1,7 @@
 <script setup>
 import { computed } from 'vue';
 import { X } from 'lucide-vue-next';
-import Select from '@ahmad-chebbo/tessera-ui/Components/Select.vue';
+import Select from '@tessera/tessera-ui/Components/Select.vue';
 
 const props = defineProps({
     modelValue: { type: Array, default: () => [] },

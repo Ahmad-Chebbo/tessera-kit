@@ -1,7 +1,7 @@
 <script setup>
 import { computed } from 'vue';
 import GuestLayout from '@/Layouts/GuestLayout.vue';
-import PrimaryButton from '@ahmad-chebbo/tessera-ui/Components/PrimaryButton.vue';
+import PrimaryButton from '@tessera/tessera-ui/Components/PrimaryButton.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
 
 const props = defineProps({

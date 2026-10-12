@@ -2,7 +2,7 @@
 import { ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useCurrency } from '@/Composables/useCurrency';
-import Modal from '@ahmad-chebbo/tessera-ui/Components/Modal.vue';
+import Modal from '@tessera/tessera-ui/Components/Modal.vue';
 import axios from 'axios';
 import { FileDown, Printer, X } from 'lucide-vue-next';
 

@@ -1,11 +1,11 @@
 import en from './locales/en.json';
 import ar from './locales/ar.json';
-import uiMessages from '@ahmad-chebbo/tessera-ui/locales';
+import uiMessages from '@tessera/tessera-ui/locales';
 
 const moduleFiles = {
     ...import.meta.glob('../../../app/Modules/*/Resources/lang/*.json', { eager: true, import: 'default' }),
-    ...import.meta.glob('../../../vendor/ahmad-chebbo/*/Resources/lang/*.json', { eager: true, import: 'default' }),
-    ...import.meta.glob('../../../vendor/ahmad-chebbo/*/modules/*/Resources/lang/*.json', { eager: true, import: 'default' }),
+    ...import.meta.glob('../../../vendor/tessera/*/Resources/lang/*.json', { eager: true, import: 'default' }),
+    ...import.meta.glob('../../../vendor/tessera/*/modules/*/Resources/lang/*.json', { eager: true, import: 'default' }),
 };
 
 /**

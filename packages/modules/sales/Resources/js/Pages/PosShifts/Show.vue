@@ -5,15 +5,15 @@ import { Head, Link, useForm } from '@inertiajs/vue3';
 import { useI18n } from 'vue-i18n';
 import { ArrowLeft, Lock, Printer } from 'lucide-vue-next';
 import SidebarLayout from '@/Layouts/SidebarLayout.vue';
-import Card from '@ahmad-chebbo/tessera-ui/Components/Card.vue';
-import StatCard from '@ahmad-chebbo/tessera-ui/Components/StatCard.vue';
-import StatusBadge from '@ahmad-chebbo/tessera-ui/Components/StatusBadge.vue';
-import DataTable from '@ahmad-chebbo/tessera-ui/Components/DataTable.vue';
-import Modal from '@ahmad-chebbo/tessera-ui/Components/Modal.vue';
-import TextInput from '@ahmad-chebbo/tessera-ui/Components/TextInput.vue';
-import InputLabel from '@ahmad-chebbo/tessera-ui/Components/InputLabel.vue';
-import InputError from '@ahmad-chebbo/tessera-ui/Components/InputError.vue';
-import PrimaryButton from '@ahmad-chebbo/tessera-ui/Components/PrimaryButton.vue';
+import Card from '@tessera/tessera-ui/Components/Card.vue';
+import StatCard from '@tessera/tessera-ui/Components/StatCard.vue';
+import StatusBadge from '@tessera/tessera-ui/Components/StatusBadge.vue';
+import DataTable from '@tessera/tessera-ui/Components/DataTable.vue';
+import Modal from '@tessera/tessera-ui/Components/Modal.vue';
+import TextInput from '@tessera/tessera-ui/Components/TextInput.vue';
+import InputLabel from '@tessera/tessera-ui/Components/InputLabel.vue';
+import InputError from '@tessera/tessera-ui/Components/InputError.vue';
+import PrimaryButton from '@tessera/tessera-ui/Components/PrimaryButton.vue';
 import { useCurrency } from '@/Composables/useCurrency';
 
 const props = defineProps({

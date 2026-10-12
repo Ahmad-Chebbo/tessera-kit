@@ -2,8 +2,8 @@
 import { Head, Link } from '@inertiajs/vue3';
 import { ArrowRight } from 'lucide-vue-next';
 import { useI18n } from 'vue-i18n';
-import LanguageToggle from '@ahmad-chebbo/tessera-ui/Components/LanguageToggle.vue';
-import ThemeToggle from '@ahmad-chebbo/tessera-ui/Components/ThemeToggle.vue';
+import LanguageToggle from '@tessera/tessera-ui/Components/LanguageToggle.vue';
+import ThemeToggle from '@tessera/tessera-ui/Components/ThemeToggle.vue';
 
 defineProps({
     canLogin: {

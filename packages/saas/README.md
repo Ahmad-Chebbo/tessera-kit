@@ -1,12 +1,12 @@
 # Tessera SaaS
 
-The SaaS layer of [Tessera](https://github.com/Ahmad-Chebbo/tessera-kit): companies with branches and locations, and subscriptions with plans and limits. It builds on [`tessera-base`](https://github.com/Ahmad-Chebbo/tessera-base) (sign-in, users and roles), which it installs with it. Feature modules (sales, inventory, expenses, …) build on it.
+The SaaS layer of [Tessera](https://github.com/Tessera-kit/tessera-kit): companies with branches and locations, and subscriptions with plans and limits. It builds on [`tessera-base`](https://github.com/Tessera-kit/tessera-base) (sign-in, users and roles), which it installs with it. Feature modules (sales, inventory, expenses, …) build on it.
 
-It replaces the old `tessera-core` package (same classes, same namespaces): `composer require ahmad-chebbo/tessera-saas` removes `tessera-core` for you. It installs with the [starter](https://github.com/Ahmad-Chebbo/tessera-starter). To add it to a project that started from the base:
+It replaces the old `tessera-core` package (same classes, same namespaces): `composer require tessera/tessera-saas` removes `tessera-core` for you. It installs with the [starter](https://github.com/Tessera-kit/tessera-starter). To add it to a project that started from the base:
 
 ```bash
-composer config repositories.tessera composer https://ahmad-chebbo.github.io/tessera-kit
-composer require ahmad-chebbo/tessera-saas
+composer config repositories.tessera composer https://tessera-kit.github.io/tessera-kit
+composer require tessera/tessera-saas
 php artisan migrate
 php artisan modules:sync
 ```
@@ -31,7 +31,7 @@ The base does not know about companies or plans. This package fills the contract
 
 ## Part of Tessera
 
-This repository is a read-only copy of a folder in the [tessera-kit](https://github.com/Ahmad-Chebbo/tessera-kit) monorepo. Open issues and pull requests there, not here.
+This repository is a read-only copy of a folder in the [tessera-kit](https://github.com/Tessera-kit/tessera-kit) monorepo. Open issues and pull requests there, not here.
 
 ## License
 

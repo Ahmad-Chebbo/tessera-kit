@@ -1,9 +1,9 @@
 <script setup>
 import { useI18n } from 'vue-i18n';
-import InputLabel from '@ahmad-chebbo/tessera-ui/Components/InputLabel.vue';
-import TextInput from '@ahmad-chebbo/tessera-ui/Components/TextInput.vue';
-import InputError from '@ahmad-chebbo/tessera-ui/Components/InputError.vue';
-import DatePicker from '@ahmad-chebbo/tessera-ui/Components/DatePicker.vue';
+import InputLabel from '@tessera/tessera-ui/Components/InputLabel.vue';
+import TextInput from '@tessera/tessera-ui/Components/TextInput.vue';
+import InputError from '@tessera/tessera-ui/Components/InputError.vue';
+import DatePicker from '@tessera/tessera-ui/Components/DatePicker.vue';
 
 defineProps({
     form: { type: Object, required: true },

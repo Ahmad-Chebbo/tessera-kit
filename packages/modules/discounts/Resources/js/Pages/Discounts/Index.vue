@@ -5,10 +5,10 @@ import { useI18n } from 'vue-i18n';
 import { Copy, FlaskConical, Pause, Pencil, Play, Plus, Sparkles, Trash2 } from 'lucide-vue-next';
 import TemplatePicker from '@modules/Discounts/Resources/js/Pages/Discounts/Partials/TemplatePicker.vue';
 import SidebarLayout from '@/Layouts/SidebarLayout.vue';
-import DataTable from '@ahmad-chebbo/tessera-ui/Components/DataTable.vue';
-import IconButton from '@ahmad-chebbo/tessera-ui/Components/IconButton.vue';
-import StatusBadge from '@ahmad-chebbo/tessera-ui/Components/StatusBadge.vue';
-import { useConfirm } from '@ahmad-chebbo/tessera-ui/Composables/useConfirm';
+import DataTable from '@tessera/tessera-ui/Components/DataTable.vue';
+import IconButton from '@tessera/tessera-ui/Components/IconButton.vue';
+import StatusBadge from '@tessera/tessera-ui/Components/StatusBadge.vue';
+import { useConfirm } from '@tessera/tessera-ui/Composables/useConfirm';
 import { useCurrency } from '@/Composables/useCurrency';
 
 defineProps({

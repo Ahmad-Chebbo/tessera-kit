@@ -4,10 +4,10 @@ import { Head, Link, router } from '@inertiajs/vue3';
 import { useI18n } from 'vue-i18n';
 import { Pencil, Plus, Trash2 } from 'lucide-vue-next';
 import SidebarLayout from '@/Layouts/SidebarLayout.vue';
-import DataTable from '@ahmad-chebbo/tessera-ui/Components/DataTable.vue';
-import IconButton from '@ahmad-chebbo/tessera-ui/Components/IconButton.vue';
-import StatusBadge from '@ahmad-chebbo/tessera-ui/Components/StatusBadge.vue';
-import { useConfirm } from '@ahmad-chebbo/tessera-ui/Composables/useConfirm';
+import DataTable from '@tessera/tessera-ui/Components/DataTable.vue';
+import IconButton from '@tessera/tessera-ui/Components/IconButton.vue';
+import StatusBadge from '@tessera/tessera-ui/Components/StatusBadge.vue';
+import { useConfirm } from '@tessera/tessera-ui/Composables/useConfirm';
 
 defineProps({
     roles: Array,

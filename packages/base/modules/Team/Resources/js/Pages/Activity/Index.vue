@@ -4,10 +4,10 @@ import { Head, Link, router } from '@inertiajs/vue3';
 import BranchFilter from '@/Components/BranchFilter.vue';
 import { useI18n } from 'vue-i18n';
 import SidebarLayout from '@/Layouts/SidebarLayout.vue';
-import DataTable from '@ahmad-chebbo/tessera-ui/Components/DataTable.vue';
-import DatePicker from '@ahmad-chebbo/tessera-ui/Components/DatePicker.vue';
-import Select from '@ahmad-chebbo/tessera-ui/Components/Select.vue';
-import StatusBadge from '@ahmad-chebbo/tessera-ui/Components/StatusBadge.vue';
+import DataTable from '@tessera/tessera-ui/Components/DataTable.vue';
+import DatePicker from '@tessera/tessera-ui/Components/DatePicker.vue';
+import Select from '@tessera/tessera-ui/Components/Select.vue';
+import StatusBadge from '@tessera/tessera-ui/Components/StatusBadge.vue';
 
 const props = defineProps({
     logs: Object,

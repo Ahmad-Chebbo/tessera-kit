@@ -2,9 +2,9 @@
 import { computed } from 'vue';
 import { X } from 'lucide-vue-next';
 import { useI18n } from 'vue-i18n';
-import Select from '@ahmad-chebbo/tessera-ui/Components/Select.vue';
-import TextInput from '@ahmad-chebbo/tessera-ui/Components/TextInput.vue';
-import DatePicker from '@ahmad-chebbo/tessera-ui/Components/DatePicker.vue';
+import Select from '@tessera/tessera-ui/Components/Select.vue';
+import TextInput from '@tessera/tessera-ui/Components/TextInput.vue';
+import DatePicker from '@tessera/tessera-ui/Components/DatePicker.vue';
 import { changeField, changeOperator } from '@modules/Discounts/Resources/js/Components/conditionTree';
 
 const props = defineProps({

@@ -6,17 +6,17 @@ import BranchFilter from '@/Components/BranchFilter.vue';
 import { useI18n } from 'vue-i18n';
 import { Eye, LockOpen, Lock } from 'lucide-vue-next';
 import SidebarLayout from '@/Layouts/SidebarLayout.vue';
-import DataTable from '@ahmad-chebbo/tessera-ui/Components/DataTable.vue';
-import FilterTabs from '@ahmad-chebbo/tessera-ui/Components/FilterTabs.vue';
-import IconButton from '@ahmad-chebbo/tessera-ui/Components/IconButton.vue';
-import StatusBadge from '@ahmad-chebbo/tessera-ui/Components/StatusBadge.vue';
-import Select from '@ahmad-chebbo/tessera-ui/Components/Select.vue';
-import Modal from '@ahmad-chebbo/tessera-ui/Components/Modal.vue';
-import TextInput from '@ahmad-chebbo/tessera-ui/Components/TextInput.vue';
-import InputLabel from '@ahmad-chebbo/tessera-ui/Components/InputLabel.vue';
-import InputError from '@ahmad-chebbo/tessera-ui/Components/InputError.vue';
-import PrimaryButton from '@ahmad-chebbo/tessera-ui/Components/PrimaryButton.vue';
-import Card from '@ahmad-chebbo/tessera-ui/Components/Card.vue';
+import DataTable from '@tessera/tessera-ui/Components/DataTable.vue';
+import FilterTabs from '@tessera/tessera-ui/Components/FilterTabs.vue';
+import IconButton from '@tessera/tessera-ui/Components/IconButton.vue';
+import StatusBadge from '@tessera/tessera-ui/Components/StatusBadge.vue';
+import Select from '@tessera/tessera-ui/Components/Select.vue';
+import Modal from '@tessera/tessera-ui/Components/Modal.vue';
+import TextInput from '@tessera/tessera-ui/Components/TextInput.vue';
+import InputLabel from '@tessera/tessera-ui/Components/InputLabel.vue';
+import InputError from '@tessera/tessera-ui/Components/InputError.vue';
+import PrimaryButton from '@tessera/tessera-ui/Components/PrimaryButton.vue';
+import Card from '@tessera/tessera-ui/Components/Card.vue';
 import { useCurrency } from '@/Composables/useCurrency';
 
 const props = defineProps({

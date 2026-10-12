@@ -3,8 +3,8 @@ import { Head } from '@inertiajs/vue3';
 import { useI18n } from 'vue-i18n';
 import { Check, Lock } from 'lucide-vue-next';
 import SidebarLayout from '@/Layouts/SidebarLayout.vue';
-import Card from '@ahmad-chebbo/tessera-ui/Components/Card.vue';
-import StatusBadge from '@ahmad-chebbo/tessera-ui/Components/StatusBadge.vue';
+import Card from '@tessera/tessera-ui/Components/Card.vue';
+import StatusBadge from '@tessera/tessera-ui/Components/StatusBadge.vue';
 
 defineProps({
     subscription: Object,

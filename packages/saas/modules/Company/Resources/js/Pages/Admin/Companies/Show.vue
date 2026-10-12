@@ -4,8 +4,8 @@ import { Head, Link } from '@inertiajs/vue3';
 import { useI18n } from 'vue-i18n';
 import SidebarLayout from '@/Layouts/SidebarLayout.vue';
 import { ArrowLeft, Pencil } from 'lucide-vue-next';
-import IconButton from '@ahmad-chebbo/tessera-ui/Components/IconButton.vue';
-import DataTable from '@ahmad-chebbo/tessera-ui/Components/DataTable.vue';
+import IconButton from '@tessera/tessera-ui/Components/IconButton.vue';
+import DataTable from '@tessera/tessera-ui/Components/DataTable.vue';
 
 const props = defineProps({
     company: Object,

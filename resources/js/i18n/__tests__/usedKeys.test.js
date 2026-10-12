@@ -3,7 +3,7 @@ import messages from '../messages';
 
 const sources = {
     ...import.meta.glob(['../../**/*.vue', '../../**/*.js', '!../../**/__tests__/**', '!../../i18n/**'], { query: '?raw', import: 'default', eager: true }),
-    ...import.meta.glob(['../../../../app/Modules/**/Resources/js/**/*.{vue,js}', '../../../../vendor/ahmad-chebbo/**/Resources/js/**/*.{vue,js}', '!../../../../**/__tests__/**'], { query: '?raw', import: 'default', eager: true }),
+    ...import.meta.glob(['../../../../app/Modules/**/Resources/js/**/*.{vue,js}', '../../../../vendor/tessera/**/Resources/js/**/*.{vue,js}', '!../../../../**/__tests__/**'], { query: '?raw', import: 'default', eager: true }),
 };
 
 const lookup = (tree, key) => key.split('.').reduce((node, part) => (node && typeof node === 'object' ? node[part] : undefined), tree);

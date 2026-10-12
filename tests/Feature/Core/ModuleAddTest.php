@@ -21,7 +21,7 @@ it('requires the package, migrates and syncs permissions, in that order', functi
 
     Process::assertRanInOrder([
         commandContains('config repositories.tessera composer https://example.test/packages'),
-        commandContains('require ahmad-chebbo/tessera-invoices --no-interaction'),
+        commandContains('require tessera/tessera-invoices --no-interaction'),
         commandContains('artisan migrate'),
         commandContains('artisan modules:sync'),
     ]);
@@ -45,5 +45,5 @@ it('does not add a repository the project already has', function () {
     $this->artisan('module:add', ['key' => 'expenses'])->assertSuccessful();
 
     Process::assertNotRan(commandContains('config repositories'));
-    Process::assertRan(commandContains('require ahmad-chebbo/tessera-expenses'));
+    Process::assertRan(commandContains('require tessera/tessera-expenses'));
 });

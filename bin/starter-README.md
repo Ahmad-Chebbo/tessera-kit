@@ -1,11 +1,11 @@
 # Tessera Starter
 
-A Laravel 13 application ready for [Tessera](https://github.com/Ahmad-Chebbo/tessera-kit) modules. It contains the module engine, the base (sign-in, users and roles) and the SaaS package (companies and branches, subscriptions), the interface kit and the application shell (sidebar layout, language and theme toggles). Business features arrive as modules.
+A Laravel 13 application ready for [Tessera](https://github.com/Tessera-kit/tessera-kit) modules. It contains the module engine, the base (sign-in, users and roles) and the SaaS package (companies and branches, subscriptions), the interface kit and the application shell (sidebar layout, language and theme toggles). Business features arrive as modules.
 
 ## Create a project
 
 ```bash
-composer create-project ahmad-chebbo/tessera-starter shop --repository-url=https://ahmad-chebbo.github.io/tessera-kit
+composer create-project tessera/tessera-starter shop --repository-url=https://tessera-kit.github.io/tessera-kit
 cd shop
 bun install
 ```
@@ -30,16 +30,16 @@ bun run build
 
 | Module | What it adds |
 |---|---|
-| [`sales`](https://github.com/Ahmad-Chebbo/tessera-sales) | point of sale, orders, cash-drawer shifts |
-| [`catalog`](https://github.com/Ahmad-Chebbo/tessera-catalog) | products and categories |
-| [`inventory`](https://github.com/Ahmad-Chebbo/tessera-inventory) | stock, transfers, suppliers, purchases |
-| [`customers`](https://github.com/Ahmad-Chebbo/tessera-customers) | customers and groups |
-| [`discounts`](https://github.com/Ahmad-Chebbo/tessera-discounts) | discount rules and promotions |
-| [`expenses`](https://github.com/Ahmad-Chebbo/tessera-expenses) | expenses, recurring expenses |
-| [`reports`](https://github.com/Ahmad-Chebbo/tessera-reports) | dashboard, sales, items and profit reports |
-| [`exports`](https://github.com/Ahmad-Chebbo/tessera-exports) | Excel and PDF export of reports |
-| [`shifts`](https://github.com/Ahmad-Chebbo/tessera-shifts) | shift templates and rosters |
-| [`attendance`](https://github.com/Ahmad-Chebbo/tessera-attendance) | check-in and check-out, absences |
+| [`sales`](https://github.com/Tessera-kit/tessera-sales) | point of sale, orders, cash-drawer shifts |
+| [`catalog`](https://github.com/Tessera-kit/tessera-catalog) | products and categories |
+| [`inventory`](https://github.com/Tessera-kit/tessera-inventory) | stock, transfers, suppliers, purchases |
+| [`customers`](https://github.com/Tessera-kit/tessera-customers) | customers and groups |
+| [`discounts`](https://github.com/Tessera-kit/tessera-discounts) | discount rules and promotions |
+| [`expenses`](https://github.com/Tessera-kit/tessera-expenses) | expenses, recurring expenses |
+| [`reports`](https://github.com/Tessera-kit/tessera-reports) | dashboard, sales, items and profit reports |
+| [`exports`](https://github.com/Tessera-kit/tessera-exports) | Excel and PDF export of reports |
+| [`shifts`](https://github.com/Tessera-kit/tessera-shifts) | shift templates and rosters |
+| [`attendance`](https://github.com/Tessera-kit/tessera-attendance) | check-in and check-out, absences |
 
 Each command requires the package, migrates, and gives the roles of every company the new permissions. `php artisan module:list` shows what is installed.
 
@@ -73,7 +73,7 @@ bun run test
 
 ## Part of Tessera
 
-This repository is a read-only copy of a folder in the [tessera-kit](https://github.com/Ahmad-Chebbo/tessera-kit) monorepo. Open issues and pull requests there, not here.
+This repository is a read-only copy of a folder in the [tessera-kit](https://github.com/Tessera-kit/tessera-kit) monorepo. Open issues and pull requests there, not here.
 
 ## License
 

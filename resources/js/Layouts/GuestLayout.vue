@@ -1,10 +1,10 @@
 <script setup>
 import ApplicationLogo from '@/Components/ApplicationLogo.vue';
-import LanguageToggle from '@ahmad-chebbo/tessera-ui/Components/LanguageToggle.vue';
-import ThemeToggle from '@ahmad-chebbo/tessera-ui/Components/ThemeToggle.vue';
+import LanguageToggle from '@tessera/tessera-ui/Components/LanguageToggle.vue';
+import ThemeToggle from '@tessera/tessera-ui/Components/ThemeToggle.vue';
 import { Link } from '@inertiajs/vue3';
-import ToastContainer from '@ahmad-chebbo/tessera-ui/Components/ToastContainer.vue';
-import ConfirmDialog from '@ahmad-chebbo/tessera-ui/Components/ConfirmDialog.vue';
+import ToastContainer from '@tessera/tessera-ui/Components/ToastContainer.vue';
+import ConfirmDialog from '@tessera/tessera-ui/Components/ConfirmDialog.vue';
 </script>
 
 <template>

@@ -5,12 +5,12 @@ const root = (path) => fileURLToPath(new URL(path, import.meta.url));
 
 /**
  * Aliases for `@modules/<Name>/...` imports. Modules in app/Modules resolve through the `@modules` folder; a module that
- * was installed with Composer lives in vendor/ahmad-chebbo/<key>, so it gets an alias of its own, found through the
+ * was installed with Composer lives in vendor/tessera/<key>, so it gets an alias of its own, found through the
  * namespace its composer.json declares.
  */
 export function moduleAliases() {
     const aliases = [];
-    const packages = root('./vendor/ahmad-chebbo');
+    const packages = root('./vendor/tessera');
 
     if (existsSync(packages)) {
         for (const key of readdirSync(packages)) {

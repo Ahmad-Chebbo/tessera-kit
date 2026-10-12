@@ -4,13 +4,13 @@ import { computed } from 'vue';
 import { Head } from '@inertiajs/vue3';
 import { useI18n } from 'vue-i18n';
 import SidebarLayout from '@/Layouts/SidebarLayout.vue';
-import StatCard from '@ahmad-chebbo/tessera-ui/Components/StatCard.vue';
-import ChartCard from '@ahmad-chebbo/tessera-ui/Components/ChartCard.vue';
-import BarChart from '@ahmad-chebbo/tessera-ui/Components/BarChart.vue';
-import DataTable from '@ahmad-chebbo/tessera-ui/Components/DataTable.vue';
+import StatCard from '@tessera/tessera-ui/Components/StatCard.vue';
+import ChartCard from '@tessera/tessera-ui/Components/ChartCard.vue';
+import BarChart from '@tessera/tessera-ui/Components/BarChart.vue';
+import DataTable from '@tessera/tessera-ui/Components/DataTable.vue';
 import AttendanceTabs from '@modules/Attendance/Resources/js/Pages/Attendance/Partials/AttendanceTabs.vue';
 import RangeFilters from '@modules/Attendance/Resources/js/Pages/Attendance/Partials/RangeFilters.vue';
-import { useDuration } from '@ahmad-chebbo/tessera-ui/Composables/useDuration';
+import { useDuration } from '@tessera/tessera-ui/Composables/useDuration';
 
 const props = defineProps({
     report: Object,

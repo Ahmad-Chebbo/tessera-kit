@@ -4,7 +4,7 @@ import { collectMessages, coreMessages, moduleMessageFiles } from '../messages';
 const CORE_MODULES = ['Auth', 'Company', 'Subscription', 'Team'];
 const isCoreModule = (path) => CORE_MODULES.some((module) => path.includes(`/modules/${module}/`) || path.includes(`/Modules/${module}/`));
 
-const moduleSources = import.meta.glob(['../../../../app/Modules/*/Resources/js/**/*.{vue,js}', '../../../../vendor/ahmad-chebbo/*/Resources/js/**/*.{vue,js}', '../../../../vendor/ahmad-chebbo/*/modules/*/Resources/js/**/*.{vue,js}', '!../../../../**/__tests__/**'], { query: '?raw', import: 'default', eager: true });
+const moduleSources = import.meta.glob(['../../../../app/Modules/*/Resources/js/**/*.{vue,js}', '../../../../vendor/tessera/*/Resources/js/**/*.{vue,js}', '../../../../vendor/tessera/*/modules/*/Resources/js/**/*.{vue,js}', '!../../../../**/__tests__/**'], { query: '?raw', import: 'default', eager: true });
 
 const coreSources = {
     ...import.meta.glob(['../../**/*.vue', '../../**/*.js', '!../../**/__tests__/**', '!../../i18n/**'], { query: '?raw', import: 'default', eager: true }),

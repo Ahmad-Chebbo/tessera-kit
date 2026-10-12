@@ -1,8 +1,8 @@
 <script setup>
-import InputError from '@ahmad-chebbo/tessera-ui/Components/InputError.vue';
-import InputLabel from '@ahmad-chebbo/tessera-ui/Components/InputLabel.vue';
-import PrimaryButton from '@ahmad-chebbo/tessera-ui/Components/PrimaryButton.vue';
-import TextInput from '@ahmad-chebbo/tessera-ui/Components/TextInput.vue';
+import InputError from '@tessera/tessera-ui/Components/InputError.vue';
+import InputLabel from '@tessera/tessera-ui/Components/InputLabel.vue';
+import PrimaryButton from '@tessera/tessera-ui/Components/PrimaryButton.vue';
+import TextInput from '@tessera/tessera-ui/Components/TextInput.vue';
 import { useForm } from '@inertiajs/vue3';
 import { ref } from 'vue';
 
