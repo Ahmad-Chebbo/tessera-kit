@@ -60,7 +60,7 @@ jobs:
           php-version: '8.4'
 
       - name: Build the starter
-        run: php bin/build-starter.php "$RUNNER_TEMP/starter" --source=vcs --vendor=${{ env.VENDOR }}
+        run: php bin/build-starter.php "$RUNNER_TEMP/starter" --source=vcs --vendor=${{ env.VENDOR }} --uiref=${{ github.ref_name }}
 
       - name: Publish the starter
         working-directory: ${{ runner.temp }}/starter

@@ -28,6 +28,7 @@ if ($target === null) {
 
 $root = dirname(__DIR__);
 $vendor = $options['vendor'];
+$composerVendor = strtolower($vendor);
 $excluded = [
     '.git', '.claude', '.cursor', '.agents', '.superpowers', '.phpunit.cache', 'vendor', 'node_modules', 'packages', 'docs', 'bin',
     'public/build', 'public/hot', 'storage/logs', 'storage/framework', 'tests/Product', 'AGENTS.md', 'CLAUDE.md', 'boost.json',
@@ -87,8 +88,8 @@ foreach (glob($root.'/packages/modules/*/composer.json') as $file) {
 $corePackages = array_keys(json_decode(file_get_contents($root.'/packages/core/composer.json'), true)['require']);
 
 foreach (array_keys($composer['require']) as $package) {
-    $isFeatureModule = str_starts_with($package, "{$vendor}/tessera-") && ! in_array($package, ["{$vendor}/tessera-engine", "{$vendor}/tessera-core"], true);
-    $isModuleOnlyPackage = isset($modulePackages[$package]) && ! in_array($package, $corePackages, true) && ! str_starts_with($package, "{$vendor}/");
+    $isFeatureModule = str_starts_with($package, "{$composerVendor}/tessera-") && ! in_array($package, ["{$composerVendor}/tessera-engine", "{$composerVendor}/tessera-core"], true);
+    $isModuleOnlyPackage = isset($modulePackages[$package]) && ! in_array($package, $corePackages, true) && ! str_starts_with($package, "{$composerVendor}/");
 
     if ($isFeatureModule || $isModuleOnlyPackage) {
         unset($composer['require'][$package]);
@@ -96,10 +97,10 @@ foreach (array_keys($composer['require']) as $package) {
 }
 
 $constraint = $options['source'] === 'path' ? '@dev' : '^1.0';
-$composer['name'] = "{$vendor}/tessera-starter";
+$composer['name'] = "{$composerVendor}/tessera-starter";
 $composer['description'] = 'A Laravel application ready for Tessera modules: add one with php artisan module:add.';
-$composer['require']["{$vendor}/tessera-engine"] = $constraint;
-$composer['require']["{$vendor}/tessera-core"] = $constraint;
+$composer['require']["{$composerVendor}/tessera-engine"] = $constraint;
+$composer['require']["{$composerVendor}/tessera-core"] = $constraint;
 ksort($composer['require']);
 
 if ($options['source'] === 'path') {
@@ -126,7 +127,7 @@ writeJson($target.'/composer.json', $composer);
 $package = json_decode(file_get_contents($root.'/package.json'), true);
 unset($package['workspaces']);
 $package['name'] = 'tessera-starter';
-$package['dependencies']['@ahmad-chebbo/tessera-ui'] = $options['source'] === 'path' ? 'file:'.$root.'/packages/ui' : "github:{$vendor}/tessera-ui";
+$package['dependencies']['@ahmad-chebbo/tessera-ui'] = $options['source'] === 'path' ? 'file:'.$root.'/packages/ui' : "github:{$vendor}/tessera-ui".(isset($options['uiref']) ? '#'.$options['uiref'] : '');
 writeJson($target.'/package.json', $package);
 
 // ---------------------------------------------------------------- tests of the monorepo that need its packages folder
