@@ -20,7 +20,7 @@ Start from the [starter](https://github.com/Tessera-kit/tessera-starter) to buil
 | Tenant | [tessera-tenant](https://github.com/Tessera-kit/tessera-tenant) | Composer | The business: its branches, stock locations, currencies and settings. One business or many. Builds on the base. |
 | SaaS | [tessera-saas](https://github.com/Tessera-kit/tessera-saas) | Composer | Plans, subscriptions and the screens to manage many tenants. Builds on the tenant package. |
 | UI | [tessera-ui](https://github.com/Tessera-kit/tessera-ui) | bun / npm | Vue 3 components, composables and the theme. Standalone. |
-| Modules | `tessera-<key>` | Composer | Attendance, Catalog, Customers, Discounts, Expenses, Exports, Inventory, Reports, Sales, Shifts. |
+| Modules | `tessera-<key>` | Composer | Attendance, Catalog, Customers, Discounts, Expenses, Exports, Inventory, Orders, Pos, Reports, Sales (the two together), Shifts. |
 | Starter | [tessera-starter](https://github.com/Tessera-kit/tessera-starter) | `composer create-project` | A Laravel SaaS app with the engine, base, tenant, saas, UI and application shell. |
 | Fresh | [tessera-fresh](https://github.com/Tessera-kit/tessera-fresh) | `composer create-project` | The same without tenants and plans: sign-in, users, roles and permissions. Modules you add make it a single business. |
 
@@ -101,7 +101,7 @@ Tag the monorepo (`git tag v4.0.0 && git push --tags`). The **Split** workflow c
 ## Add a module
 
 ```bash
-php artisan module:make Invoices --requires=sales    # in a project made from the starter
+php artisan module:make Invoices --requires=orders    # in a project made from a starter
 ```
 
 To add it to the monorepo as a package, create `packages/modules/invoices` with a `composer.json` like its neighbours, require it in the root `composer.json`, add its repository to the matrix of `.github/workflows/split.yml` and to `.github/satis.json`.

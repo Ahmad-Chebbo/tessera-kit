@@ -1,8 +1,8 @@
 # Tessera Customers
 
-A customer list with contact details and customer groups. When Sales is installed, a customer's order history appears on their page.
+A customer list with contact details and customer groups. When Orders is installed, a customer's order history appears on their page.
 
-A module for [Tessera](https://github.com/Tessera-kit/tessera-kit). It needs a project made from the [Tessera starter](https://github.com/Tessera-kit/tessera-starter) (the engine, the core and the interface kit).
+A module for [Tessera](https://github.com/Tessera-kit/tessera-kit). It needs a project made from one of the Tessera starters, the [SaaS starter](https://github.com/Tessera-kit/tessera-starter) or the [fresh starter](https://github.com/Tessera-kit/tessera-fresh): the engine, the base and the interface kit.
 
 ## Install
 
@@ -33,12 +33,12 @@ bun run build
 
 Menu entries: Customers, Customer groups.
 
-- Shows a customer's order history on their page through the `CustomerActivity` contract, so the page works without Sales and gains the history when Sales is installed.
+- Shows a customer's order history on their page through the `CustomerActivity` contract, so the page works without Orders and gains the history when Orders is installed.
 
 
 ## Turn it off without removing it
 
-Set `MODULES_ENABLED` in `.env` to the modules you want, for example `MODULES_ENABLED=catalog,sales`. Core modules are always on. A module that is left out disappears from the menu, the routes and the plan features.
+Set `MODULES_ENABLED` in `.env` to the modules you want, for example `MODULES_ENABLED=customers`. The core modules (Auth, Team and Tenant) are always on. A module that is left out disappears from the menu, the routes and the plan features.
 
 ## Develop
 

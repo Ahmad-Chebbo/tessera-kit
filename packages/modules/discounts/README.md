@@ -2,7 +2,7 @@
 
 Discount rules and promotion templates with a condition builder and a simulator, applied automatically at the till.
 
-A module for [Tessera](https://github.com/Tessera-kit/tessera-kit). It needs a project made from the [Tessera starter](https://github.com/Tessera-kit/tessera-starter) (the engine, the core and the interface kit).
+A module for [Tessera](https://github.com/Tessera-kit/tessera-kit). It needs a project made from one of the Tessera starters, the [SaaS starter](https://github.com/Tessera-kit/tessera-starter) or the [fresh starter](https://github.com/Tessera-kit/tessera-fresh): the engine, the base and the interface kit.
 
 ## Install
 
@@ -23,7 +23,7 @@ bun run build
 
 ## What it needs
 
-- Other Tessera modules: `catalog`, `tenant`, `customers`, `sales`, `subscription`, `team`. Composer installs them for you.
+- Other Tessera modules: `catalog`, `tenant`, `customers`, `orders`, `team`. Composer installs them for you.
 
 ## What it adds
 
@@ -33,15 +33,15 @@ bun run build
 
 Menu entries: Discounts.
 
-- Fills the `CartPricing` contract: Sales asks it for the discounts of a cart and works without it when it is not installed.
+- Fills the `CartPricing` contract: Orders and the till ask it for the discounts of a cart, and work without it when it is not installed.
 
 ## Notes
 
-- The discount columns on orders belong to Sales, so removing this module never breaks existing orders.
+- The discount columns on orders belong to Orders, so removing this module never breaks existing orders.
 
 ## Turn it off without removing it
 
-Set `MODULES_ENABLED` in `.env` to the modules you want, for example `MODULES_ENABLED=catalog,sales`. Core modules are always on. A module that is left out disappears from the menu, the routes and the plan features.
+Set `MODULES_ENABLED` in `.env` to the modules you want, for example `MODULES_ENABLED=catalog,inventory,customers,orders,discounts`. The core modules (Auth, Team and Tenant) are always on. A module that is left out disappears from the menu, the routes and the plan features.
 
 ## Develop
 

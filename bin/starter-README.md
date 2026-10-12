@@ -45,10 +45,19 @@ bun run build
 
 Each command requires the package, migrates, and gives the roles of every tenant the new permissions. `php artisan module:list` shows what is installed.
 
+## Change a module
+
+```bash
+php artisan module:publish catalog          # take the whole module into app/Modules to edit it
+php artisan module:publish catalog --pages  # copy only its Vue pages; they replace the module's own
+```
+
+The first stops that module updating through Composer. The second keeps it updating while your pages take over the screens you copied.
+
 ## Write your own module
 
 ```bash
-php artisan module:make Invoices --requires=sales
+php artisan module:make Invoices --requires=orders
 php artisan module:check
 ```
 

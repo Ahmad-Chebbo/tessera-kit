@@ -1,13 +1,13 @@
 # Tessera UI
 
-The interface kit of [Tessera](https://github.com/Tessera-kit/tessera-kit): Vue 3 components, composables, chart helpers and the theme, for Inertia and Vite projects. It does not need the Tessera engine or core, so it also suits a plain Laravel + Inertia project such as a CMS.
+The interface kit of [Tessera](https://github.com/Tessera-kit/tessera-kit): Vue 3 components, composables, chart helpers and the theme, for Inertia and Vite projects. It does not need the Tessera engine or base, so it also suits a plain Laravel + Inertia project such as a CMS.
 
 It ships source files (no build step); Vite compiles them with your app.
 
 ## Install
 
 ```bash
-bun add github:Tessera-kit/tessera-ui#v1.0.2
+bun add github:Tessera-kit/tessera-ui
 ```
 
 Peer dependencies: `vue`, `vue-i18n`, `@inertiajs/vue3`, `lucide-vue-next`, `chart.js`, `vue-chartjs`, `tailwindcss` 4 and `@tailwindcss/forms`.

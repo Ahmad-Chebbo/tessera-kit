@@ -38,6 +38,15 @@ bun run build
 
 The feature modules (sales, catalog, inventory...) keep their data per tenant, so `module:add` installs the tenant package for you. Your project then runs as a **single business**: one tenant made on first use with a main branch and its stock location, every user in it, and roles shared by everyone. Branches, stock locations, currencies and a settings page appear, and employee profiles and the activity log switch on. There are no plans and no platform admin. To serve many businesses from one install, add `tessera/tessera-saas` or start from the SaaS starter.
 
+## Change a module
+
+```bash
+php artisan module:publish catalog          # take the whole module into app/Modules to edit it
+php artisan module:publish catalog --pages  # copy only its Vue pages; they replace the module's own
+```
+
+The first stops that module updating through Composer. The second keeps it updating while your pages take over the screens you copied.
+
 ## Write your own module
 
 ```bash

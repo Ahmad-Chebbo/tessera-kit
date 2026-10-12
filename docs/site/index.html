@@ -309,6 +309,8 @@ footer .legal { margin-top: 2rem; max-width: 46em; }
             <div class="feature"><h3>Reports and exports</h3><p>A dashboard, sales, item and profit reports, and Excel or PDF exports in English or Arabic. Large exports run in the background and wait on an Exports page.</p></div>
             <div class="feature"><h3>English, Arabic and right-to-left</h3><p>Every screen has both languages and flips direction with one toggle. Modules ship their own translations, and the checker flags missing keys.</p></div>
             <div class="feature"><h3>A JSON API from the same code</h3><p>Modules add API routes under <code style="font-family:var(--mono);font-size:.9em">/api/v1</code>, signed in with Sanctum tokens. Set <code style="font-family:var(--mono);font-size:.9em">MODULES_LAYERS=api</code> to run without any web pages.</p></div>
+            <div class="feature"><h3>Take a module over when you need to</h3><p><code style="font-family:var(--mono);font-size:.9em">module:publish</code> copies a module into your project so you can change its models, migrations and screens, or copies only its Vue pages and lets them replace the module's own while the module keeps updating.</p></div>
+            <div class="feature"><h3>Orders without a till</h3><p>Orders and the point of sale are separate modules. Install orders on their own and place them from your own code, an import or an online shop you build, with stock, customers and credit sales handled for you.</p></div>
             <div class="feature"><h3>Settings you can override per project</h3><p>The engine, the Team module, the currencies and any module with a config file can be published to <code style="font-family:var(--mono);font-size:.9em">config/</code> with <code style="font-family:var(--mono);font-size:.9em">vendor:publish --tag=tessera-config</code>.</p></div>
         </div>
     </div>
@@ -453,6 +455,13 @@ php artisan module:add inventory
 php artisan module:add expenses</pre><button class="copy" type="button">Copy</button></div>
             </article>
             <article class="case">
+                <div><h3>Orders from your own channel</h3><p>Sell somewhere that is not a counter: an online shop you build, a wholesale portal, an import from a marketplace. Install the orders module and call its place-order action, and you get prices checked on the server, discounts, stock movements, credit sales and the order screens without any till code.</p>
+                <ul><li>orders</li><li>catalog</li><li>inventory</li><li>PlaceOrderAction</li></ul></div>
+                <div class="code"><pre>php artisan module:add orders
+<span class="tok-c"># in your code</span>
+app(PlaceOrderAction::class)->execute($branch, $items, ...);</pre><button class="copy" type="button">Copy</button></div>
+            </article>
+            <article class="case">
                 <div><h3>Start with one business, grow into a platform</h3><p>Build the app for the first customer with no plans and no extra tables to explain. When the second customer arrives, add the SaaS package and turn the first customer into tenant number one. Nothing is rebuilt and no data moves.</p>
                 <ul><li>fresh starter</li><li>tessera-saas</li><li>saas:install</li></ul></div>
                 <div class="code"><pre>composer require tessera/tessera-saas
@@ -528,7 +537,7 @@ php artisan module:package invoices</pre><button class="copy" type="button">Copy
         <div class="head"><h2>Good to know</h2></div>
         <dl class="good">
             <div><dt>What it needs</dt><dd>PHP 8.4, Laravel 13, Composer and bun (or npm). Any database Laravel supports; SQLite works for trying it out.</dd></div>
-            <div><dt>Moving from an earlier version</dt><dd>Version 3 renamed company to tenant and split the tenant package from the SaaS one. The migrations rename the tables, columns and permissions of an existing database. The README lists the steps for your own code.</dd></div>
+            <div><dt>Moving from an earlier version</dt><dd>Version 4 split Sales into orders and the till. Version 3 renamed company to tenant and split the tenant package from the SaaS one. The migrations rename the tables, columns, permissions and stored class names of an existing database. The README lists the steps for your own code.</dd></div>
             <div><dt>One business or many</dt><dd>Every module keeps a tenant on its data. Without the SaaS package that is a single tenant, made on first use, so you never see it. With it, each tenant is a separate business with its own users, roles and plan.</dd></div>
             <div><dt>You own the app</dt><dd>The starters are ordinary projects. The packages update through Composer, and the files in your project stay yours.</dd></div>
             <div><dt>Where to report problems</dt><dd>Every package is a read-only copy of a folder in the main repository. Open issues and pull requests on <a href="https://github.com/Tessera-kit/tessera-kit">tessera-kit</a>.</dd></div>

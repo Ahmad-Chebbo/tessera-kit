@@ -30,7 +30,7 @@ class InvoicesServiceProvider extends ModuleServiceProvider
 {
     public function manifest(): ModuleManifest
     {
-        return new ModuleManifest(key: 'invoices', name: 'Invoices', requires: ['sales'], packages: ['dompdf/dompdf']);
+        return new ModuleManifest(key: 'invoices', name: 'Invoices', requires: ['orders'], packages: ['dompdf/dompdf']);
     }
 
     public function menu(): array
@@ -47,8 +47,8 @@ The hooks a provider can override: `features()` (plan features), `permissionGrou
 | Command | What it does |
 |---|---|
 | `module:list` | Shows the installed modules, their version, type, whether they are enabled and what they require. |
-| `module:make Invoices [--requires=sales] [--group=sales]` | Scaffolds a module in `app/Modules` with a provider, controller, route, Vue page, English and Arabic texts, a migrations folder and a passing test. |
-| `module:add invoices [--constraint=^1.2] [--build]` | Installs a module package: adds the Tessera Composer repository when missing, requires the package, migrates and syncs permissions. |
+| `module:make Invoices [--requires=orders] [--group=sales]` | Scaffolds a module in `app/Modules` with a provider, controller, route, Vue page, English and Arabic texts, a migrations folder and a passing test. |
+| `module:add invoices [--constraint=^4.0] [--build]` | Installs a module package: adds the Tessera Composer repository when missing, requires the package, migrates and syncs permissions. |
 | `module:check [--strict]` | Checks that modules stay portable: manifests, imports of modules that are not required, translation keys, routes guarded by permissions nobody declares, duplicate migrations, unresolvable contracts. |
 | `module:package <key>` | Copies a module of the project into a Composer package. |
 | `module:publish catalog [--pages] [--force] [--no-composer]` | Takes a module into your project so you can edit its models, migrations, services, controllers, pages, translations and tests. See below. |
