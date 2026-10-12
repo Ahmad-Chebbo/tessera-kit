@@ -2,8 +2,6 @@
 
 namespace App\Providers;
 
-use App\Modules\Company\Services\CurrencyService;
-use App\Modules\Subscription\Services\Entitlements;
 use App\Modules\Team\Enums\ActivityEvent;
 use App\Modules\Team\Services\ActivityLogger;
 use Illuminate\Auth\Events\Login;
@@ -17,17 +15,6 @@ use Illuminate\Validation\Rules\Password;
 
 class AppServiceProvider extends ServiceProvider
 {
-    /**
-     * Register any application services.
-     */
-    public function register(): void
-    {
-        $this->app->singleton(Entitlements::class);
-        $this->app->singleton(CurrencyService::class, function () {
-            return new CurrencyService;
-        });
-    }
-
     /**
      * Bootstrap any application services.
      */

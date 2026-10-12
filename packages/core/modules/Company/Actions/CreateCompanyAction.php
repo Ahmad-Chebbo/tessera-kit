@@ -6,10 +6,10 @@ use App\Modules\Company\Enums\LocationType;
 use App\Modules\Company\Models\Branch;
 use App\Modules\Company\Models\Company;
 use App\Modules\Company\Models\Location;
+use App\Modules\Company\Services\RoleTemplates;
 use App\Modules\Subscription\Models\Plan;
 use App\Modules\Subscription\Services\SubscriptionService;
 use App\Modules\Team\Models\User;
-use App\Modules\Team\Services\RoleTemplates;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 

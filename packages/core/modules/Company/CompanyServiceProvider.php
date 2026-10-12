@@ -2,6 +2,15 @@
 
 namespace App\Modules\Company;
 
+use App\Modules\Company\Models\Branch;
+use App\Modules\Company\Models\Company;
+use App\Modules\Company\Services\BranchAccess;
+use App\Modules\Company\Services\CurrencyService;
+use App\Modules\Team\Models\EmployeeProfile;
+use App\Modules\Team\Models\Role;
+use App\Modules\Team\Models\User;
+use Illuminate\Http\Request;
+use Tessera\Core\Contracts\BranchScope;
 use Tessera\Engine\MenuItem;
 use Tessera\Engine\ModuleManifest;
 use Tessera\Engine\ModuleServiceProvider;
@@ -29,9 +38,23 @@ class CompanyServiceProvider extends ModuleServiceProvider
         $this->mergeConfigFrom($this->modulePath('currencies.php'), 'currencies');
     }
 
+    protected function bindings(): void
+    {
+        $this->app->bind(BranchScope::class, BranchAccess::class);
+        $this->app->singleton(CurrencyService::class, fn () => new CurrencyService);
+    }
+
+    /**
+     * Team does not know about companies; the relations to them are added here.
+     */
     public function boot(): void
     {
         parent::boot();
+
+        User::resolveRelationUsing('company', fn (User $user) => $user->belongsTo(Company::class, 'company_id'));
+        User::resolveRelationUsing('branch', fn (User $user) => $user->belongsTo(Branch::class, 'branch_id'));
+        Role::resolveRelationUsing('company', fn (Role $role) => $role->belongsTo(Company::class, 'company_id'));
+        EmployeeProfile::resolveRelationUsing('company', fn (EmployeeProfile $profile) => $profile->belongsTo(Company::class, 'company_id'));
 
         if ($this->app->runningInConsole()) {
             $this->publishes([$this->modulePath('currencies.php') => config_path('currencies.php')], ['tessera-config', 'tessera-modules-config', 'tessera-company-config']);
@@ -63,6 +86,18 @@ class CompanyServiceProvider extends ModuleServiceProvider
             'Admin' => ['manage companies'],
             'Owner' => ['manage branches', 'manage locations', 'manage settings', 'view all branches'],
             'Manager' => ['manage branches', 'manage locations', 'view all branches'],
+        ];
+    }
+
+    public function sharedProps(): array
+    {
+        return [
+            'currency' => fn (Request $request, ?User $user) => $user?->company?->currency ?? 'USD',
+            'branchScope' => fn (Request $request, ?User $user) => $user && $user->company_id ? [
+                'canSeeAll' => app(BranchAccess::class)->canSeeAll($user),
+                'branches' => app(BranchAccess::class)->branches($user)->map->only(['id', 'name'])->values(),
+                'branchId' => $user->branch_id,
+            ] : null,
         ];
     }
 

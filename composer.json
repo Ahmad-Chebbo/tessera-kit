@@ -22,6 +22,7 @@
         "symfony/expression-language": "^8.1",
         "tightenco/ziggy": "^2.6",
         "ahmad-chebbo/tessera-engine": "@dev",
+        "ahmad-chebbo/tessera-base": "@dev",
         "ahmad-chebbo/tessera-core": "@dev",
         "ahmad-chebbo/tessera-attendance": "@dev",
         "ahmad-chebbo/tessera-catalog": "@dev",
@@ -118,6 +119,13 @@
         {
             "type": "path",
             "url": "packages/engine",
+            "options": {
+                "symlink": true
+            }
+        },
+        {
+            "type": "path",
+            "url": "packages/base",
             "options": {
                 "symlink": true
             }

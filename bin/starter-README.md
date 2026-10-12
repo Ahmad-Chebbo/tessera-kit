@@ -56,7 +56,7 @@ The module appears in `app/Modules/Invoices` with a provider, route, page, trans
 
 - `app/Modules` — your own modules.
 - `resources/js` — the application shell: layouts, `app.js`, the page resolver and the translation merge. Modules import the layout as `@/Layouts/SidebarLayout.vue`, so keep it.
-- `vite.modules.js` — lets `@modules/<Name>/…` imports reach modules installed in `vendor`.
+- `vite.modules.js` — lets `@modules/<Name>/…` imports reach modules installed in `vendor`, also while `bun run dev` is running.
 - `config/tessera.php` / `config/modules.php` — optional; the engine provides the defaults.
 
 ## Useful settings

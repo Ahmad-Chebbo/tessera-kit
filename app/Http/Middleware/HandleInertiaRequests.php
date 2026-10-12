@@ -2,14 +2,13 @@
 
 namespace App\Http\Middleware;
 
-use App\Modules\Company\Services\BranchAccess;
-use App\Modules\Subscription\Services\Entitlements;
 use App\Modules\Team\Models\User;
 use Closure;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Middleware;
 use Symfony\Component\HttpFoundation\Response;
+use Tessera\Core\Contracts\PlanLimits;
 use Tessera\Engine\ModuleRegistry;
 use Tessera\Engine\Navigation;
 
@@ -47,30 +46,12 @@ class HandleInertiaRequests extends Middleware
         $module = app(ModuleRegistry::class)->featureForPermission($permission);
 
         return $module === null
-            || $user->company_id === null
             || $user->isSuperAdmin()
-            || app(Entitlements::class)->hasModule($user->company_id, $module);
+            || app(PlanLimits::class)->hasModule($user->company_id, $module);
     }
 
     /**
-     * @return array{name: string, status: string, usable: bool, trial_ends_at: ?string, ends_at: ?string}|null
-     */
-    private function planSummary(int $companyId): ?array
-    {
-        $subscription = app(Entitlements::class)->subscription($companyId);
-
-        return $subscription ? [
-            'name' => $subscription->plan->name,
-            'status' => $subscription->effectiveStatus()->value,
-            'usable' => $subscription->isUsable(),
-            'trial_ends_at' => $subscription->trial_ends_at?->toIso8601String(),
-            'ends_at' => $subscription->ends_at?->toIso8601String(),
-            'modules' => app(Entitlements::class)->modules($companyId),
-        ] : null;
-    }
-
-    /**
-     * Define the props that are shared by default.
+     * Define the props that are shared by default. Modules add theirs (the plan, the branches, the currency...).
      *
      * @return array<string, mixed>
      */
@@ -109,13 +90,6 @@ class HandleInertiaRequests extends Middleware
             ],
             'enabledModules' => fn () => array_keys(app(ModuleRegistry::class)->enabled()),
             'navigation' => fn () => $user ? app(Navigation::class)->build($request, $permissions) : [],
-            'currency' => $user->company?->currency ?? 'USD',
-            'plan' => fn () => $user && $user->company_id ? $this->planSummary($user->company_id) : null,
-            'branchScope' => fn () => $user && $user->company_id ? [
-                'canSeeAll' => app(BranchAccess::class)->canSeeAll($user),
-                'branches' => app(BranchAccess::class)->branches($user)->map->only(['id', 'name'])->values(),
-                'branchId' => $user->branch_id,
-            ] : null,
             ...array_map(fn (Closure $resolver): Closure => fn () => $resolver($request, $user), app(ModuleRegistry::class)->sharedProps()),
         ];
     }

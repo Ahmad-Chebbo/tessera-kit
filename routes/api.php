@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Middleware\EnsureUserIsActive;
-use App\Modules\Subscription\Http\Middleware\EnsureSubscriptionIsUsable;
 use Illuminate\Support\Facades\Route;
 use Tessera\Engine\ModuleRegistry;
 
@@ -25,7 +24,9 @@ if ($modules->apiEnabled()) {
         }
     });
 
-    Route::prefix('v1')->name('api.v1.')->middleware(['auth:sanctum', EnsureUserIsActive::class, EnsureSubscriptionIsUsable::class])->group(function () use ($modules) {
+    $signedIn = ['auth:sanctum', EnsureUserIsActive::class, ...(array_key_exists('subscription.usable', Route::getMiddleware()) ? ['subscription.usable'] : [])];
+
+    Route::prefix('v1')->name('api.v1.')->middleware($signedIn)->group(function () use ($modules) {
         foreach ($modules->routeFiles('api.php') as $moduleRoutes) {
             require $moduleRoutes;
         }

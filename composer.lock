@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c607dcad1ef37e5378d22b6fa34b825a",
+    "content-hash": "90613a5dc003cd38f38f1fd1d83e2bbf",
     "packages": [
         {
             "name": "ahmad-chebbo/tessera-attendance",
@@ -40,6 +40,56 @@
                 "proprietary"
             ],
             "description": "The Attendance module of Tessera.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "ahmad-chebbo/tessera-base",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "packages/base",
+                "reference": "9f741d284801fe102669f4a0ab9002cc773fd1c1"
+            },
+            "require": {
+                "ahmad-chebbo/tessera-engine": "^1.0",
+                "inertiajs/inertia-laravel": "*",
+                "laravel/sanctum": "*",
+                "php": "^8.4",
+                "spatie/laravel-medialibrary": "*",
+                "spatie/laravel-permission": "*",
+                "tightenco/ziggy": "*"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Tessera\\Core\\CoreServiceProvider"
+                    ]
+                },
+                "tessera": {
+                    "modules": [
+                        "App\\Modules\\Auth\\AuthServiceProvider",
+                        "App\\Modules\\Team\\TeamServiceProvider"
+                    ]
+                },
+                "branch-alias": {
+                    "dev-main": "1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Tessera\\Core\\": "src/",
+                    "App\\Modules\\Auth\\": "modules/Auth/",
+                    "App\\Modules\\Team\\": "modules/Team/"
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "description": "The base of Tessera: sign-in, users, roles and permissions. Add tessera-core on top for companies, branches and subscriptions.",
             "transport-options": {
                 "symlink": true,
                 "relative": true
@@ -90,9 +140,10 @@
             "dist": {
                 "type": "path",
                 "url": "packages/core",
-                "reference": "f516792a932ea0d134d9b36bf340bea62c11600e"
+                "reference": "97fe2d19c9d04f9af596dd63311e4bd25d2adf4d"
             },
             "require": {
+                "ahmad-chebbo/tessera-base": "^1.0",
                 "ahmad-chebbo/tessera-engine": "^1.0",
                 "inertiajs/inertia-laravel": "*",
                 "laravel/sanctum": "*",
@@ -103,17 +154,10 @@
             },
             "type": "library",
             "extra": {
-                "laravel": {
-                    "providers": [
-                        "Tessera\\Core\\CoreServiceProvider"
-                    ]
-                },
                 "tessera": {
                     "modules": [
-                        "App\\Modules\\Auth\\AuthServiceProvider",
                         "App\\Modules\\Company\\CompanyServiceProvider",
-                        "App\\Modules\\Subscription\\SubscriptionServiceProvider",
-                        "App\\Modules\\Team\\TeamServiceProvider"
+                        "App\\Modules\\Subscription\\SubscriptionServiceProvider"
                     ]
                 },
                 "branch-alias": {
@@ -122,17 +166,14 @@
             },
             "autoload": {
                 "psr-4": {
-                    "Tessera\\Core\\": "src/",
-                    "App\\Modules\\Auth\\": "modules/Auth/",
                     "App\\Modules\\Company\\": "modules/Company/",
-                    "App\\Modules\\Subscription\\": "modules/Subscription/",
-                    "App\\Modules\\Team\\": "modules/Team/"
+                    "App\\Modules\\Subscription\\": "modules/Subscription/"
                 }
             },
             "license": [
                 "proprietary"
             ],
-            "description": "The SaaS core of Tessera: sign-in, companies and branches, subscriptions and plans, users and roles.",
+            "description": "The SaaS layer of Tessera: companies with branches and locations, subscriptions with plans and limits. Builds on tessera-base.",
             "transport-options": {
                 "symlink": true,
                 "relative": true
@@ -12126,6 +12167,7 @@
     "minimum-stability": "dev",
     "stability-flags": {
         "ahmad-chebbo/tessera-attendance": 20,
+        "ahmad-chebbo/tessera-base": 20,
         "ahmad-chebbo/tessera-catalog": 20,
         "ahmad-chebbo/tessera-core": 20,
         "ahmad-chebbo/tessera-customers": 20,

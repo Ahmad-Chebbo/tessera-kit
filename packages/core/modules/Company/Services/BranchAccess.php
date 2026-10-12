@@ -6,18 +6,24 @@ use App\Modules\Company\Models\Branch;
 use App\Modules\Team\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
+use Tessera\Core\Contracts\BranchScope;
 
 /**
  * Decides which branches a user may look at. People with the "view all branches" permission can see every branch of
  * their company and narrow the view to one. Everyone else is held to their own branch, whatever the request says.
  * Controllers ask this class instead of repeating the rule, so every page behaves the same.
  */
-class BranchAccess
+class BranchAccess implements BranchScope
 {
     /**
      * A branch id no real branch has, used to match nothing for people who belong to no branch.
      */
     public const NONE = -1;
+
+    public function available(): bool
+    {
+        return true;
+    }
 
     public function canSeeAll(User $user): bool
     {
