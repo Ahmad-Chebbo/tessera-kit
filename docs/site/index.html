@@ -284,8 +284,9 @@ footer .legal { margin-top: 2rem; max-width: 46em; }
         <div class="layers">
             <div class="layer you"><code>app/Modules</code><p>Your own modules. They sit in the project, load exactly like the packaged ones, and can be packaged for other projects later.</p></div>
             <div class="layer"><code>tessera/tessera-&lt;module&gt;</code><p>Ten feature modules: catalog, inventory, customers, sales, discounts, expenses, reports, exports, shifts and attendance.</p></div>
-            <div class="layer"><code>tessera/tessera-saas</code><p>Tenants, branches, stock locations, currencies, plans and subscription limits. Add it when one install serves many businesses.</p></div>
-            <div class="layer"><code>tessera/tessera-base</code><p>Sign-in, registration, password reset, profile, API tokens, users, roles and permissions. Works without tenants or plans.</p></div>
+            <div class="layer"><code>tessera/tessera-saas</code><p>Plans, subscriptions and the screens a platform admin uses to create tenants. Add it only when one install serves many businesses.</p></div>
+            <div class="layer"><code>tessera/tessera-tenant</code><p>The business: its branches, stock locations, currencies and settings. One tenant for a single business, many with the SaaS layer. The feature modules keep their data here.</p></div>
+            <div class="layer"><code>tessera/tessera-base</code><p>Sign-in, registration, password reset, profile, API tokens, users, roles and permissions. Has no tenant, branch or plan of its own.</p></div>
             <div class="layer-split">
                 <div class="layer"><code>tessera/tessera-engine</code><p>Finds, orders and boots modules, and gives you <code style="color:inherit">module:make</code>, <code style="color:inherit">module:add</code>, <code style="color:inherit">module:check</code> and <code style="color:inherit">module:package</code>. Works in any Laravel 13 app.</p></div>
                 <div class="layer"><code>@tessera/tessera-ui</code><p>Vue 3 components, charts, composables and the theme. Installed with bun or npm, and usable on its own.</p></div>
@@ -301,7 +302,7 @@ footer .legal { margin-top: 2rem; max-width: 46em; }
         <div class="features">
             <div class="feature"><h3>Modules that do not break each other</h3><p>A module declares what it requires and everything else goes through a contract with a safe default. <code style="font-family:var(--mono);font-size:.9em">module:check</code> fails the build when a module imports one it did not declare.</p></div>
             <div class="feature"><h3>Roles and permissions that follow the modules</h3><p>Each module declares its permissions and the roles that get them by default. Install a module, run <code style="font-family:var(--mono);font-size:.9em">modules:sync</code>, and the role page lists the new permissions.</p></div>
-            <div class="feature"><h3>Many tenants in one install</h3><p>With the SaaS package every tenant has its own users, roles, branches, stock and settings. A platform admin creates tenants and assigns plans.</p></div>
+            <div class="feature"><h3>One business or many</h3><p>A single business gets one tenant, made for you with a main branch. With the SaaS layer every tenant has its own users, roles, branches, stock and settings, and a platform admin creates them and assigns plans.</p></div>
             <div class="feature"><h3>Plans that switch features on and off</h3><p>A plan lists the modules a tenant may use and its limits, such as the number of users. Pages, menus and permissions of a module the plan leaves out disappear.</p></div>
             <div class="feature"><h3>Branches and stock locations</h3><p>Staff see their own branch, managers with the right permission see all of them, and every report can be narrowed to one branch.</p></div>
             <div class="feature"><h3>A till that works offline</h3><p>The point of sale queues sales while the connection is down and syncs them later without double-charging, with weighed goods, held orders, receipts and cash-drawer shifts.</p></div>
@@ -336,7 +337,7 @@ footer .legal { margin-top: 2rem; max-width: 46em; }
                 </tbody>
             </table>
         </div>
-        <p class="prose" style="margin-top:1rem">Modules that work with tenants install <code style="font-family:var(--mono);font-size:.9em;color:var(--accent)">tessera-saas</code> as well, because their data belongs to a tenant.</p>
+        <p class="prose" style="margin-top:1rem">Modules keep their data per tenant, so they install <code style="font-family:var(--mono);font-size:.9em;color:var(--accent)">tessera-tenant</code> as well. That is enough for a single business; add <code style="font-family:var(--mono);font-size:.9em;color:var(--accent)">tessera-saas</code> for many.</p>
     </div>
 </section>
 
@@ -374,7 +375,7 @@ bun run build   <span class="tok-c"># or: bun run dev</span></pre><button class=
         </div>
 
         <div class="panel" id="p-fresh" role="tabpanel" aria-labelledby="t-fresh" hidden>
-            <p class="prose" style="margin-bottom:1.5rem">Sign-in, users, roles and permissions, with no tenants or plans. A good base for an internal tool or an admin panel.</p>
+            <p class="prose" style="margin-bottom:1.5rem">Sign-in, users, roles and permissions, with no tenants or plans. A good base for an internal tool or an admin panel. Add a module such as catalog and it becomes a single-business app.</p>
             <ol class="steps">
                 <li><div><h3>Create the project</h3>
 <div class="code"><pre>composer create-project tessera/tessera-fresh app \
@@ -424,6 +425,14 @@ php artisan module:add expenses</pre><button class="copy" type="button">Copy</bu
                 <div class="code"><pre>composer create-project tessera/tessera-starter shop
 php artisan module:add sales
 php artisan module:add reports
+php artisan module:add expenses</pre><button class="copy" type="button">Copy</button></div>
+            </article>
+            <article class="case">
+                <div><h3>The back office of one business</h3><p>Products, stock, customers and expenses for a shop, a clinic or a workshop, with no plans and no other tenants. People sign in, an owner sets up the branches and decides what each role may do.</p>
+                <ul><li>fresh starter</li><li>catalog</li><li>inventory</li><li>expenses</li></ul></div>
+                <div class="code"><pre>composer create-project tessera/tessera-fresh shop
+php artisan module:add catalog
+php artisan module:add inventory
 php artisan module:add expenses</pre><button class="copy" type="button">Copy</button></div>
             </article>
             <article class="case">
@@ -494,7 +503,7 @@ php artisan module:package invoices</pre><button class="copy" type="button">Copy
         <div class="head"><h2>Good to know</h2></div>
         <dl class="good">
             <div><dt>What it needs</dt><dd>PHP 8.4, Laravel 13, Composer and bun (or npm). Any database Laravel supports; SQLite works for trying it out.</dd></div>
-            <div><dt>Moving from version 1</dt><dd>Version 2 renamed the packages (<code style="font-family:var(--mono)">tessera/…</code>) and moved the project to this organization. Class names and the database did not change. The README has the steps.</dd></div>
+            <div><dt>Moving from an earlier version</dt><dd>Version 3 renamed company to tenant and split the tenant package from the SaaS one. The migrations rename the tables, columns and permissions of an existing database. The README lists the steps for your own code.</dd></div>
             <div><dt>You own the app</dt><dd>The starters are ordinary projects. The packages update through Composer, and the files in your project stay yours.</dd></div>
             <div><dt>Where to report problems</dt><dd>Every package is a read-only copy of a folder in the main repository. Open issues and pull requests on <a href="https://github.com/Tessera-kit/tessera-kit">tessera-kit</a>.</dd></div>
         </dl>
@@ -512,6 +521,7 @@ php artisan module:package invoices</pre><button class="copy" type="button">Copy
             <div><h4>Packages</h4><ul>
                 <li><a href="https://github.com/Tessera-kit/tessera-engine">tessera-engine</a></li>
                 <li><a href="https://github.com/Tessera-kit/tessera-base">tessera-base</a></li>
+                <li><a href="https://github.com/Tessera-kit/tessera-tenant">tessera-tenant</a></li>
                 <li><a href="https://github.com/Tessera-kit/tessera-saas">tessera-saas</a></li>
                 <li><a href="https://github.com/Tessera-kit/tessera-ui">tessera-ui</a></li>
             </ul></div>
@@ -598,7 +608,7 @@ php artisan module:package invoices</pre><button class="copy" type="button">Copy
         if (extra.length) {
             html += '<div class="note">also installs <b>' + extra.map(function (m) { return m.key; }).join(', ') + '</b></div>';
         }
-        html += '<div class="note">and <b>tessera-saas</b>, which these modules build on</div>';
+        html += '<div class="note">and <b>tessera-tenant</b>, which these modules build on</div>';
         out.innerHTML = html;
         pages.innerHTML = 'Adds <b>' + total + ' pages</b> to the sidebar: ' + list.map(function (m) { return m.pages.join(', '); }).join(', ') + '.';
     }

@@ -1,8 +1,8 @@
 # Tessera SaaS
 
-The SaaS layer of [Tessera](https://github.com/Tessera-kit/tessera-kit): tenants with branches and locations, and subscriptions with plans and limits. It builds on [`tessera-base`](https://github.com/Tessera-kit/tessera-base) (sign-in, users and roles), which it installs with it. Feature modules (sales, inventory, expenses, …) build on it.
+The SaaS layer of [Tessera](https://github.com/Tessera-kit/tessera-kit): plans, subscriptions and limits, and the screens a platform admin uses to create and manage tenants. Add it when one install serves several businesses. A project with a single business does not need it.
 
-It replaces the old `tessera-core` package (same classes, same namespaces): `composer require tessera/tessera-saas` removes `tessera-core` for you. It installs with the [starter](https://github.com/Tessera-kit/tessera-starter). To add it to a project that started from the base:
+It builds on [`tessera-tenant`](https://github.com/Tessera-kit/tessera-tenant) (the business, its branches and settings) and [`tessera-base`](https://github.com/Tessera-kit/tessera-base) (sign-in, users and roles), which it installs with it. It comes ready in the [SaaS starter](https://github.com/Tessera-kit/tessera-starter). To add it to a project that already has the tenant package:
 
 ```bash
 composer config repositories.tessera composer https://tessera-kit.github.io/tessera-kit
@@ -11,23 +11,27 @@ php artisan migrate
 php artisan modules:sync
 ```
 
-## The two modules
+## The Subscription module
 
-Core modules are always enabled and cannot be switched off.
+| | |
+|---|---|
+| **Tenants** | The platform admin creates a tenant with its owner account, a main branch and a plan, edits it and switches it off. |
+| **Plans** | The modules a plan includes, its limits (such as the number of users or branches) and its price. Pages, menus and permissions of a module a plan leaves out disappear for that tenant. |
+| **Subscriptions** | Each tenant has a subscription to a plan, with a trial or an end date. An expired subscription sends people to a page that says so. |
 
-| Module | What it does | Permissions it declares |
-|---|---|---|
-| **Tenant** | Tenants (multi-tenant data scoping), branches, stock locations, settings, exchange rates and currencies. | manage tenants, manage branches, manage locations, manage settings, view all branches |
-| **Subscription** | Plans, subscriptions, usage limits, expiry gating, and the plan-management screens for the platform admin. | none (plan features gate the routes of other modules) |
+Permissions it declares: manage tenants (held by the platform *Admin* role).
 
-## How it plugs into the base
+It is an ordinary feature module, not a core one: `MODULES_ENABLED` can leave it out, and the project then behaves as a single business.
 
-The base does not know about tenants or plans. This package fills the contracts the base defines (`BranchScope` with the Tenant module, `PlanLimits` with the Subscription module), adds the `tenant` and `branch` relations to users, roles and employee profiles, adds the foreign keys to the tenant and branch columns the base keeps, and shares the plan, branch and currency props with the pages. It also registers the `module` and `subscription.usable` middleware.
+## How it plugs in
 
-## Notes
+The modules that check plan limits (the user limit in Team, the module gate in the `module` middleware, the shift and discount checks in Sales and Discounts) ask the `PlanLimits` contract, which allows everything by default. This package binds the real one. It also adds the subscription relations to the tenant, registers the `subscription.usable` middleware, and shares the plan with the pages. With this package, roles belong to each tenant instead of being shared.
 
-- Roles are per tenant. A tenant starts with the template roles; `modules:sync` adds the permissions of newly installed modules to the matching roles of existing tenants.
-- `config/currencies.php` lists the currencies a tenant can choose (`php artisan vendor:publish --tag=tessera-tenant-config`).
+## Upgrading from version 2
+
+The Tenant module (the business, branches, locations, settings) moved to `tessera-tenant`, and *company* became *tenant* everywhere. `composer update` installs the new package for you. The tenant administration screens that were in the Company module now live here.
+
+This package replaces the old `tessera-core`: `composer require tessera/tessera-saas` removes it.
 
 ## Part of Tessera
 

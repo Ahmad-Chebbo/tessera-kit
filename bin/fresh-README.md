@@ -36,7 +36,7 @@ php artisan module:add expenses
 bun run build
 ```
 
-Modules that work with tenants (sales, catalog, inventory...) need the SaaS package, and `module:add` installs it for you, which also turns on branches, plans and the other tenant features. If you do not want those, start from the SaaS starter instead or write your own modules.
+The feature modules (sales, catalog, inventory...) keep their data per tenant, so `module:add` installs the tenant package for you. Your project then runs as a **single business**: one tenant made on first use with a main branch and its stock location, every user in it, and roles shared by everyone. Branches, stock locations, currencies and a settings page appear, and employee profiles and the activity log switch on. There are no plans and no platform admin. To serve many businesses from one install, add `tessera/tessera-saas` or start from the SaaS starter.
 
 ## Write your own module
 

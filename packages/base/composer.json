@@ -5,7 +5,7 @@
     "license": "proprietary",
     "require": {
         "php": "^8.4",
-        "tessera/tessera-engine": "^2.0",
+        "tessera/tessera-engine": "^3.0",
         "inertiajs/inertia-laravel": "*",
         "tightenco/ziggy": "*",
         "spatie/laravel-permission": "*",
@@ -32,7 +32,7 @@
             ]
         },
         "branch-alias": {
-            "dev-main": "2.x-dev"
+            "dev-main": "3.x-dev"
         }
     },
     "replace": {

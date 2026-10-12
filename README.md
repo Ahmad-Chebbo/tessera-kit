@@ -17,11 +17,12 @@ Start from the [starter](https://github.com/Tessera-kit/tessera-starter) to buil
 |---|---|---|---|
 | Engine | [tessera-engine](https://github.com/Tessera-kit/tessera-engine) | Composer | Finds, orders and boots modules; `module:*` commands. Works in any Laravel app. |
 | Base | [tessera-base](https://github.com/Tessera-kit/tessera-base) | Composer | Auth and Team (users, roles, permissions), plus the shared contracts. Works alone. |
-| SaaS | [tessera-saas](https://github.com/Tessera-kit/tessera-saas) | Composer | Tenant and Subscription: tenants, branches, plans. Builds on the base. |
+| Tenant | [tessera-tenant](https://github.com/Tessera-kit/tessera-tenant) | Composer | The business: its branches, stock locations, currencies and settings. One business or many. Builds on the base. |
+| SaaS | [tessera-saas](https://github.com/Tessera-kit/tessera-saas) | Composer | Plans, subscriptions and the screens to manage many tenants. Builds on the tenant package. |
 | UI | [tessera-ui](https://github.com/Tessera-kit/tessera-ui) | bun / npm | Vue 3 components, composables and the theme. Standalone. |
 | Modules | `tessera-<key>` | Composer | Attendance, Catalog, Customers, Discounts, Expenses, Exports, Inventory, Reports, Sales, Shifts. |
-| Starter | [tessera-starter](https://github.com/Tessera-kit/tessera-starter) | `composer create-project` | A Laravel SaaS app with the engine, base, core, UI and application shell. |
-| Fresh | [tessera-fresh](https://github.com/Tessera-kit/tessera-fresh) | `composer create-project` | The same without tenants and plans: sign-in, users, roles and permissions. |
+| Starter | [tessera-starter](https://github.com/Tessera-kit/tessera-starter) | `composer create-project` | A Laravel SaaS app with the engine, base, tenant, saas, UI and application shell. |
+| Fresh | [tessera-fresh](https://github.com/Tessera-kit/tessera-fresh) | `composer create-project` | The same without tenants and plans: sign-in, users, roles and permissions. Modules you add make it a single business. |
 
 Every package has a README. They are read-only copies of folders here.
 
@@ -30,7 +31,8 @@ Every package has a README. They are read-only copies of folders here.
 ```
 packages/engine           Tessera\Engine         the module engine
 packages/base             Tessera\Core           contracts + modules/{Auth,Team}
-packages/saas             App\Modules\...        modules/{Tenant,Subscription}
+packages/tenant           App\Modules\Tenant     modules/Tenant
+packages/saas             App\Modules\Subscription  modules/Subscription
 packages/ui               @tessera/tessera-ui   the interface kit (npm)
 packages/modules/<key>    App\Modules\<Name>    one folder per feature module
 app, resources, routes    the host application (it becomes the starter)
@@ -55,6 +57,16 @@ php artisan module:check --strict
 
 Rules that keep modules reusable (checked by `module:check`): a module imports another module only when its manifest requires it; contracts replace direct dependencies on optional modules; class names stay under `App\Modules\<Name>\` because the database stores them.
 
+## Upgrading from 2.x
+
+Version 3 renamed *company* to *tenant* everywhere and split the SaaS package in two: [`tessera-tenant`](https://github.com/Tessera-kit/tessera-tenant) holds the business (branches, stock locations, currencies, settings) and works for one business or many, and `tessera-saas` keeps plans, subscriptions and the screens to manage tenants. The modules no longer need the SaaS package, only the tenant one. Users, roles and the other base tables no longer have tenant columns of their own; the tenant package adds them.
+
+`composer update` installs the new package. Run `php artisan migrate`: the migrations rename the `companies` table to `tenants`, every `company_id` column to `tenant_id`, the *manage companies* permission to *manage tenants*, and the class names stored in the activity log and in media. Then, in your own code:
+
+- `App\Modules\Company\…` becomes `App\Modules\Tenant\…`, and `$user->company` becomes `$user->tenant`.
+- `company_id` becomes `tenant_id` in your queries and in your own modules' migrations, and the `company` module key in `requires: ['company']` becomes `tenant`.
+- Routes and pages named `companies` are now `tenants` (`/admin/tenants`), and so are the translation keys.
+
 ## Upgrading from 1.x
 
 Version 2.0 moved the project to the GitHub organization [Tessera-kit](https://github.com/Tessera-kit) and renamed the packages: the Composer vendor is now `tessera` (`tessera/tessera-engine`, `tessera/tessera-sales`, …), the interface kit is `@tessera/tessera-ui`, and the Composer repository is `https://tessera-kit.github.io/tessera-kit`. Class names, namespaces and the database are unchanged. In an existing project:
@@ -71,7 +83,7 @@ Each new package declares that it replaces the old one, so Composer drops the ol
 
 ## Release
 
-Tag the monorepo (`git tag v2.0.0 && git push --tags`). The **Split** workflow copies each package to its repository with the same tag and publishes the starter; the **Repository** workflow then rebuilds the Composer repository at `https://tessera-kit.github.io/tessera-kit` that lists every package. The **Tests** workflow runs on every push. The workflows need a repository secret `SPLIT_TOKEN` (a token that may push to the package repositories).
+Tag the monorepo (`git tag v3.0.0 && git push --tags`). The **Split** workflow copies each package to its repository with the same tag and publishes the starter; the **Repository** workflow then rebuilds the Composer repository at `https://tessera-kit.github.io/tessera-kit` that lists every package. The **Tests** workflow runs on every push. The workflows need a repository secret `SPLIT_TOKEN` (a token that may push to the package repositories).
 
 ## Add a module
 

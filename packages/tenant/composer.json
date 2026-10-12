@@ -5,13 +5,13 @@
     "license": "proprietary",
     "require": {
         "php": "^8.4",
-        "tessera/tessera-engine": "^2.0",
+        "tessera/tessera-engine": "^3.0",
         "inertiajs/inertia-laravel": "*",
         "tightenco/ziggy": "*",
         "spatie/laravel-permission": "*",
         "spatie/laravel-medialibrary": "*",
         "laravel/sanctum": "*",
-        "tessera/tessera-base": "^2.0"
+        "tessera/tessera-base": "^3.0"
     },
     "autoload": {
         "psr-4": {
@@ -25,7 +25,7 @@
             ]
         },
         "branch-alias": {
-            "dev-main": "2.x-dev"
+            "dev-main": "3.x-dev"
         }
     }
 }

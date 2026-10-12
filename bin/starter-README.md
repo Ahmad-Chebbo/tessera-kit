@@ -1,6 +1,6 @@
 # Tessera Starter
 
-A Laravel 13 application ready for [Tessera](https://github.com/Tessera-kit/tessera-kit) modules. It contains the module engine, the base (sign-in, users and roles) and the SaaS package (tenants and branches, subscriptions), the interface kit and the application shell (sidebar layout, language and theme toggles). Business features arrive as modules.
+A Laravel 13 application ready for [Tessera](https://github.com/Tessera-kit/tessera-kit) modules. It contains the module engine, the base (sign-in, users and roles), the tenant package (the business, branches, stock locations, settings) and the SaaS package (many tenants, plans and subscriptions), the interface kit and the application shell (sidebar layout, language and theme toggles). Business features arrive as modules.
 
 ## Create a project
 

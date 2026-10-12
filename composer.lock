@@ -7612,13 +7612,13 @@
             "dist": {
                 "type": "path",
                 "url": "packages/modules/attendance",
-                "reference": "22beb99e4deec9ab724f58d44b1ba6cb7fc516f2"
+                "reference": "0a43ef93d0d86061b241267c7483fe4a964bb5be"
             },
             "require": {
                 "php": "^8.4",
-                "tessera/tessera-engine": "^2.0",
-                "tessera/tessera-shifts": "^2.0",
-                "tessera/tessera-tenant": "^2.0"
+                "tessera/tessera-engine": "^3.0",
+                "tessera/tessera-shifts": "^3.0",
+                "tessera/tessera-tenant": "^3.0"
             },
             "replace": {
                 "ahmad-chebbo/tessera-attendance": "self.version"
@@ -7631,7 +7631,7 @@
                     ]
                 },
                 "branch-alias": {
-                    "dev-main": "2.x-dev"
+                    "dev-main": "3.x-dev"
                 }
             },
             "autoload": {
@@ -7654,7 +7654,7 @@
             "dist": {
                 "type": "path",
                 "url": "packages/base",
-                "reference": "8a9902178ca8503720a7a393879db9728288824b"
+                "reference": "62fff456ed4fa389d62e0e83fb22a368b91a350c"
             },
             "require": {
                 "inertiajs/inertia-laravel": "*",
@@ -7662,7 +7662,7 @@
                 "php": "^8.4",
                 "spatie/laravel-medialibrary": "*",
                 "spatie/laravel-permission": "*",
-                "tessera/tessera-engine": "^2.0",
+                "tessera/tessera-engine": "^3.0",
                 "tightenco/ziggy": "*"
             },
             "replace": {
@@ -7682,7 +7682,7 @@
                     ]
                 },
                 "branch-alias": {
-                    "dev-main": "2.x-dev"
+                    "dev-main": "3.x-dev"
                 }
             },
             "autoload": {
@@ -7707,13 +7707,13 @@
             "dist": {
                 "type": "path",
                 "url": "packages/modules/catalog",
-                "reference": "3372d3e28bdacd57de6ebdb571091e7ba737ce59"
+                "reference": "35cc995a8e95409a501a965fea31657838b33e7c"
             },
             "require": {
                 "php": "^8.4",
                 "spatie/laravel-medialibrary": "*",
-                "tessera/tessera-engine": "^2.0",
-                "tessera/tessera-tenant": "^2.0"
+                "tessera/tessera-engine": "^3.0",
+                "tessera/tessera-tenant": "^3.0"
             },
             "replace": {
                 "ahmad-chebbo/tessera-catalog": "self.version"
@@ -7726,7 +7726,7 @@
                     ]
                 },
                 "branch-alias": {
-                    "dev-main": "2.x-dev"
+                    "dev-main": "3.x-dev"
                 }
             },
             "autoload": {
@@ -7749,12 +7749,12 @@
             "dist": {
                 "type": "path",
                 "url": "packages/modules/customers",
-                "reference": "88bfb78373c43937d6ec11d1d8ab92d75979ffa7"
+                "reference": "7c93c416ff3e0231038e8d579f7b332d4b10d4dd"
             },
             "require": {
                 "php": "^8.4",
-                "tessera/tessera-engine": "^2.0",
-                "tessera/tessera-tenant": "^2.0"
+                "tessera/tessera-engine": "^3.0",
+                "tessera/tessera-tenant": "^3.0"
             },
             "replace": {
                 "ahmad-chebbo/tessera-customers": "self.version"
@@ -7767,7 +7767,7 @@
                     ]
                 },
                 "branch-alias": {
-                    "dev-main": "2.x-dev"
+                    "dev-main": "3.x-dev"
                 }
             },
             "autoload": {
@@ -7790,15 +7790,15 @@
             "dist": {
                 "type": "path",
                 "url": "packages/modules/discounts",
-                "reference": "31a2c46051f8e1b9b0571551a053c1e17cca4da9"
+                "reference": "d7ee09d33d12900c21cd8da7aaca11a232f8850b"
             },
             "require": {
                 "php": "^8.4",
-                "tessera/tessera-catalog": "^2.0",
-                "tessera/tessera-customers": "^2.0",
-                "tessera/tessera-engine": "^2.0",
-                "tessera/tessera-sales": "^2.0",
-                "tessera/tessera-tenant": "^2.0"
+                "tessera/tessera-catalog": "^3.0",
+                "tessera/tessera-customers": "^3.0",
+                "tessera/tessera-engine": "^3.0",
+                "tessera/tessera-sales": "^3.0",
+                "tessera/tessera-tenant": "^3.0"
             },
             "replace": {
                 "ahmad-chebbo/tessera-discounts": "self.version"
@@ -7811,7 +7811,7 @@
                     ]
                 },
                 "branch-alias": {
-                    "dev-main": "2.x-dev"
+                    "dev-main": "3.x-dev"
                 }
             },
             "autoload": {
@@ -7834,7 +7834,7 @@
             "dist": {
                 "type": "path",
                 "url": "packages/engine",
-                "reference": "5ec2d0c1a68b62a7374f19b4df0f6f3ac5e094be"
+                "reference": "09c69264ab687090ba2a578587d9405aae06177f"
             },
             "require": {
                 "illuminate/support": "^13.0",
@@ -7854,7 +7854,7 @@
                     ]
                 },
                 "branch-alias": {
-                    "dev-main": "2.x-dev"
+                    "dev-main": "3.x-dev"
                 }
             },
             "autoload": {
@@ -7877,13 +7877,13 @@
             "dist": {
                 "type": "path",
                 "url": "packages/modules/expenses",
-                "reference": "55791cd9aeb646d37a44801ea28f93b504d338b1"
+                "reference": "13cadec717d6952b0ec911ac06064f5623f92f67"
             },
             "require": {
                 "php": "^8.4",
                 "spatie/laravel-medialibrary": "*",
-                "tessera/tessera-engine": "^2.0",
-                "tessera/tessera-tenant": "^2.0"
+                "tessera/tessera-engine": "^3.0",
+                "tessera/tessera-tenant": "^3.0"
             },
             "replace": {
                 "ahmad-chebbo/tessera-expenses": "self.version"
@@ -7896,7 +7896,7 @@
                     ]
                 },
                 "branch-alias": {
-                    "dev-main": "2.x-dev"
+                    "dev-main": "3.x-dev"
                 }
             },
             "autoload": {
@@ -7919,14 +7919,14 @@
             "dist": {
                 "type": "path",
                 "url": "packages/modules/exports",
-                "reference": "824b0a8ec6458d23e49fb0b1fa0f918057095007"
+                "reference": "1d2362cd14e51947b345f1ca5919a1cbbdc4571f"
             },
             "require": {
                 "mpdf/mpdf": "*",
                 "openspout/openspout": "*",
                 "php": "^8.4",
-                "tessera/tessera-engine": "^2.0",
-                "tessera/tessera-tenant": "^2.0"
+                "tessera/tessera-engine": "^3.0",
+                "tessera/tessera-tenant": "^3.0"
             },
             "replace": {
                 "ahmad-chebbo/tessera-exports": "self.version"
@@ -7939,7 +7939,7 @@
                     ]
                 },
                 "branch-alias": {
-                    "dev-main": "2.x-dev"
+                    "dev-main": "3.x-dev"
                 }
             },
             "autoload": {
@@ -7962,13 +7962,13 @@
             "dist": {
                 "type": "path",
                 "url": "packages/modules/inventory",
-                "reference": "ec2ed459a44f89f2e6ae063d11f412043323bfd1"
+                "reference": "5c9fea77e2aa74df1e738ed57afcea46fa184204"
             },
             "require": {
                 "php": "^8.4",
-                "tessera/tessera-catalog": "^2.0",
-                "tessera/tessera-engine": "^2.0",
-                "tessera/tessera-tenant": "^2.0"
+                "tessera/tessera-catalog": "^3.0",
+                "tessera/tessera-engine": "^3.0",
+                "tessera/tessera-tenant": "^3.0"
             },
             "replace": {
                 "ahmad-chebbo/tessera-inventory": "self.version"
@@ -7981,7 +7981,7 @@
                     ]
                 },
                 "branch-alias": {
-                    "dev-main": "2.x-dev"
+                    "dev-main": "3.x-dev"
                 }
             },
             "autoload": {
@@ -8004,14 +8004,14 @@
             "dist": {
                 "type": "path",
                 "url": "packages/modules/reports",
-                "reference": "4a78504123f3b7e548180f2f9c5a8e8062211430"
+                "reference": "d9f1d4d479dd5771f5428b27b7a16e87c4418f5c"
             },
             "require": {
                 "php": "^8.4",
-                "tessera/tessera-catalog": "^2.0",
-                "tessera/tessera-engine": "^2.0",
-                "tessera/tessera-sales": "^2.0",
-                "tessera/tessera-tenant": "^2.0"
+                "tessera/tessera-catalog": "^3.0",
+                "tessera/tessera-engine": "^3.0",
+                "tessera/tessera-sales": "^3.0",
+                "tessera/tessera-tenant": "^3.0"
             },
             "replace": {
                 "ahmad-chebbo/tessera-reports": "self.version"
@@ -8024,7 +8024,7 @@
                     ]
                 },
                 "branch-alias": {
-                    "dev-main": "2.x-dev"
+                    "dev-main": "3.x-dev"
                 }
             },
             "autoload": {
@@ -8047,7 +8047,7 @@
             "dist": {
                 "type": "path",
                 "url": "packages/saas",
-                "reference": "44fcde8afc45334c139f91548ff3a3ced6956a57"
+                "reference": "3b16149ebebbaa1a74b77f3f09140e88b49d8b8b"
             },
             "require": {
                 "inertiajs/inertia-laravel": "*",
@@ -8055,8 +8055,8 @@
                 "php": "^8.4",
                 "spatie/laravel-medialibrary": "*",
                 "spatie/laravel-permission": "*",
-                "tessera/tessera-engine": "^2.0",
-                "tessera/tessera-tenant": "^2.0",
+                "tessera/tessera-engine": "^3.0",
+                "tessera/tessera-tenant": "^3.0",
                 "tightenco/ziggy": "*"
             },
             "replace": {
@@ -8071,7 +8071,7 @@
                     ]
                 },
                 "branch-alias": {
-                    "dev-main": "2.x-dev"
+                    "dev-main": "3.x-dev"
                 }
             },
             "autoload": {
@@ -8094,15 +8094,15 @@
             "dist": {
                 "type": "path",
                 "url": "packages/modules/sales",
-                "reference": "67eb04f2d5e0f454ac05e263383afdbc55993a59"
+                "reference": "d249e7f2ece61064d81ce9fec03a1dae4b79309a"
             },
             "require": {
                 "php": "^8.4",
-                "tessera/tessera-catalog": "^2.0",
-                "tessera/tessera-customers": "^2.0",
-                "tessera/tessera-engine": "^2.0",
-                "tessera/tessera-inventory": "^2.0",
-                "tessera/tessera-tenant": "^2.0"
+                "tessera/tessera-catalog": "^3.0",
+                "tessera/tessera-customers": "^3.0",
+                "tessera/tessera-engine": "^3.0",
+                "tessera/tessera-inventory": "^3.0",
+                "tessera/tessera-tenant": "^3.0"
             },
             "replace": {
                 "ahmad-chebbo/tessera-sales": "self.version"
@@ -8115,7 +8115,7 @@
                     ]
                 },
                 "branch-alias": {
-                    "dev-main": "2.x-dev"
+                    "dev-main": "3.x-dev"
                 }
             },
             "autoload": {
@@ -8138,12 +8138,12 @@
             "dist": {
                 "type": "path",
                 "url": "packages/modules/shifts",
-                "reference": "2a929ba31bac58d269a3ea77835d6ab41fc5417d"
+                "reference": "005172e46767a6514adca9599be23fcac404cdf6"
             },
             "require": {
                 "php": "^8.4",
-                "tessera/tessera-engine": "^2.0",
-                "tessera/tessera-tenant": "^2.0"
+                "tessera/tessera-engine": "^3.0",
+                "tessera/tessera-tenant": "^3.0"
             },
             "replace": {
                 "ahmad-chebbo/tessera-shifts": "self.version"
@@ -8156,7 +8156,7 @@
                     ]
                 },
                 "branch-alias": {
-                    "dev-main": "2.x-dev"
+                    "dev-main": "3.x-dev"
                 }
             },
             "autoload": {
@@ -8179,7 +8179,7 @@
             "dist": {
                 "type": "path",
                 "url": "packages/tenant",
-                "reference": "0b3d7ac4edf370fc11f1ad5f4dd21ed131892998"
+                "reference": "fa44e5fe0f7bd7e6eb01911c987c6960f1a029f5"
             },
             "require": {
                 "inertiajs/inertia-laravel": "*",
@@ -8187,8 +8187,8 @@
                 "php": "^8.4",
                 "spatie/laravel-medialibrary": "*",
                 "spatie/laravel-permission": "*",
-                "tessera/tessera-base": "^2.0",
-                "tessera/tessera-engine": "^2.0",
+                "tessera/tessera-base": "^3.0",
+                "tessera/tessera-engine": "^3.0",
                 "tightenco/ziggy": "*"
             },
             "type": "library",
@@ -8199,7 +8199,7 @@
                     ]
                 },
                 "branch-alias": {
-                    "dev-main": "2.x-dev"
+                    "dev-main": "3.x-dev"
                 }
             },
             "autoload": {
