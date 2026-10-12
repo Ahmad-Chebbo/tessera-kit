@@ -302,7 +302,7 @@ footer .legal { margin-top: 2rem; max-width: 46em; }
         <div class="features">
             <div class="feature"><h3>Modules that do not break each other</h3><p>A module declares what it requires and everything else goes through a contract with a safe default. <code style="font-family:var(--mono);font-size:.9em">module:check</code> fails the build when a module imports one it did not declare.</p></div>
             <div class="feature"><h3>Roles and permissions that follow the modules</h3><p>Each module declares its permissions and the roles that get them by default. Install a module, run <code style="font-family:var(--mono);font-size:.9em">modules:sync</code>, and the role page lists the new permissions.</p></div>
-            <div class="feature"><h3>One business or many</h3><p>A single business gets one tenant, made for you with a main branch. With the SaaS layer every tenant has its own users, roles, branches, stock and settings, and a platform admin creates them and assigns plans.</p></div>
+            <div class="feature"><h3>One business or many</h3><p>A single business gets one tenant, made for you with a main branch, and the roles are shared. With the SaaS layer every tenant has its own users, roles, branches, stock and settings, and a platform admin creates them and assigns plans. <code style="font-family:var(--mono);font-size:.9em">saas:install</code> turns the business you already run into the first tenant.</p></div>
             <div class="feature"><h3>Plans that switch features on and off</h3><p>A plan lists the modules a tenant may use and its limits, such as the number of users. Pages, menus and permissions of a module the plan leaves out disappear.</p></div>
             <div class="feature"><h3>Branches and stock locations</h3><p>Staff see their own branch, managers with the right permission see all of them, and every report can be narrowed to one branch.</p></div>
             <div class="feature"><h3>A till that works offline</h3><p>The point of sale queues sales while the connection is down and syncs them later without double-charging, with weighed goods, held orders, receipts and cash-drawer shifts.</p></div>
@@ -352,6 +352,7 @@ footer .legal { margin-top: 2rem; max-width: 46em; }
             <button class="tab" role="tab" id="t-saas" aria-controls="p-saas" aria-selected="true">SaaS starter</button>
             <button class="tab" role="tab" id="t-fresh" aria-controls="p-fresh" aria-selected="false">Fresh starter</button>
             <button class="tab" role="tab" id="t-existing" aria-controls="p-existing" aria-selected="false">Existing Laravel app</button>
+            <button class="tab" role="tab" id="t-grow" aria-controls="p-grow" aria-selected="false">One business, then many</button>
         </div>
 
         <div class="panel" id="p-saas" role="tabpanel" aria-labelledby="t-saas">
@@ -406,7 +407,21 @@ php artisan modules:sync</pre><button class="copy" type="button">Copy</button></
                 <li><div><h3>Add the interface kit and a module</h3>
 <div class="code"><pre>bun add github:Tessera-kit/tessera-ui
 php artisan module:add expenses</pre><button class="copy" type="button">Copy</button></div>
-<p>The starters also include the page shell (sidebar, language and theme toggles) that modules expect. Copy <code style="font-family:var(--mono)">resources/js</code> and <code style="font-family:var(--mono)">vite.modules.js</code> from a starter if you add pages to an existing app.</p></div></li>
+<p>The first module you add installs <code style="font-family:var(--mono)">tessera-tenant</code> as well, because modules keep their data per tenant. A project with one business gets one tenant, made for you.</p><p>The starters also include the page shell (sidebar, language and theme toggles) that modules expect. Copy <code style="font-family:var(--mono)">resources/js</code> and <code style="font-family:var(--mono)">vite.modules.js</code> from a starter if you add pages to an existing app.</p></div></li>
+            </ol>
+        </div>
+
+        <div class="panel" id="p-grow" role="tabpanel" aria-labelledby="t-grow" hidden>
+            <p class="prose" style="margin-bottom:1.5rem">Start as one business, with no plans and no platform admin. When one install has to serve several businesses, add the SaaS package. The business you already run becomes the first tenant and keeps working.</p>
+            <ol class="steps">
+                <li><div><h3>Add the SaaS package</h3>
+<div class="code"><pre>composer require tessera/tessera-saas
+php artisan migrate</pre><button class="copy" type="button">Copy</button></div></div></li>
+                <li><div><h3>Convert the business and create the platform admin</h3>
+<div class="code"><pre>php artisan saas:install --admin-email=you@example.com</pre><button class="copy" type="button">Copy</button></div>
+<p>The command gives the business its own copy of the roles and moves its users onto them, subscribes it to a plan with every installed module, and creates the platform admin outside every tenant. A password is made and shown once. Running it again changes nothing that is already done.</p></div></li>
+                <li><div><h3>Sign in as the platform admin</h3>
+<p style="margin-top:0">Only the Admin role can open the Tenants and Plans pages. From there you create more tenants, each with its own owner, branches and plan.</p></div></li>
             </ol>
         </div>
     </div>
@@ -434,6 +449,13 @@ php artisan module:add expenses</pre><button class="copy" type="button">Copy</bu
 php artisan module:add catalog
 php artisan module:add inventory
 php artisan module:add expenses</pre><button class="copy" type="button">Copy</button></div>
+            </article>
+            <article class="case">
+                <div><h3>Start with one business, grow into a platform</h3><p>Build the app for the first customer with no plans and no extra tables to explain. When the second customer arrives, add the SaaS package and turn the first customer into tenant number one. Nothing is rebuilt and no data moves.</p>
+                <ul><li>fresh starter</li><li>tessera-saas</li><li>saas:install</li></ul></div>
+                <div class="code"><pre>composer require tessera/tessera-saas
+php artisan migrate
+php artisan saas:install --admin-email=you@example.com</pre><button class="copy" type="button">Copy</button></div>
             </article>
             <article class="case">
                 <div><h3>Software that serves many businesses</h3><p>One install, many customers. Each tenant gets its own data, users, branches and plan, and you decide which modules and how many users each plan includes.</p>
@@ -504,6 +526,7 @@ php artisan module:package invoices</pre><button class="copy" type="button">Copy
         <dl class="good">
             <div><dt>What it needs</dt><dd>PHP 8.4, Laravel 13, Composer and bun (or npm). Any database Laravel supports; SQLite works for trying it out.</dd></div>
             <div><dt>Moving from an earlier version</dt><dd>Version 3 renamed company to tenant and split the tenant package from the SaaS one. The migrations rename the tables, columns and permissions of an existing database. The README lists the steps for your own code.</dd></div>
+            <div><dt>One business or many</dt><dd>Every module keeps a tenant on its data. Without the SaaS package that is a single tenant, made on first use, so you never see it. With it, each tenant is a separate business with its own users, roles and plan.</dd></div>
             <div><dt>You own the app</dt><dd>The starters are ordinary projects. The packages update through Composer, and the files in your project stay yours.</dd></div>
             <div><dt>Where to report problems</dt><dd>Every package is a read-only copy of a folder in the main repository. Open issues and pull requests on <a href="https://github.com/Tessera-kit/tessera-kit">tessera-kit</a>.</dd></div>
         </dl>
