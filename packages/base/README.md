@@ -7,8 +7,8 @@ It needs [`tessera-engine`](https://github.com/Tessera-kit/tessera-engine) and i
 ```bash
 composer config repositories.tessera composer https://tessera-kit.github.io/tessera-kit
 composer require tessera/tessera-base
-php artisan migrate
-php artisan modules:sync
+php artisan migrate               # also creates the permissions and default roles of the installed modules
+php artisan tessera:install       # asks for the first account, which becomes the Owner
 ```
 
 ## The two modules
@@ -18,7 +18,7 @@ Core modules are always enabled and cannot be switched off.
 | Module | What it does | Permissions it declares |
 |---|---|---|
 | **Auth** | Sign-in, registration, password reset, email verification, profile, and API tokens (Sanctum). | none |
-| **Team** | Users, roles, permissions, and `php artisan modules:sync`, which creates the permissions of every installed module and gives the template roles their defaults. Optionally employee profiles and an activity log. | view / create / edit / delete users, manage roles, view activity log |
+| **Team** | Users, roles and permissions. `php artisan modules:sync`, which also runs after every migration, creates the permissions of every installed module and gives the template roles their defaults; `php artisan tessera:install` creates the first account. Optionally employee profiles and an activity log. | view / create / edit / delete users, manage roles, view activity log |
 
 ### Team options
 

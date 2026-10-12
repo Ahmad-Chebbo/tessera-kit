@@ -10,12 +10,15 @@ cd shop
 bun install
 ```
 
-`create-project` copies `.env.example` to `.env`, generates the key and runs the migrations when the database is reachable. Set `DB_*` in `.env` and run `php artisan migrate` if it was not. Then seed the plans and build the frontend:
+`create-project` copies `.env.example` to `.env`, generates the key and runs the migrations when the database is reachable. Set `DB_*` in `.env` and run `php artisan migrate` if it was not. Then seed the plans, create the platform admin and build the frontend:
 
 ```bash
-php artisan db:seed
-bun run build      # or: bun run dev
+php artisan db:seed             # the plans and a demo tenant
+php artisan tessera:install     # asks for the platform admin's name, email and password
+bun run build                   # or: bun run dev
 ```
+
+For a local demo, the seeder also creates `admin@app.com` / `password`; never use it in production.
 
 Requirements: PHP 8.4, Composer, [bun](https://bun.sh), a database supported by Laravel.
 

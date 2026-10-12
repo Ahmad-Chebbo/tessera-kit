@@ -370,8 +370,9 @@ bun install</pre><button class="copy" type="button">Copy</button></div></div></l
                 <li><div><h3>Set up the database and seed it</h3>
 <div class="code"><pre><span class="tok-c"># set DB_* in .env if migrations did not run, then</span>
 php artisan migrate
-php artisan db:seed</pre><button class="copy" type="button">Copy</button></div>
-<p>Sign in with <b>admin@app.com</b> and <b>password</b>, and change the password.</p></div></li>
+php artisan db:seed
+php artisan tessera:install</pre><button class="copy" type="button">Copy</button></div>
+<p>The last command asks for the name, email and password of the platform admin. The seeder alone creates <b>admin@app.com</b> with the password <b>password</b>, which is only for a local demo.</p></div></li>
                 <li><div><h3>Add modules and build the frontend</h3>
 <div class="code"><pre>php artisan module:add sales
 php artisan module:add expenses
@@ -387,11 +388,11 @@ bun run build   <span class="tok-c"># or: bun run dev</span></pre><button class=
   --repository-url=https://tessera-kit.github.io/tessera-kit
 cd app
 bun install</pre><button class="copy" type="button">Copy</button></div></div></li>
-                <li><div><h3>Seed the roles and the first account</h3>
+                <li><div><h3>Create the first account</h3>
 <div class="code"><pre>php artisan migrate
-php artisan db:seed
+php artisan tessera:install
 bun run build</pre><button class="copy" type="button">Copy</button></div>
-<p>Sign in with <b>admin@app.com</b> and <b>password</b>. The account is an Owner and holds every permission, so it can manage users and roles straight away.</p></div></li>
+<p>Migrating creates the permissions and default roles. <code style="font-family:var(--mono)">tessera:install</code> asks for a name, an email and a password and makes an Owner who holds every permission, so they can manage users and roles straight away. <code style="font-family:var(--mono)">db:seed</code> makes a demo account, <b>admin@app.com</b> with the password <b>password</b>, for local use only.</p></div></li>
                 <li><div><h3>Turn on more when you want it</h3>
 <p style="margin-top:0">Employee profiles and the activity log are built in but off. Set <code style="font-family:var(--mono)">TEAM_EMPLOYEE_PROFILES=true</code> and <code style="font-family:var(--mono)">TEAM_ACTIVITY_LOG=true</code>, or publish <code style="font-family:var(--mono)">config/team.php</code>.</p></div></li>
             </ol>

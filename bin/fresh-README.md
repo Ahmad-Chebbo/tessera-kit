@@ -12,14 +12,14 @@ cd app
 bun install
 ```
 
-`create-project` copies `.env.example` to `.env`, generates the key and runs the migrations when the database is reachable. Set `DB_*` in `.env` and run `php artisan migrate` if it was not. Then seed the roles and the first account and build the frontend:
+`create-project` copies `.env.example` to `.env`, generates the key and runs the migrations when the database is reachable. Set `DB_*` in `.env` and run `php artisan migrate` if it was not. Every migration run also creates the permissions and default roles the installed modules declare. Create the first account and build the frontend:
 
 ```bash
-php artisan db:seed
-bun run build      # or: bun run dev
+php artisan tessera:install     # asks for a name, an email and a password
+bun run build                   # or: bun run dev
 ```
 
-Sign in with `admin@app.com` / `password`. The account has the **Owner** role, which holds every permission, so it can manage users and roles from the start. Change the password.
+The account has the **Owner** role, which holds every permission, so it can manage users and roles from the start. For a local demo, `php artisan db:seed` creates `admin@app.com` / `password` instead; never use it in production.
 
 ## What you get
 

@@ -3,7 +3,11 @@
 namespace App\Modules\Team;
 
 use App\Modules\Team\Console\ModulesSyncCommand;
+use App\Modules\Team\Console\TesseraInstallCommand;
+use App\Modules\Team\Services\PermissionSynchronizer;
 use App\Modules\Team\Services\TeamFeatures;
+use Illuminate\Database\Events\MigrationsEnded;
+use Illuminate\Support\Facades\Event;
 use Tessera\Engine\MenuItem;
 use Tessera\Engine\ModuleManifest;
 use Tessera\Engine\ModuleServiceProvider;
@@ -63,7 +67,22 @@ class TeamServiceProvider extends ModuleServiceProvider
         parent::boot();
 
         if ($this->app->runningInConsole()) {
-            $this->commands([ModulesSyncCommand::class]);
+            $this->commands([ModulesSyncCommand::class, TesseraInstallCommand::class]);
         }
+
+        Event::listen(MigrationsEnded::class, $this->syncAfterMigrating(...));
+    }
+
+    /**
+     * Keeps the permissions and default roles in step with the installed modules, so a new module's permissions exist as
+     * soon as its migrations have run. It is skipped while testing, where the tests set up what they need.
+     */
+    private function syncAfterMigrating(MigrationsEnded $event): void
+    {
+        if ($event->method !== 'up' || $this->app->runningUnitTests()) {
+            return;
+        }
+
+        $this->app->make(PermissionSynchronizer::class)->sync();
     }
 }
