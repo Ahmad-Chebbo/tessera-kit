@@ -1,59 +1,69 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Tessera
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A modular kit for Laravel business applications. Install a small core, then add the features you need as modules, the way you add plugins to WordPress, but as normal Composer packages.
 
-## About Laravel
+```bash
+composer create-project ahmad-chebbo/tessera-starter shop --repository='{"type":"composer","url":"https://ahmad-chebbo.github.io/tessera-kit"}'
+cd shop && bun install
+php artisan module:add sales
+bun run build
+```
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Start from the [starter](https://github.com/Ahmad-Chebbo/tessera-starter) to build an app. This repository is where Tessera itself is developed.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## The pieces
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+| Package | Repository | Installed with | What it is |
+|---|---|---|---|
+| Engine | [tessera-engine](https://github.com/Ahmad-Chebbo/tessera-engine) | Composer | Finds, orders and boots modules; `module:*` commands. Works in any Laravel app. |
+| Core | [tessera-core](https://github.com/Ahmad-Chebbo/tessera-core) | Composer | Auth, Company, Subscription and Team, plus the shared contracts. |
+| UI | [tessera-ui](https://github.com/Ahmad-Chebbo/tessera-ui) | bun / npm | Vue 3 components, composables and the theme. Standalone. |
+| Modules | `tessera-<key>` | Composer | Attendance, Catalog, Customers, Discounts, Expenses, Exports, Inventory, Reports, Sales, Shifts. |
+| Starter | [tessera-starter](https://github.com/Ahmad-Chebbo/tessera-starter) | `composer create-project` | A Laravel app with the engine, core, UI and application shell. |
 
-## Learning Laravel
+Every package has a README. They are read-only copies of folders here.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+## How the monorepo is laid out
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+```
+packages/engine           Tessera\Engine         the module engine
+packages/core             Tessera\Core           contracts + modules/{Auth,Company,Subscription,Team}
+packages/ui               @ahmad-chebbo/tessera-ui   the interface kit (npm)
+packages/modules/<key>    App\Modules\<Name>    one folder per feature module
+app, resources, routes    the host application (it becomes the starter)
+bin/build-starter.php     builds the starter project from the host application
+tests/                    core and product tests
+```
 
-## Laravel Sponsors
+The host application installs everything from `packages/` through Composer path repositories, exactly as a customer project installs it from the published repository, so what you run here is what users get.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## Work on it
 
-### Premium Partners
+```bash
+composer install
+cp .env.example .env && php artisan key:generate
+bun install
+php artisan migrate --seed
+bun run dev            # or: bun run build
+php artisan test       # all packages' tests
+bun run test           # frontend tests
+php artisan module:check --strict
+```
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+Rules that keep modules reusable (checked by `module:check`): a module imports another module only when its manifest requires it; contracts replace direct dependencies on optional modules; class names stay under `App\Modules\<Name>\` because the database stores them.
 
-## Contributing
+## Release
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Tag the monorepo (`git tag v1.2.0 && git push --tags`). The **Split** workflow copies each package to its repository with the same tag and publishes the starter; the **Repository** workflow then rebuilds the Composer repository at `https://ahmad-chebbo.github.io/tessera-kit` that lists every package. The **Tests** workflow runs on every push. The workflows need a repository secret `SPLIT_TOKEN` (a token that may push to the package repositories).
 
-## Code of Conduct
+## Add a module
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+```bash
+php artisan module:make Invoices --requires=sales    # in a project made from the starter
+```
 
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+To add it to the monorepo as a package, create `packages/modules/invoices` with a `composer.json` like its neighbours, require it in the root `composer.json`, add its repository to the matrix of `.github/workflows/split.yml` and to `.github/satis.json`.
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+All rights reserved until a license is added.

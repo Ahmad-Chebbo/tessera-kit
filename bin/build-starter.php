@@ -145,4 +145,6 @@ file_put_contents($target.'/vitest.config.js', $vitest);
 $viteConfig = $target.'/.gitignore';
 file_put_contents($viteConfig, rtrim((string) file_get_contents($viteConfig))."\n/bootstrap/cache/*.php\n");
 
+copy(__DIR__.'/starter-README.md', $target.'/README.md');
+
 echo "Built the starter in {$target}\n";

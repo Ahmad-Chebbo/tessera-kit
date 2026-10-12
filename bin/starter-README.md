@@ -1,0 +1,80 @@
+# Tessera Starter
+
+A Laravel 13 application ready for [Tessera](https://github.com/Ahmad-Chebbo/tessera-kit) modules. It contains the module engine, the SaaS core (sign-in, companies and branches, subscriptions, users and roles), the interface kit and the application shell (sidebar layout, language and theme toggles). Business features arrive as modules.
+
+## Create a project
+
+```bash
+composer create-project ahmad-chebbo/tessera-starter shop --repository='{"type":"composer","url":"https://ahmad-chebbo.github.io/tessera-kit"}'
+cd shop
+bun install
+```
+
+`create-project` copies `.env.example` to `.env`, generates the key and runs the migrations when the database is reachable. Set `DB_*` in `.env` and run `php artisan migrate` if it was not. Then seed the plans and build the frontend:
+
+```bash
+php artisan db:seed
+bun run build      # or: bun run dev
+```
+
+Requirements: PHP 8.4, Composer, [bun](https://bun.sh), a database supported by Laravel.
+
+## Add modules
+
+```bash
+php artisan module:add sales       # also installs catalog, customers and inventory
+php artisan module:add expenses
+php artisan module:add reports
+bun run build
+```
+
+| Module | What it adds |
+|---|---|
+| [`sales`](https://github.com/Ahmad-Chebbo/tessera-sales) | point of sale, orders, cash-drawer shifts |
+| [`catalog`](https://github.com/Ahmad-Chebbo/tessera-catalog) | products and categories |
+| [`inventory`](https://github.com/Ahmad-Chebbo/tessera-inventory) | stock, transfers, suppliers, purchases |
+| [`customers`](https://github.com/Ahmad-Chebbo/tessera-customers) | customers and groups |
+| [`discounts`](https://github.com/Ahmad-Chebbo/tessera-discounts) | discount rules and promotions |
+| [`expenses`](https://github.com/Ahmad-Chebbo/tessera-expenses) | expenses, recurring expenses |
+| [`reports`](https://github.com/Ahmad-Chebbo/tessera-reports) | dashboard, sales, items and profit reports |
+| [`exports`](https://github.com/Ahmad-Chebbo/tessera-exports) | Excel and PDF export of reports |
+| [`shifts`](https://github.com/Ahmad-Chebbo/tessera-shifts) | shift templates and rosters |
+| [`attendance`](https://github.com/Ahmad-Chebbo/tessera-attendance) | check-in and check-out, absences |
+
+Each command requires the package, migrates, and gives the roles of every company the new permissions. `php artisan module:list` shows what is installed.
+
+## Write your own module
+
+```bash
+php artisan module:make Invoices --requires=sales
+php artisan module:check
+```
+
+The module appears in `app/Modules/Invoices` with a provider, route, page, translations and a passing test. When it is ready for other projects, `php artisan module:package invoices` turns it into a Composer package.
+
+## Layout
+
+- `app/Modules` — your own modules.
+- `resources/js` — the application shell: layouts, `app.js`, the page resolver and the translation merge. Modules import the layout as `@/Layouts/SidebarLayout.vue`, so keep it.
+- `vite.modules.js` — lets `@modules/<Name>/…` imports reach modules installed in `vendor`.
+- `config/tessera.php` / `config/modules.php` — optional; the engine provides the defaults.
+
+## Useful settings
+
+- `MODULES_ENABLED` — `*` (default), a comma separated list of module keys, or `none`.
+- `MODULES_LAYERS` — `web,api` (default), `web`, or `api` for a headless project.
+
+## Tests
+
+```bash
+php artisan test
+bun run test
+```
+
+## Part of Tessera
+
+This repository is a read-only copy of a folder in the [tessera-kit](https://github.com/Ahmad-Chebbo/tessera-kit) monorepo. Open issues and pull requests there, not here.
+
+## License
+
+All rights reserved until a license is added to the monorepo.
