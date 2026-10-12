@@ -5,7 +5,7 @@ The module engine of [Tessera](https://github.com/Ahmad-Chebbo/tessera-kit). It 
 ## Install
 
 ```bash
-composer config repositories.tessera --json '{"type":"composer","url":"https://ahmad-chebbo.github.io/tessera-kit"}'
+composer config repositories.tessera composer https://ahmad-chebbo.github.io/tessera-kit
 composer require ahmad-chebbo/tessera-engine
 ```
 

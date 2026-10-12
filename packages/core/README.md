@@ -5,7 +5,7 @@ The SaaS core of [Tessera](https://github.com/Ahmad-Chebbo/tessera-kit): sign-in
 It needs [`tessera-engine`](https://github.com/Ahmad-Chebbo/tessera-engine) and installs with the [starter](https://github.com/Ahmad-Chebbo/tessera-starter). To add it to an existing project:
 
 ```bash
-composer config repositories.tessera --json '{"type":"composer","url":"https://ahmad-chebbo.github.io/tessera-kit"}'
+composer config repositories.tessera composer https://ahmad-chebbo.github.io/tessera-kit
 composer require ahmad-chebbo/tessera-core
 php artisan migrate
 php artisan modules:sync

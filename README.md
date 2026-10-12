@@ -3,7 +3,7 @@
 A modular kit for Laravel business applications. Install a small core, then add the features you need as modules, the way you add plugins to WordPress, but as normal Composer packages.
 
 ```bash
-composer create-project ahmad-chebbo/tessera-starter shop --repository='{"type":"composer","url":"https://ahmad-chebbo.github.io/tessera-kit"}'
+composer create-project ahmad-chebbo/tessera-starter shop --repository-url=https://ahmad-chebbo.github.io/tessera-kit
 cd shop && bun install
 php artisan module:add sales
 bun run build

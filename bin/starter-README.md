@@ -5,7 +5,7 @@ A Laravel 13 application ready for [Tessera](https://github.com/Ahmad-Chebbo/tes
 ## Create a project
 
 ```bash
-composer create-project ahmad-chebbo/tessera-starter shop --repository='{"type":"composer","url":"https://ahmad-chebbo.github.io/tessera-kit"}'
+composer create-project ahmad-chebbo/tessera-starter shop --repository-url=https://ahmad-chebbo.github.io/tessera-kit
 cd shop
 bun install
 ```
