@@ -1,12 +1,15 @@
 name: Repository
 
-# Publishes the Composer repository at https://tessera-kit.github.io/tessera-kit that lists every package, so a project
+# Publishes the product page and the Composer repository at https://tessera-kit.github.io/tessera-kit that lists every package, so a project
 # adds one repository and then `composer require`s any module. Runs after each split.
 
 on:
   workflow_run:
     workflows: [Split]
     types: [completed]
+  push:
+    branches: [main]
+    paths: ['docs/site/**']
   workflow_dispatch:
 
 permissions:
@@ -20,7 +23,7 @@ concurrency:
 
 jobs:
   build:
-    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     environment:
       name: github-pages
@@ -39,6 +42,9 @@ jobs:
         env:
           COMPOSER_AUTH: '{"github-oauth": {"github.com": "${{ secrets.SPLIT_TOKEN }}"}}'
         run: php "$RUNNER_TEMP/satis/bin/satis" build .github/satis.json public --no-interaction
+
+      - name: Add the product page
+        run: cp -r docs/site/. public/
 
       - uses: actions/upload-pages-artifact@v3
         with:
