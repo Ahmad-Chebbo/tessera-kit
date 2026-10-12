@@ -2,12 +2,15 @@
 
 namespace App\Modules\Subscription;
 
+use App\Modules\Subscription\Database\Factories\GivesTenantsAPlan;
 use App\Modules\Subscription\Database\Seeders\PlanSeeder;
-use App\Modules\Subscription\Http\Middleware\EnsureModuleEnabled;
 use App\Modules\Subscription\Http\Middleware\EnsureSubscriptionIsUsable;
+use App\Modules\Subscription\Models\Subscription;
 use App\Modules\Subscription\Services\Entitlements;
 use App\Modules\Subscription\Services\EntitlementsPlanLimits;
 use App\Modules\Team\Models\User;
+use App\Modules\Tenant\Database\Factories\TenantFactory;
+use App\Modules\Tenant\Models\Tenant;
 use Illuminate\Contracts\Auth\Middleware\AuthenticatesRequests;
 use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Http\Request;
@@ -17,7 +20,7 @@ use Tessera\Engine\ModuleManifest;
 use Tessera\Engine\ModuleServiceProvider;
 
 /**
- * Plans and subscriptions. A core module that works with Tenant and Team.
+ * Plans, subscriptions and limits, and the platform admin's screens for creating and managing tenants.
  */
 class SubscriptionServiceProvider extends ModuleServiceProvider
 {
@@ -34,8 +37,21 @@ class SubscriptionServiceProvider extends ModuleServiceProvider
     public function menu(): array
     {
         return [
+            new MenuItem('admin', 'nav.tenants', 'admin.tenants.index', 'tenant', 'manage tenants', ['admin.tenants.*'], 10),
             new MenuItem('admin', 'plans.nav', 'admin.plans.index', 'plans', 'manage tenants', ['admin.plans.*'], 20),
             new MenuItem('settings', 'plans.subscriptionNav', 'subscription.show', 'subscription', 'manage settings', ['subscription.*'], 10),
+        ];
+    }
+
+    public function extraPermissions(): array
+    {
+        return ['manage tenants'];
+    }
+
+    public function defaultRolePermissions(): array
+    {
+        return [
+            'Admin' => ['manage tenants'],
         ];
     }
 
@@ -57,8 +73,12 @@ class SubscriptionServiceProvider extends ModuleServiceProvider
     {
         parent::boot();
 
+        TenantFactory::$hooks[] = fn (Tenant $tenant) => GivesTenantsAPlan::for($tenant);
+
+        Tenant::resolveRelationUsing('subscriptions', fn (Tenant $tenant) => $tenant->hasMany(Subscription::class, 'tenant_id'));
+        Tenant::resolveRelationUsing('subscription', fn (Tenant $tenant) => $tenant->hasOne(Subscription::class, 'tenant_id')->latestOfMany());
+
         $router = $this->app->make('router');
-        $router->aliasMiddleware('module', EnsureModuleEnabled::class);
         $router->aliasMiddleware('subscription.usable', EnsureSubscriptionIsUsable::class);
 
         $kernel = $this->app->make(Kernel::class);

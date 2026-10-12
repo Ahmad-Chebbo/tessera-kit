@@ -17,7 +17,8 @@ use Tessera\Engine\ModuleServiceProvider;
 use Tessera\Engine\PlanFeature;
 
 /**
- * Tenants, branches, locations, exchange rates and settings. A core module that works with Team and Subscription.
+ * The tenant, its branches, stock locations, exchange rates and settings. A project with one business has one tenant,
+ * made on first use; the Subscription module adds many tenants and plans on top.
  */
 class TenantServiceProvider extends ModuleServiceProvider
 {
@@ -75,15 +76,9 @@ class TenantServiceProvider extends ModuleServiceProvider
         ];
     }
 
-    public function extraPermissions(): array
-    {
-        return ['manage tenants'];
-    }
-
     public function defaultRolePermissions(): array
     {
         return [
-            'Admin' => ['manage tenants'],
             'Owner' => ['manage branches', 'manage locations', 'manage settings', 'view all branches'],
             'Manager' => ['manage branches', 'manage locations', 'view all branches'],
         ];
@@ -104,7 +99,6 @@ class TenantServiceProvider extends ModuleServiceProvider
     public function menu(): array
     {
         return [
-            new MenuItem('admin', 'nav.tenants', 'admin.tenants.index', 'tenant', 'manage tenants', ['admin.tenants.*'], 10),
             new MenuItem('settings', 'settings.title', 'settings.index', 'cog', 'manage settings', ['settings.*'], 20),
             new MenuItem('settings', 'settings.exchangeRates', 'exchange-rates.index', 'currency', 'manage settings', ['exchange-rates.*'], 30),
             new MenuItem('settings', 'nav.branches', 'branches.index', 'branch', 'manage branches', ['branches.*'], 40),

@@ -20,15 +20,18 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Modules that come from the SaaS package
+    | Modules that come from the tenant and SaaS packages
     |--------------------------------------------------------------------------
     |
-    | `module:package` requires the base package for every module, and the SaaS package too when the module requires one
-    | of these (tenants, branches, plans).
+    | `module:package` requires the base package for every module, the tenant package too when the module requires one of
+    | the first list (the tenant, branches, stock locations), and the SaaS package when it requires one of the second
+    | (plans, subscriptions).
     |
     */
 
-    'saas_modules' => ['tenant', 'subscription'],
+    'tenant_modules' => ['tenant'],
+
+    'saas_modules' => ['subscription'],
 
     /*
     |--------------------------------------------------------------------------

@@ -30,7 +30,7 @@ class SalesServiceProvider extends ModuleServiceProvider
         return new ModuleManifest(
             key: 'sales',
             name: 'Sales',
-            requires: ['catalog', 'tenant', 'customers', 'inventory', 'subscription', 'team'],
+            requires: ['catalog', 'tenant', 'customers', 'inventory', 'team'],
         );
     }
 

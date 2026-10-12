@@ -21,6 +21,7 @@ jobs:
         include:
           - { path: packages/engine, repo: tessera-engine }
           - { path: packages/base, repo: tessera-base }
+          - { path: packages/tenant, repo: tessera-tenant }
           - { path: packages/saas, repo: tessera-saas }
           - { path: packages/ui, repo: tessera-ui }
           - { path: packages/modules/attendance, repo: tessera-attendance }

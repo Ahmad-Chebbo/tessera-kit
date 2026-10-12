@@ -29,7 +29,7 @@ function moduleFolders(): array
 
     $folders = [];
     $patterns = [
-        'app/Modules/*', 'packages/modules/*', 'packages/base/modules/*', 'packages/saas/modules/*',
+        'app/Modules/*', 'packages/modules/*', 'packages/base/modules/*', 'packages/tenant/modules/*', 'packages/saas/modules/*',
         'vendor/tessera/*', 'vendor/tessera/*/modules/*',
     ];
 

@@ -3,7 +3,6 @@
 namespace App\Modules\Tenant\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
-use App\Modules\Subscription\Services\Entitlements;
 use App\Modules\Tenant\Enums\LocationType;
 use App\Modules\Tenant\Http\Requests\StoreBranchRequest;
 use App\Modules\Tenant\Models\Branch;
@@ -13,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Inertia\Response;
+use Tessera\Core\Contracts\PlanLimits;
 
 class BranchController extends Controller
 {
@@ -51,7 +51,7 @@ class BranchController extends Controller
         if (! $user->can('manage branches')) {
             abort(403);
         }
-        if (! app(Entitlements::class)->hasRoomFor($user->tenant_id, 'branches')) {
+        if (! app(PlanLimits::class)->hasRoomFor($user->tenant_id, 'branches')) {
             return back()->with('error', 'Your plan has reached its branch limit.');
         }
 

@@ -83,8 +83,8 @@ describe('module:package', function () {
         $sales = json_decode(file_get_contents(base_path('packages-test/sales/composer.json')), true);
 
         expect($sales['require'])->toHaveKeys(['tessera/tessera-catalog', 'tessera/tessera-inventory', 'tessera/tessera-customers'])->not->toHaveKey('tessera/tessera-team')
-            ->and($sales['require'])->toHaveKey('tessera/tessera-saas')
-            ->and($composer['require'])->not->toHaveKey('tessera/tessera-saas');
+            ->and($sales['require'])->toHaveKey('tessera/tessera-tenant')->not->toHaveKey('tessera/tessera-saas')
+            ->and($composer['require'])->not->toHaveKey('tessera/tessera-tenant');
     })->skip(fn () => ! moduleInstalled('exports') || ! moduleInstalled('sales'), 'Needs Exports and Sales');
 
     it('refuses core modules, unknown keys and existing folders', function () {

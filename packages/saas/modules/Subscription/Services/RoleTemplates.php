@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Tenant\Services;
+namespace App\Modules\Subscription\Services;
 
 use App\Modules\Team\Models\Role;
 use App\Modules\Tenant\Models\Tenant;

@@ -12,8 +12,6 @@ use App\Modules\Inventory\Services\StockService;
 use App\Modules\Sales\Enums\OrderStatus;
 use App\Modules\Sales\Models\Order;
 use App\Modules\Sales\Services\PosShiftService;
-use App\Modules\Subscription\Enums\Module;
-use App\Modules\Subscription\Services\Entitlements;
 use App\Modules\Team\Enums\ActivityEvent;
 use App\Modules\Team\Models\User;
 use App\Modules\Team\Services\ActivityLogger;
@@ -23,6 +21,7 @@ use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\DB;
 use InvalidArgumentException;
 use Tessera\Core\Contracts\CartPricing;
+use Tessera\Core\Contracts\PlanLimits;
 use Tessera\Core\Pricing\CartLine;
 use Tessera\Core\Pricing\DiscountResult;
 use Tessera\Core\Pricing\PricingContext;
@@ -205,7 +204,7 @@ class CheckoutAction
 
             $posShift = $this->posShifts->current($cashier);
 
-            if ($posShift === null && $requireShift && $branch->tenant->require_pos_shift && app(Entitlements::class)->hasModule($branch->tenant_id, Module::Shifts)) {
+            if ($posShift === null && $requireShift && $branch->tenant->require_pos_shift && app(PlanLimits::class)->hasModule($branch->tenant_id, 'shifts')) {
                 throw new InvalidArgumentException('Open a shift before selling.');
             }
 

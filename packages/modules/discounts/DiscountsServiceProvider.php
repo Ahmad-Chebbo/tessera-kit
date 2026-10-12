@@ -21,7 +21,7 @@ class DiscountsServiceProvider extends ModuleServiceProvider
         return new ModuleManifest(
             key: 'discounts',
             name: 'Discounts',
-            requires: ['catalog', 'tenant', 'customers', 'sales', 'subscription', 'team'],
+            requires: ['catalog', 'tenant', 'customers', 'sales', 'team'],
         );
     }
 

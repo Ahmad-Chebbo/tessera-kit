@@ -13,7 +13,7 @@ export default defineConfig({
         include: [
             'resources/js/**/*.test.js',
             'packages/ui/src/**/*.test.js',
-            '{app/Modules,packages/modules,packages/base/modules,packages/saas/modules}/*/{Tests/js,Resources/js}/**/*.test.js',
+            '{app/Modules,packages/modules,packages/base/modules,packages/tenant/modules,packages/saas/modules}/*/{Tests/js,Resources/js}/**/*.test.js',
         ],
         globals: false,
     },

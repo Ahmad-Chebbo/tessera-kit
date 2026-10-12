@@ -97,7 +97,7 @@ foreach (glob($root.'/packages/modules/*/composer.json') as $file) {
     }
 }
 
-$kept = $fresh ? ['engine', 'base'] : ['engine', 'base', 'saas'];
+$kept = $fresh ? ['engine', 'base'] : ['engine', 'base', 'tenant', 'saas'];
 $keptPackages = array_map(fn (string $name): string => "{$composerVendor}/tessera-{$name}", $kept);
 $corePackages = [];
 

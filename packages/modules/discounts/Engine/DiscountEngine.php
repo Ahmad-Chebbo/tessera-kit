@@ -6,8 +6,7 @@ use App\Modules\Catalog\Models\Product;
 use App\Modules\Discounts\Models\DiscountApplication;
 use App\Modules\Discounts\Models\DiscountRule;
 use App\Modules\Sales\Enums\OrderStatus;
-use App\Modules\Subscription\Enums\Module;
-use App\Modules\Subscription\Services\Entitlements;
+use Tessera\Core\Contracts\PlanLimits;
 use Tessera\Core\Pricing\CartLine;
 use Tessera\Core\Pricing\DiscountResult;
 
@@ -22,14 +21,14 @@ class DiscountEngine
         private readonly ConditionEvaluator $conditions,
         private readonly ActionCalculator $actions,
         private readonly RuleExpression $expressions,
-        private readonly Entitlements $entitlements,
+        private readonly PlanLimits $limits,
     ) {}
 
     public function evaluate(EvaluationContext $context): DiscountResult
     {
         $couponStatus = $context->couponCode !== null && $context->couponCode !== '' ? DiscountResult::COUPON_UNKNOWN : DiscountResult::COUPON_NONE;
 
-        if (! $this->entitlements->hasModule($context->tenantId, Module::Discounts)) {
+        if (! $this->limits->hasModule($context->tenantId, 'discounts')) {
             return new DiscountResult($context->lines, $couponStatus);
         }
 

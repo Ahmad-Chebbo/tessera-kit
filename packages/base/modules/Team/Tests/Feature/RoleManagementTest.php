@@ -1,11 +1,11 @@
 <?php
 
+use App\Modules\Subscription\Services\RoleTemplates;
 use App\Modules\Team\Models\ActivityLog;
 use App\Modules\Team\Models\Role;
 use App\Modules\Team\Models\User;
 use App\Modules\Tenant\Models\Branch;
 use App\Modules\Tenant\Models\Tenant;
-use App\Modules\Tenant\Services\RoleTemplates;
 use Inertia\Testing\AssertableInertia as Assert;
 use Spatie\Permission\Models\Permission;
 

@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Modules\Tenant\Actions;
+namespace App\Modules\Subscription\Actions;
 
 use App\Modules\Subscription\Models\Plan;
+use App\Modules\Subscription\Services\RoleTemplates;
 use App\Modules\Subscription\Services\SubscriptionService;
 use App\Modules\Team\Models\User;
 use App\Modules\Tenant\Enums\LocationType;
 use App\Modules\Tenant\Models\Branch;
 use App\Modules\Tenant\Models\Location;
 use App\Modules\Tenant\Models\Tenant;
-use App\Modules\Tenant\Services\RoleTemplates;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 

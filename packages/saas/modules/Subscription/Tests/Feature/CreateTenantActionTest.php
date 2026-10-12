@@ -1,8 +1,8 @@
 <?php
 
+use App\Modules\Subscription\Actions\CreateTenantAction;
 use App\Modules\Subscription\Models\Plan;
 use App\Modules\Team\Models\User;
-use App\Modules\Tenant\Actions\CreateTenantAction;
 use App\Modules\Tenant\Models\Location;
 
 it('creates a tenant with its main branch, location, owner and subscription', function () {

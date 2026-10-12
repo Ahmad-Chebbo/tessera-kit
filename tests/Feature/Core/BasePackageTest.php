@@ -4,26 +4,30 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Process;
 
 /**
- * The base package (Auth and Team) has to work without the core (Tenant and Subscription), because the fresh starter
- * installs only the base. Its tests may use the core; nothing else may.
+ * Each package works without the ones above it: the fresh starter installs only the base, and a project for a single
+ * business installs the base and the tenant package without Subscription. Their tests may use the layers above; nothing
+ * else may.
  */
-it('keeps the base package free of the Tenant and Subscription modules', function () {
+it('keeps each package free of the layers above it', function (string $package, string $above) {
     $offenders = [];
 
-    foreach (File::allFiles(base_path('packages/base')) as $file) {
+    foreach (File::allFiles(base_path("packages/{$package}")) as $file) {
         $path = str_replace('\\', '/', $file->getPathname());
 
         if (! in_array($file->getExtension(), ['php', 'vue', 'js'], true) || str_contains($path, '/Tests/')) {
             continue;
         }
 
-        if (preg_match('#App\\\\Modules\\\\(Tenant|Subscription)\\\\|@modules/(Tenant|Subscription)/#', $file->getContents())) {
+        if (preg_match("#App\\\\Modules\\\\({$above})\\\\|@modules/({$above})/#", $file->getContents())) {
             $offenders[] = substr($path, strlen(str_replace('\\', '/', base_path())) + 1);
         }
     }
 
     expect($offenders)->toBe([]);
-});
+})->with([
+    'base' => ['base', 'Tenant|Subscription'],
+    'tenant' => ['tenant', 'Subscription'],
+]);
 
 it('builds a fresh starter that requires the engine and the base only', function () {
     $target = sys_get_temp_dir().'/tessera-fresh-'.uniqid();
@@ -37,7 +41,7 @@ it('builds a fresh starter that requires the engine and the base only', function
 
         expect($composer['name'])->toBe('tessera/tessera-fresh')
             ->and($required)->toContain('tessera/tessera-engine', 'tessera/tessera-base')
-            ->and($required)->not->toContain('tessera/tessera-saas')
+            ->and($required)->not->toContain('tessera/tessera-tenant', 'tessera/tessera-saas')
             ->and(collect($required)->filter(fn (string $name): bool => str_starts_with($name, 'tessera/tessera-'))->count())->toBe(2)
             ->and($composer['autoload'])->not->toHaveKey('files')
             ->and(file_exists($target.'/app/Helpers/currency.php'))->toBeFalse()
@@ -57,7 +61,7 @@ it('builds the SaaS starter with the core on top of the base', function () {
         $composer = json_decode(file_get_contents($target.'/composer.json'), true);
 
         expect($composer['name'])->toBe('tessera/tessera-starter')
-            ->and(array_keys($composer['require']))->toContain('tessera/tessera-engine', 'tessera/tessera-base', 'tessera/tessera-saas')
+            ->and(array_keys($composer['require']))->toContain('tessera/tessera-engine', 'tessera/tessera-base', 'tessera/tessera-tenant', 'tessera/tessera-saas')
             ->and(file_exists($target.'/app/Helpers/currency.php'))->toBeTrue();
     } finally {
         File::deleteDirectory($target);

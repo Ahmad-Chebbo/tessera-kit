@@ -2,10 +2,6 @@
 
 namespace App\Modules\Tenant\Database\Factories;
 
-use App\Modules\Subscription\Enums\Module;
-use App\Modules\Subscription\Enums\SubscriptionStatus;
-use App\Modules\Subscription\Models\Plan;
-use App\Modules\Subscription\Models\Subscription;
 use App\Modules\Tenant\Models\Tenant;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -16,20 +12,19 @@ class TenantFactory extends Factory
 {
     protected $model = Tenant::class;
 
+    /**
+     * What other modules do with each tenant the factory makes, for example the Subscription module gives it a plan.
+     *
+     * @var list<\Closure(Tenant): void>
+     */
+    public static array $hooks = [];
+
     public function configure(): static
     {
         return $this->afterCreating(function (Tenant $tenant): void {
-            $plan = Plan::query()->firstOrCreate(
-                ['slug' => 'factory-all-modules'],
-                ['name' => 'All modules', 'modules' => Module::values(), 'billing_interval' => Plan::LIFETIME, 'price' => 0],
-            );
-
-            Subscription::create([
-                'tenant_id' => $tenant->id,
-                'plan_id' => $plan->id,
-                'status' => SubscriptionStatus::Active,
-                'starts_at' => now()->subDay(),
-            ]);
+            foreach (self::$hooks as $callback) {
+                $callback($tenant);
+            }
         });
     }
 

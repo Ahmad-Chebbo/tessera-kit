@@ -8,17 +8,18 @@ use Tessera\Core\Contracts\CartPricing;
 use Tessera\Core\Contracts\CustomerActivity;
 use Tessera\Core\Contracts\Defaults\NoBranches;
 use Tessera\Core\Contracts\Defaults\NoCartPricing;
-use Tessera\Core\Contracts\Defaults\NoPlanLimits;
-use Tessera\Core\Contracts\PlanLimits;
 use Tessera\Core\Contracts\Defaults\NoCustomerActivity;
 use Tessera\Core\Contracts\Defaults\NoLocationUsage;
 use Tessera\Core\Contracts\Defaults\NoNetProfit;
+use Tessera\Core\Contracts\Defaults\NoPlanLimits;
 use Tessera\Core\Contracts\Defaults\NoPurchaseLookup;
 use Tessera\Core\Contracts\Defaults\NoRevenueSource;
 use Tessera\Core\Contracts\LocationUsage;
 use Tessera\Core\Contracts\NetProfit;
+use Tessera\Core\Contracts\PlanLimits;
 use Tessera\Core\Contracts\PurchaseLookup;
 use Tessera\Core\Contracts\RevenueSource;
+use Tessera\Core\Http\Middleware\EnsureModuleEnabled;
 
 /**
  * Gives the contracts that feature modules share a default that does nothing, so a module works when the module that
@@ -47,5 +48,10 @@ class CoreServiceProvider extends ServiceProvider
         }
 
         config(['tessera.contracts' => array_values(array_unique([...config('tessera.contracts', []), ...array_keys(self::DEFAULTS)]))]);
+    }
+
+    public function boot(): void
+    {
+        $this->app->make('router')->aliasMiddleware('module', EnsureModuleEnabled::class);
     }
 }

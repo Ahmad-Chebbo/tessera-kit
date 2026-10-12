@@ -6,7 +6,7 @@
     "require": {
         "php": "^8.4",
         "tessera/tessera-engine": "^2.0",
-        "tessera/tessera-saas": "^2.0",
+        "tessera/tessera-tenant": "^2.0",
         "tessera/tessera-catalog": "^2.0",
         "tessera/tessera-customers": "^2.0",
         "tessera/tessera-sales": "^2.0"

@@ -12,6 +12,10 @@
         },
         {
             "type": "vcs",
+            "url": "https://github.com/Tessera-kit/tessera-tenant"
+        },
+        {
+            "type": "vcs",
             "url": "https://github.com/Tessera-kit/tessera-saas"
         },
         {

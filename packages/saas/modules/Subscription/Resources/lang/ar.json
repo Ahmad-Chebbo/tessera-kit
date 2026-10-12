@@ -77,5 +77,30 @@
             "discounts": "الخصومات والعروض",
             "exports": "تصدير التقارير (Excel وPDF)"
         }
+    },
+    "tenants": {
+        "title": "الشركات",
+        "addTenant": "إضافة شركة",
+        "editTenant": "تعديل شركة",
+        "createTenant": "إنشاء شركة",
+        "updateTenant": "تحديث شركة",
+        "manageTenants": "إدارة الشركات المسجلة",
+        "createNewTenant": "تسجيل شركة جديدة",
+        "tenant": "الشركة",
+        "tenantName": "اسم الشركة",
+        "tenantInfo": "معلومات الشركة",
+        "tenantDetails": "تفاصيل الشركة",
+        "currency": "العملة",
+        "taxRate": "نسبة الضريبة (%)",
+        "branches": "الفروع",
+        "users": "المستخدمين",
+        "noTenants": "لا توجد شركات",
+        "noBranches": "لا توجد فروع لهذه الشركة",
+        "noUsers": "لا يوجد مستخدمين لهذه الشركة",
+        "adminUser": "المستخدم المسؤول",
+        "adminName": "اسم المسؤول",
+        "adminEmail": "بريد المسؤول",
+        "adminPassword": "كلمة مرور المسؤول",
+        "confirmDelete": "هل أنت متأكد من حذف هذه الشركة؟"
     }
 }

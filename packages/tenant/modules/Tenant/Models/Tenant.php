@@ -2,14 +2,12 @@
 
 namespace App\Modules\Tenant\Models;
 
-use App\Modules\Subscription\Models\Subscription;
 use App\Modules\Team\Models\User;
 use App\Modules\Tenant\Database\Factories\TenantFactory;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
@@ -34,16 +32,6 @@ class Tenant extends Model implements HasMedia
     ];
 
     protected $with = ['media'];
-
-    public function subscriptions(): HasMany
-    {
-        return $this->hasMany(Subscription::class);
-    }
-
-    public function subscription(): HasOne
-    {
-        return $this->hasOne(Subscription::class)->latestOfMany();
-    }
 
     protected $appends = ['logo_url'];
 

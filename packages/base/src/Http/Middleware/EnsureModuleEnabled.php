@@ -1,26 +1,27 @@
 <?php
 
-namespace App\Modules\Subscription\Http\Middleware;
+namespace Tessera\Core\Http\Middleware;
 
-use App\Modules\Subscription\Services\Entitlements;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Tessera\Core\Contracts\PlanLimits;
 use Tessera\Engine\ModuleRegistry;
 
 /**
- * For routes that no permission guards. Permission-guarded routes are covered by the Gate in AppServiceProvider.
+ * For routes that no permission guards. Permission-guarded routes are covered by the Gate in the User model. Without the
+ * Subscription module nothing is limited, so every module is enabled.
  */
 class EnsureModuleEnabled
 {
-    public function __construct(private Entitlements $entitlements) {}
+    public function __construct(private PlanLimits $limits) {}
 
     public function handle(Request $request, Closure $next, string $module): Response
     {
         $user = $request->user();
         $label = app(ModuleRegistry::class)->features()[$module]->label ?? $module;
 
-        if ($user === null || $user->tenant_id === null || $user->isSuperAdmin() || $this->entitlements->hasModule($user->tenant_id, $module)) {
+        if ($user === null || $user->isSuperAdmin() || $this->limits->hasModule($user->tenant_id, $module)) {
             return $next($request);
         }
 

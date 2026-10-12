@@ -2,6 +2,7 @@
 
 use App\Modules\Subscription\Http\Controllers\Web\PlanController;
 use App\Modules\Subscription\Http\Controllers\Web\SubscriptionController;
+use App\Modules\Subscription\Http\Controllers\Web\TenantController;
 use App\Modules\Subscription\Http\Controllers\Web\TenantSubscriptionController;
 use Illuminate\Support\Facades\Route;
 
@@ -17,4 +18,14 @@ Route::prefix('admin')->name('admin.')->middleware('can:manage tenants')->group(
     Route::delete('/plans/{plan}', [PlanController::class, 'destroy'])->whereNumber('plan')->name('plans.destroy');
     Route::get('/tenants/{tenant}/subscription', [TenantSubscriptionController::class, 'edit'])->whereNumber('tenant')->name('tenants.subscription.edit');
     Route::put('/tenants/{tenant}/subscription', [TenantSubscriptionController::class, 'update'])->whereNumber('tenant')->name('tenants.subscription.update');
+});
+
+Route::prefix('admin')->name('admin.')->middleware('can:manage tenants')->group(function () {
+    Route::get('/tenants', [TenantController::class, 'index'])->name('tenants.index');
+    Route::get('/tenants/create', [TenantController::class, 'create'])->name('tenants.create');
+    Route::post('/tenants', [TenantController::class, 'store'])->name('tenants.store');
+    Route::get('/tenants/{tenant}', [TenantController::class, 'show'])->name('tenants.show');
+    Route::get('/tenants/{tenant}/edit', [TenantController::class, 'edit'])->name('tenants.edit');
+    Route::put('/tenants/{tenant}', [TenantController::class, 'update'])->name('tenants.update');
+    Route::delete('/tenants/{tenant}', [TenantController::class, 'destroy'])->name('tenants.destroy');
 });

@@ -51,8 +51,10 @@ class ModulePackageCommand extends Command
         $prefix = (string) $this->option('prefix');
         $requires = ['php' => '^8.4', "{$vendor}/{$prefix}engine" => '^2.0', "{$vendor}/{$prefix}base" => '^2.0'];
 
-        if (array_intersect($manifest->requires, (array) config('tessera.saas_modules', []))) {
-            $requires["{$vendor}/{$prefix}saas"] = '^2.0';
+        foreach (['tenant' => 'tenant_modules', 'saas' => 'saas_modules'] as $package => $setting) {
+            if (array_intersect($manifest->requires, (array) config("tessera.{$setting}", []))) {
+                $requires["{$vendor}/{$prefix}{$package}"] = '^2.0';
+            }
         }
 
         foreach ($manifest->packages as $package) {

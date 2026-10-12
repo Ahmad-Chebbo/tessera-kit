@@ -23,6 +23,7 @@
         "tightenco/ziggy": "^2.6",
         "tessera/tessera-engine": "@dev",
         "tessera/tessera-base": "@dev",
+        "tessera/tessera-tenant": "@dev",
         "tessera/tessera-saas": "@dev",
         "tessera/tessera-attendance": "@dev",
         "tessera/tessera-catalog": "@dev",
@@ -126,6 +127,13 @@
         {
             "type": "path",
             "url": "packages/base",
+            "options": {
+                "symlink": true
+            }
+        },
+        {
+            "type": "path",
+            "url": "packages/tenant",
             "options": {
                 "symlink": true
             }

@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Modules\Tenant\Http\Controllers\Web;
+namespace App\Modules\Subscription\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
+use App\Modules\Subscription\Actions\CreateTenantAction;
 use App\Modules\Subscription\Models\Plan;
-use App\Modules\Tenant\Actions\CreateTenantAction;
 use App\Modules\Tenant\Models\Tenant;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
