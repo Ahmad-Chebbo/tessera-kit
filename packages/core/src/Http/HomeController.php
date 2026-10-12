@@ -16,7 +16,7 @@ class HomeController
         $user = $request->user();
         $permissions = $user->getAllPermissions()->pluck('name')->all();
 
-        foreach ($navigation->build($request, $permissions, $user->isSuperAdmin()) as $entry) {
+        foreach ($navigation->build($request, $permissions) as $entry) {
             $href = $entry['href'] ?? ($entry['items'][0]['href'] ?? null);
 
             if ($href !== null) {

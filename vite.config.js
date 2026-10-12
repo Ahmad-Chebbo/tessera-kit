@@ -8,6 +8,11 @@ export default defineConfig({
     resolve: {
         alias: moduleAliases(),
     },
+    // The kit keeps state in modules (locale, toasts, confirm dialogs). Pre-bundled, `app.js` and the `.vue` files, which
+    // Vite cannot pre-bundle, would each get their own copy of that state.
+    optimizeDeps: {
+        exclude: ['@ahmad-chebbo/tessera-ui'],
+    },
     plugins: [
         laravel({
             input: 'resources/js/app.js',

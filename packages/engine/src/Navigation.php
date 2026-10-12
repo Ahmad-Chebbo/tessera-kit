@@ -17,14 +17,14 @@ class Navigation
      * @param  list<string>  $permissions  The permissions the user holds and whose plan feature is on.
      * @return list<array<string, mixed>>
      */
-    public function build(Request $request, array $permissions, bool $everything = false): array
+    public function build(Request $request, array $permissions): array
     {
         $held = array_flip($permissions);
         $entries = [];
         $sections = [];
 
         foreach ($this->registry->menuItems() as $item) {
-            if (! $everything && $item->permission !== null && ! isset($held[$item->permission])) {
+            if ($item->permission !== null && ! isset($held[$item->permission])) {
                 continue;
             }
 

@@ -108,7 +108,7 @@ class HandleInertiaRequests extends Middleware
                 'currentBranch' => $user ? $user->branch?->name : null,
             ],
             'enabledModules' => fn () => array_keys(app(ModuleRegistry::class)->enabled()),
-            'navigation' => fn () => $user ? app(Navigation::class)->build($request, $permissions, $user->isSuperAdmin()) : [],
+            'navigation' => fn () => $user ? app(Navigation::class)->build($request, $permissions) : [],
             'currency' => $user->company?->currency ?? 'USD',
             'plan' => fn () => $user && $user->company_id ? $this->planSummary($user->company_id) : null,
             'branchScope' => fn () => $user && $user->company_id ? [

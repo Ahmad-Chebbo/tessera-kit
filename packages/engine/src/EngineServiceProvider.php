@@ -35,6 +35,11 @@ class EngineServiceProvider extends ServiceProvider
     public function boot(): void
     {
         if ($this->app->runningInConsole()) {
+            $this->publishes([
+                __DIR__.'/../config/modules.php' => config_path('modules.php'),
+                __DIR__.'/../config/tessera.php' => config_path('tessera.php'),
+            ], ['tessera-config', 'tessera-engine-config']);
+
             $this->commands([ModuleAddCommand::class, ModuleListCommand::class, ModuleMakeCommand::class, ModuleCheckCommand::class, ModulePackageCommand::class]);
         }
 

@@ -66,28 +66,16 @@ class DemoStoreSeeder extends Seeder
             'is_active' => true,
         ]);
 
-        // Update existing user or create test user
-        $user = User::first();
-        if ($user) {
-            $user->update([
-                'company_id' => $company->id,
-                'branch_id' => $branch->id,
-            ]);
-        } else {
-            $user = User::create([
-                'name' => 'Test Cashier',
-                'email' => 'cashier@tessera.test',
-                'password' => Hash::make('password'),
-                'company_id' => $company->id,
-                'branch_id' => $branch->id,
-                'is_active' => true,
-            ]);
-        }
+        // The store's own owner; the platform admin stays outside every company.
+        $user = User::updateOrCreate(['email' => 'owner@tessera.test'], [
+            'name' => 'Demo Owner',
+            'password' => Hash::make('password'),
+            'company_id' => $company->id,
+            'branch_id' => $branch->id,
+            'is_active' => true,
+        ]);
 
-        // Assign Admin role to the user
-        if (! $user->hasRole('Owner')) {
-            $user->assignRole('Owner');
-        }
+        $user->assignRole('Owner');
 
         // Create Categories
         $categories = [

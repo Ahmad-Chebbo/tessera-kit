@@ -1,6 +1,8 @@
 <?php
 
+use App\Modules\Company\Services\CurrencyService;
 use Illuminate\Support\Facades\Process;
+use Illuminate\Support\ServiceProvider;
 use Tessera\Engine\ModuleException;
 use Tessera\Engine\ModuleManifest;
 use Tessera\Engine\ModuleRegistry;
@@ -153,5 +155,25 @@ describe('the booted application', function () {
 
     it('lists the modules in the console', function () {
         $this->artisan('module:list')->expectsOutputToContain('expenses')->assertSuccessful();
+    });
+});
+
+describe('publishable config', function () {
+    it('lets a project publish the engine and module configs under one tag', function () {
+        $published = array_map(fn (string $target): string => basename($target), ServiceProvider::pathsToPublish(null, 'tessera-config'));
+
+        expect(array_values($published))->toContain('tessera.php', 'modules.php', 'exports.php', 'currencies.php')
+            ->and(array_values(ServiceProvider::pathsToPublish(null, 'tessera-exports-config')))->toHaveCount(1)
+            ->and(array_values(ServiceProvider::pathsToPublish(null, 'tessera-engine-config')))->toHaveCount(2);
+    });
+});
+
+describe('currencies', function () {
+    it('formats amounts with the configured currencies', function () {
+        $currency = new CurrencyService('LBP');
+
+        expect($currency->format(1500000))->toBe('1,500,000 ل.ل')
+            ->and((new CurrencyService('USD'))->format(1234.5))->toBe('$1,234.50')
+            ->and(CurrencyService::getCurrencyInfo('KWD')['decimals'])->toBe(3);
     });
 });

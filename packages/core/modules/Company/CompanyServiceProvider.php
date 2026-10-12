@@ -22,6 +22,22 @@ class CompanyServiceProvider extends ModuleServiceProvider
         );
     }
 
+    public function register(): void
+    {
+        parent::register();
+
+        $this->mergeConfigFrom($this->modulePath('currencies.php'), 'currencies');
+    }
+
+    public function boot(): void
+    {
+        parent::boot();
+
+        if ($this->app->runningInConsole()) {
+            $this->publishes([$this->modulePath('currencies.php') => config_path('currencies.php')], ['tessera-config', 'tessera-modules-config', 'tessera-company-config']);
+        }
+    }
+
     public function features(): array
     {
         return [

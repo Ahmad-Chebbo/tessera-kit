@@ -12,7 +12,8 @@ class DatabaseSeeder extends Seeder
     use WithoutModelEvents;
 
     /**
-     * Seeds the roles and an admin account, then whatever the enabled modules seed (plans, units, a demo store...).
+     * Seeds the roles and the platform admin (no company; it manages companies and plans), then whatever the enabled
+     * modules seed (plans, units, a demo store with its own owner...).
      */
     public function run(): void
     {
@@ -23,7 +24,7 @@ class DatabaseSeeder extends Seeder
 
         $this->call(RolesAndPermissionsSeeder::class);
 
-        $user->assignRole('Owner');
+        $user->assignRole('Admin');
 
         foreach (app(ModuleRegistry::class)->seeders() as $seeder) {
             $this->call($seeder);

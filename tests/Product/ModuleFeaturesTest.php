@@ -179,13 +179,14 @@ describe('sidebar', function () {
         expect(navigationLabels($navigation))->toContain('nav.products', 'users.title')->not->toContain('expenses.nav', 'nav.orders');
     });
 
-    it('shows everything to a super admin', function () {
+    it('shows a super admin only the pages the role can open', function () {
         $admin = User::factory()->create(['company_id' => null]);
         $admin->givePermissionTo(Permission::findOrCreate('manage companies'));
         $admin->assignRole(Role::query()->firstOrCreate(['name' => 'Admin', 'guard_name' => 'web', 'company_id' => null]));
 
         $labels = navigationLabels(navigationOf($admin, 'admin.companies.index'));
 
-        expect($labels)->toContain('nav.companies', 'plans.nav', 'nav.products', 'expenses.nav', 'attendance.historyNav');
+        expect($labels)->toContain('nav.companies', 'plans.nav')
+            ->not->toContain('nav.products', 'expenses.nav', 'attendance.historyNav', 'settings.title', 'nav.branches');
     });
 });

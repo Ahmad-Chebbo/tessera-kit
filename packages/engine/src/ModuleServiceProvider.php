@@ -141,6 +141,12 @@ abstract class ModuleServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
+        if ($this->app->runningInConsole() && is_file($config = $this->modulePath('config.php'))) {
+            $key = $this->manifest()->key;
+
+            $this->publishes([$config => config_path($key.'.php')], ['tessera-config', 'tessera-modules-config', "tessera-{$key}-config"]);
+        }
+
         if (is_dir($migrations = $this->modulePath('Database/Migrations'))) {
             $this->loadMigrationsFrom($migrations);
         }
