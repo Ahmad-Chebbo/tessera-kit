@@ -47,6 +47,7 @@ describe('without the providing module', function () {
 
         expect($activity->available())->toBeFalse()
             ->and($activity->summary(1))->toBe(['orders' => 0, 'spent' => 0.0, 'debt' => 0.0, 'paid_debt' => 0.0])
+            ->and($activity->totals([1, 2]))->toBe([])
             ->and($activity->orders(1)->total())->toBe(0);
     });
 

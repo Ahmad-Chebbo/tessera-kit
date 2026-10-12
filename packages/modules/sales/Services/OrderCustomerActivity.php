@@ -26,6 +26,17 @@ class OrderCustomerActivity implements CustomerActivity
         ];
     }
 
+    public function totals(array $customerIds): array
+    {
+        return Order::query()
+            ->whereIn('customer_id', $customerIds)
+            ->selectRaw("customer_id, count(*) as orders, coalesce(sum(case when payment_type = 'debt' and debt_status = 'unpaid' then total else 0 end), 0) as debt")
+            ->groupBy('customer_id')
+            ->get()
+            ->mapWithKeys(fn ($row): array => [(int) $row->customer_id => ['orders' => (int) $row->orders, 'debt' => (float) $row->debt]])
+            ->all();
+    }
+
     public function orders(int $customerId, int $perPage = 15): LengthAwarePaginator
     {
         return Order::query()

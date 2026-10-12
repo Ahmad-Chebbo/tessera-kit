@@ -17,6 +17,11 @@ class NoCustomerActivity implements CustomerActivity
         return ['orders' => 0, 'spent' => 0.0, 'debt' => 0.0, 'paid_debt' => 0.0];
     }
 
+    public function totals(array $customerIds): array
+    {
+        return [];
+    }
+
     public function orders(int $customerId, int $perPage = 15): LengthAwarePaginator
     {
         return new LengthAwarePaginator([], 0, $perPage);

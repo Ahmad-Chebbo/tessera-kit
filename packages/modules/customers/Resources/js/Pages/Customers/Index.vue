@@ -19,6 +19,7 @@ import CardGrid from '@ahmad-chebbo/tessera-ui/Components/CardGrid.vue';
 const props = defineProps({
     customers: Object,
     filters: Object,
+    ordersAvailable: { type: Boolean, default: true },
 });
 
 const { t } = useI18n();
@@ -27,8 +28,10 @@ const tableColumns = computed(() => [
     { key: 'name', label: t('common.name'), cellClass: 'font-medium text-fg', wrap: true },
     { key: 'phone', label: t('common.phone'), cellClass: 'text-muted', wrap: true },
     { key: 'email', label: t('common.email'), cellClass: 'text-muted', wrap: true },
-    { key: 'title', label: t('orders.title'), cellClass: 'text-muted', wrap: true },
-    { key: 'totalDebt', label: t('customers.totalDebt'), cellClass: 'font-medium', wrap: true },
+    ...(props.ordersAvailable ? [
+        { key: 'title', label: t('orders.title'), cellClass: 'text-muted', wrap: true },
+        { key: 'totalDebt', label: t('customers.totalDebt'), cellClass: 'font-medium', wrap: true },
+    ] : []),
     { key: 'status', label: t('common.status'), wrap: true },
     { key: 'actions', label: t('common.actions'), align: 'end', wrap: true },
 ]);
@@ -144,10 +147,12 @@ const deleteCustomer = async (customerId) => {
                     </template>
                     <template #meta>
                         <div class="text-muted">{{ customer.phone || '-' }}</div>
-                        <div class="text-muted">{{ t('orders.title') }}: {{ customer.orders_count }}</div>
-                        <div class="font-medium" :class="customer.total_debt > 0 ? 'text-status-danger' : 'text-muted'">
-                            {{ formatCurrency(customer.total_debt || 0) }}
-                        </div>
+                        <template v-if="ordersAvailable">
+                            <div class="text-muted">{{ t('orders.title') }}: {{ customer.orders_count }}</div>
+                            <div class="font-medium" :class="customer.total_debt > 0 ? 'text-status-danger' : 'text-muted'">
+                                {{ formatCurrency(customer.total_debt || 0) }}
+                            </div>
+                        </template>
                     </template>
                     <template #actions>
                         <IconButton :icon="Eye" :label="t('common.view')" :href="route('customers.show', customer.id)" />

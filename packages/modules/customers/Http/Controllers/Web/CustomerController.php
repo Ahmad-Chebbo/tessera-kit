@@ -21,9 +21,7 @@ class CustomerController extends Controller
         $user = $request->user();
 
         $query = Customer::query()
-            ->where('company_id', $user->company_id)
-            ->withCount('orders')
-            ->withSum(['orders as total_debt' => fn ($q) => $q->where('payment_type', 'debt')->where('debt_status', 'unpaid')], 'total');
+            ->where('company_id', $user->company_id);
 
         if ($request->filled('search')) {
             $query->where(function ($q) use ($request) {
@@ -39,7 +37,18 @@ class CustomerController extends Controller
 
         $customers = $query->orderBy('name')->paginate(20)->withQueryString();
 
+        $activity = app(CustomerActivity::class);
+        $totals = $activity->totals($customers->pluck('id')->all());
+
+        $customers->through(function (Customer $customer) use ($totals): Customer {
+            $customer->setAttribute('orders_count', $totals[$customer->id]['orders'] ?? 0);
+            $customer->setAttribute('total_debt', $totals[$customer->id]['debt'] ?? 0);
+
+            return $customer;
+        });
+
         return Inertia::render('Customers/Index', [
+            'ordersAvailable' => $activity->available(),
             'customers' => $customers,
             'filters' => $request->only(['search', 'status']),
         ]);

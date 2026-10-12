@@ -17,6 +17,15 @@ interface CustomerActivity
     public function summary(int $customerId): array;
 
     /**
+     * Order count and unpaid debt of several customers at once, keyed by customer id; customers without orders may be
+     * left out.
+     *
+     * @param  list<int>  $customerIds
+     * @return array<int, array{orders: int, debt: float}>
+     */
+    public function totals(array $customerIds): array;
+
+    /**
      * @return LengthAwarePaginator<int, mixed>
      */
     public function orders(int $customerId, int $perPage = 15): LengthAwarePaginator;
