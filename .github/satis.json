@@ -49,6 +49,10 @@
         {
             "type": "vcs",
             "url": "https://github.com/Ahmad-Chebbo/tessera-shifts"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/Ahmad-Chebbo/tessera-starter"
         }
     ],
     "require-all": true,
