@@ -43,6 +43,7 @@ bun run build
 | [`expenses`](https://github.com/Tessera-kit/tessera-expenses) | expenses, recurring expenses |
 | [`reports`](https://github.com/Tessera-kit/tessera-reports) | dashboard, sales, items and profit reports |
 | [`exports`](https://github.com/Tessera-kit/tessera-exports) | Excel and PDF export of reports |
+| [`leave`](https://github.com/Tessera-kit/tessera-leave) | leave types, requests with approval, holidays |
 | [`organization`](https://github.com/Tessera-kit/tessera-organization) | departments, positions, managers and an organization chart |
 | [`shifts`](https://github.com/Tessera-kit/tessera-shifts) | shift templates and rosters |
 | [`attendance`](https://github.com/Tessera-kit/tessera-attendance) | check-in and check-out, absences |

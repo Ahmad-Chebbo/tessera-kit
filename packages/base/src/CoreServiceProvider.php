@@ -9,6 +9,7 @@ use Tessera\Core\Contracts\CustomerActivity;
 use Tessera\Core\Contracts\Defaults\NoBranches;
 use Tessera\Core\Contracts\Defaults\NoCartPricing;
 use Tessera\Core\Contracts\Defaults\NoCustomerActivity;
+use Tessera\Core\Contracts\Defaults\NoLeaveCalendar;
 use Tessera\Core\Contracts\Defaults\NoLocationUsage;
 use Tessera\Core\Contracts\Defaults\NoNetProfit;
 use Tessera\Core\Contracts\Defaults\NoPlanLimits;
@@ -16,6 +17,7 @@ use Tessera\Core\Contracts\Defaults\NoPurchaseLookup;
 use Tessera\Core\Contracts\Defaults\NoReportingLines;
 use Tessera\Core\Contracts\Defaults\NoRevenueSource;
 use Tessera\Core\Contracts\Defaults\NoTenancy;
+use Tessera\Core\Contracts\LeaveCalendar;
 use Tessera\Core\Contracts\LocationUsage;
 use Tessera\Core\Contracts\NetProfit;
 use Tessera\Core\Contracts\PlanLimits;
@@ -45,6 +47,7 @@ class CoreServiceProvider extends ServiceProvider
         NetProfit::class => NoNetProfit::class,
         PurchaseLookup::class => NoPurchaseLookup::class,
         ReportingLines::class => NoReportingLines::class,
+        LeaveCalendar::class => NoLeaveCalendar::class,
     ];
 
     public function register(): void

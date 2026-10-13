@@ -29,6 +29,7 @@ const PERMISSIONS_BEFORE_MODULES = [
     'view shifts', 'manage shifts', 'view shift reports', 'open pos shift',
     'view attendance', 'manage attendance', 'record attendance',
     'view organization', 'manage organization',
+    'request leave', 'approve leave', 'manage leave',
 ];
 
 function navigationOf(User $user, string $route = 'users.index'): array
@@ -55,7 +56,7 @@ describe('permissions', function () {
     });
 
     it('keeps the plan feature keys and their order', function () {
-        expect(array_keys(app(ModuleRegistry::class)->features()))->toBe(['pos', 'orders', 'catalog', 'inventory', 'customers', 'expenses', 'reports', 'branches', 'organization', 'shifts', 'attendance', 'activity', 'roles', 'discounts', 'exports'])
+        expect(array_keys(app(ModuleRegistry::class)->features()))->toBe(['pos', 'orders', 'catalog', 'inventory', 'customers', 'expenses', 'reports', 'branches', 'organization', 'shifts', 'attendance', 'leave', 'activity', 'roles', 'discounts', 'exports'])
             ->and(Module::values())->toBe(array_keys(app(ModuleRegistry::class)->features()));
     });
 
@@ -84,7 +85,7 @@ describe('permissions', function () {
     });
 
     it('lists the role editor groups in their usual order', function () {
-        expect(array_keys(app(ModuleRegistry::class)->permissionGroups()))->toBe(['dashboard', 'pos', 'catalog', 'sales', 'inventory', 'expenses', 'reports', 'team', 'organization', 'shifts', 'attendance', 'settings'])
+        expect(array_keys(app(ModuleRegistry::class)->permissionGroups()))->toBe(['dashboard', 'pos', 'catalog', 'sales', 'inventory', 'expenses', 'reports', 'team', 'organization', 'shifts', 'attendance', 'leave', 'settings'])
             ->and(app(ModuleRegistry::class)->permissionGroups()['sales'])->toContain('view orders', 'view customers', 'manage discounts');
     });
 });
@@ -93,11 +94,11 @@ describe('default roles', function () {
     it('gives the template roles the permissions the seeder used to give', function () {
         $roles = app(ModuleRegistry::class)->defaultRolePermissions();
 
-        $team = ['view activity log', 'view organization', 'view shifts', 'manage shifts', 'view shift reports', 'open pos shift', 'view attendance', 'manage attendance', 'record attendance'];
+        $team = ['view activity log', 'view organization', 'request leave', 'approve leave', 'view shifts', 'manage shifts', 'view shift reports', 'open pos shift', 'view attendance', 'manage attendance', 'record attendance'];
 
         expect($roles['Admin'])->toBe(['manage tenants'])
-            ->and($roles['Cashier'])->toEqualCanonicalizing(['access pos', 'view customers', 'create customers', 'open pos shift', 'record attendance'])
-            ->and($roles['Stock Keeper'])->toEqualCanonicalizing(['view dashboard', 'view products', 'view categories', 'view inventory', 'adjust inventory', 'transfer stock', 'view purchases', 'receive purchases', 'view inventory reports', 'record attendance', 'view customers'])
+            ->and($roles['Cashier'])->toEqualCanonicalizing(['access pos', 'view customers', 'create customers', 'open pos shift', 'record attendance', 'request leave'])
+            ->and($roles['Stock Keeper'])->toEqualCanonicalizing(['view dashboard', 'view products', 'view categories', 'view inventory', 'adjust inventory', 'transfer stock', 'view purchases', 'receive purchases', 'view inventory reports', 'record attendance', 'request leave', 'view customers'])
             ->and($roles['Manager'])->toEqualCanonicalizing([
                 'view dashboard', 'access pos', 'apply discounts', 'void orders', 'view products', 'create products', 'edit products', 'view categories',
                 'view orders', 'view all orders', 'export orders', 'view inventory', 'adjust inventory', 'transfer stock', 'view purchases', 'create purchases',
@@ -105,7 +106,7 @@ describe('default roles', function () {
                 'view inventory reports', 'manage branches', 'manage locations', 'view customers', 'create customers', 'edit customers', 'delete customers',
                 'manage discounts', 'export reports', 'view all branches', ...$team,
             ])
-            ->and($roles['Owner'])->toContain('manage roles', 'manage organization', 'manage settings', 'view all branches', 'delete products', ...$team)
+            ->and($roles['Owner'])->toContain('manage roles', 'manage organization', 'manage leave', 'manage settings', 'view all branches', 'delete products', ...$team)
             ->not->toContain('manage tenants', 'delete users');
     });
 

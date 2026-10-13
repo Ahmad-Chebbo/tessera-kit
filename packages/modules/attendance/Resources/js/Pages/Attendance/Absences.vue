@@ -73,9 +73,9 @@ const removeExcuse = (absence) => router.delete(route('attendance.excuses.destro
                 </StatusBadge>
             </template>
             <template #cell-actions="{ row }">
-                <div v-if="can.manage" class="flex items-center justify-end gap-2">
+                <div v-if="can.manage && !row.on_leave" class="flex items-center justify-end gap-2">
                     <IconButton :icon="BadgeCheck" :label="t('attendance.excuse')" @click="openExcuse(row)" />
-                    <IconButton v-if="row.excused" :icon="Undo2" :label="t('attendance.removeExcuse')" @click="removeExcuse(row)" />
+                    <IconButton v-if="row.excuse_id" :icon="Undo2" :label="t('attendance.removeExcuse')" @click="removeExcuse(row)" />
                 </div>
             </template>
         </DataTable>

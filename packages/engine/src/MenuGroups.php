@@ -27,5 +27,5 @@ final class MenuGroups
      *
      * @var list<string>
      */
-    public const PERMISSION_ORDER = ['dashboard', 'pos', 'catalog', 'sales', 'inventory', 'expenses', 'reports', 'team', 'organization', 'shifts', 'attendance', 'settings'];
+    public const PERMISSION_ORDER = ['dashboard', 'pos', 'catalog', 'sales', 'inventory', 'expenses', 'reports', 'team', 'organization', 'shifts', 'attendance', 'leave', 'settings'];
 }

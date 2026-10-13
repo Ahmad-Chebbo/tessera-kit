@@ -21,6 +21,7 @@ const MODULE_PAGES = [
     'discounts' => ['discounts', 'discounts/create', 'discounts/simulator'],
     'expenses' => ['expenses', 'expenses/create', 'expenses/categories', 'expenses/recurring', 'expenses/report', 'expenses/statement'],
     'organization' => ['organization'],
+    'leave' => ['leave'],
     'shifts' => ['shifts'],
     'attendance' => ['attendance', 'attendance/absences', 'attendance/report'],
     'exports' => ['exports'],
@@ -71,6 +72,7 @@ dataset('module sets', [
     'catalog on its own' => ['catalog', ['catalog']],
     'shifts on their own' => ['shifts', ['shifts']],
     'organization on its own' => ['organization', ['organization']],
+    'leave on its own' => ['leave', ['leave']],
     'exports on their own' => ['exports', ['exports']],
     'discounts with what they need' => ['catalog,inventory,customers,orders,discounts', ['catalog', 'inventory', 'customers', 'orders', 'discounts']],
     'expenses with reports and exports' => ['catalog,customers,inventory,orders,reports,expenses,exports', ['catalog', 'inventory', 'customers', 'orders', 'reports', 'expenses', 'exports']],
@@ -79,7 +81,7 @@ dataset('module sets', [
     'the sales bundle' => ['catalog,inventory,customers,orders,pos,sales', ['catalog', 'inventory', 'customers', 'orders', 'pos']],
     'point of sale as a saas' => ['catalog,inventory,customers,orders,pos,subscription', ['catalog', 'inventory', 'customers', 'orders', 'pos', 'subscription']],
     'reports on orders' => ['catalog,customers,inventory,orders,reports', ['catalog', 'inventory', 'customers', 'orders', 'reports']],
-    'every module' => ['*', ['catalog', 'inventory', 'customers', 'orders', 'pos', 'reports', 'discounts', 'expenses', 'organization', 'shifts', 'attendance', 'exports', 'subscription']],
+    'every module' => ['*', ['catalog', 'inventory', 'customers', 'orders', 'pos', 'reports', 'discounts', 'expenses', 'organization', 'shifts', 'attendance', 'leave', 'exports', 'subscription']],
 ]);
 
 it('boots, migrates and serves exactly the pages of the enabled modules', function (string $enabled, array $features) {

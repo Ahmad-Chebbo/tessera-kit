@@ -72,6 +72,7 @@
             "branches": "Branches & locations",
             "shifts": "Shifts & cash drawer",
             "attendance": "Attendance",
+            "leave": "Leave",
             "organization": "Organization chart",
             "activity": "Activity log",
             "roles": "Custom roles",

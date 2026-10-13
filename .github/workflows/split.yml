@@ -31,6 +31,7 @@ jobs:
           - { path: packages/modules/expenses, repo: tessera-expenses }
           - { path: packages/modules/exports, repo: tessera-exports }
           - { path: packages/modules/inventory, repo: tessera-inventory }
+          - { path: packages/modules/leave, repo: tessera-leave }
           - { path: packages/modules/reports, repo: tessera-reports }
           - { path: packages/modules/orders, repo: tessera-orders }
           - { path: packages/modules/organization, repo: tessera-organization }

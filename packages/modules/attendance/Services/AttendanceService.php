@@ -14,6 +14,7 @@ use Carbon\CarbonInterface;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Collection;
 use InvalidArgumentException;
+use Tessera\Core\Contracts\LeaveCalendar;
 
 class AttendanceService
 {
@@ -170,9 +171,10 @@ class AttendanceService
     }
 
     /**
-     * Assigned shift days that have passed with no attendance record. Days with an excuse are flagged, not hidden.
+     * Assigned shift days that have passed with no attendance record. Days with an excuse, or on approved leave when the
+     * Leave module is installed, are flagged, not hidden.
      *
-     * @return Collection<int, array{user_id: int, user: string, date: string, shift: string, excused: bool, reason: ?string, excuse_id: ?int}>
+     * @return Collection<int, array{user_id: int, user: string, date: string, shift: string, excused: bool, reason: ?string, excuse_id: ?int, on_leave: bool}>
      */
     public function absences(int $tenantId, CarbonInterface $from, CarbonInterface $to, ?int $userId = null, ?int $branchId = null): Collection
     {
@@ -202,21 +204,25 @@ class AttendanceService
             ->get()
             ->keyBy(fn (AttendanceExcuse $excuse): string => $excuse->user_id.'|'.$excuse->date);
 
+        $leave = app(LeaveCalendar::class)->daysOff($tenantId, $from->toDateString(), $lastDay->toDateString(), $userId ? [$userId] : null);
+
         return $assignments
             ->reject(fn (ShiftAssignment $assignment): bool => isset($present[$assignment->user_id.'|'.$assignment->date]))
             ->groupBy(fn (ShiftAssignment $assignment): string => $assignment->user_id.'|'.$assignment->date)
-            ->map(function (Collection $group, string $key) use ($excuses): array {
+            ->map(function (Collection $group, string $key) use ($excuses, $leave): array {
                 $first = $group->first();
                 $excuse = $excuses->get($key);
+                $away = $leave[$key] ?? null;
 
                 return [
                     'user_id' => $first->user_id,
                     'user' => $first->user?->name ?? '',
                     'date' => $first->date,
                     'shift' => $group->map(fn (ShiftAssignment $assignment): string => (string) $assignment->template?->name)->implode(', '),
-                    'excused' => $excuse !== null,
-                    'reason' => $excuse?->reason,
+                    'excused' => $excuse !== null || $away !== null,
+                    'reason' => $excuse?->reason ?? $away['label'] ?? null,
                     'excuse_id' => $excuse?->id,
+                    'on_leave' => $excuse === null && $away !== null,
                 ];
             })
             ->sortBy([['date', 'desc'], ['user', 'asc']])
