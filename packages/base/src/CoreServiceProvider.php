@@ -13,12 +13,14 @@ use Tessera\Core\Contracts\Defaults\NoLocationUsage;
 use Tessera\Core\Contracts\Defaults\NoNetProfit;
 use Tessera\Core\Contracts\Defaults\NoPlanLimits;
 use Tessera\Core\Contracts\Defaults\NoPurchaseLookup;
+use Tessera\Core\Contracts\Defaults\NoReportingLines;
 use Tessera\Core\Contracts\Defaults\NoRevenueSource;
 use Tessera\Core\Contracts\Defaults\NoTenancy;
 use Tessera\Core\Contracts\LocationUsage;
 use Tessera\Core\Contracts\NetProfit;
 use Tessera\Core\Contracts\PlanLimits;
 use Tessera\Core\Contracts\PurchaseLookup;
+use Tessera\Core\Contracts\ReportingLines;
 use Tessera\Core\Contracts\RevenueSource;
 use Tessera\Core\Contracts\Tenancy;
 use Tessera\Core\Http\Middleware\EnsureModuleEnabled;
@@ -42,6 +44,7 @@ class CoreServiceProvider extends ServiceProvider
         CartPricing::class => NoCartPricing::class,
         NetProfit::class => NoNetProfit::class,
         PurchaseLookup::class => NoPurchaseLookup::class,
+        ReportingLines::class => NoReportingLines::class,
     ];
 
     public function register(): void

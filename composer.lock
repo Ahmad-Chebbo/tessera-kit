@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5b13a360246a36af0aa500309f7abb8c",
+    "content-hash": "2f7cc203ae1cde885981a8f2ca29793b",
     "packages": [
         {
             "name": "brick/math",
@@ -8040,6 +8040,44 @@
             }
         },
         {
+            "name": "tessera/tessera-organization",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "packages/modules/organization",
+                "reference": "d4952ab89c8b1133578e3471f484320ca3d837cc"
+            },
+            "require": {
+                "php": "^8.4",
+                "tessera/tessera-engine": "^4.0",
+                "tessera/tessera-tenant": "^4.0"
+            },
+            "type": "library",
+            "extra": {
+                "tessera": {
+                    "modules": [
+                        "App\\Modules\\Organization\\OrganizationServiceProvider"
+                    ]
+                },
+                "branch-alias": {
+                    "dev-main": "4.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "App\\Modules\\Organization\\": ""
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "description": "The Organization module of Tessera.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
             "name": "tessera/tessera-pos",
             "version": "dev-main",
             "dist": {
@@ -12338,6 +12376,7 @@
         "tessera/tessera-exports": 20,
         "tessera/tessera-inventory": 20,
         "tessera/tessera-orders": 20,
+        "tessera/tessera-organization": 20,
         "tessera/tessera-pos": 20,
         "tessera/tessera-reports": 20,
         "tessera/tessera-saas": 20,

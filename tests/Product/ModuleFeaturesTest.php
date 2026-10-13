@@ -28,6 +28,7 @@ const PERMISSIONS_BEFORE_MODULES = [
     'view all branches', 'export reports', 'manage discounts', 'manage roles', 'view activity log',
     'view shifts', 'manage shifts', 'view shift reports', 'open pos shift',
     'view attendance', 'manage attendance', 'record attendance',
+    'view organization', 'manage organization',
 ];
 
 function navigationOf(User $user, string $route = 'users.index'): array
@@ -54,7 +55,7 @@ describe('permissions', function () {
     });
 
     it('keeps the plan feature keys and their order', function () {
-        expect(array_keys(app(ModuleRegistry::class)->features()))->toBe(['pos', 'orders', 'catalog', 'inventory', 'customers', 'expenses', 'reports', 'branches', 'shifts', 'attendance', 'activity', 'roles', 'discounts', 'exports'])
+        expect(array_keys(app(ModuleRegistry::class)->features()))->toBe(['pos', 'orders', 'catalog', 'inventory', 'customers', 'expenses', 'reports', 'branches', 'organization', 'shifts', 'attendance', 'activity', 'roles', 'discounts', 'exports'])
             ->and(Module::values())->toBe(array_keys(app(ModuleRegistry::class)->features()));
     });
 
@@ -83,7 +84,7 @@ describe('permissions', function () {
     });
 
     it('lists the role editor groups in their usual order', function () {
-        expect(array_keys(app(ModuleRegistry::class)->permissionGroups()))->toBe(['dashboard', 'pos', 'catalog', 'sales', 'inventory', 'expenses', 'reports', 'team', 'shifts', 'attendance', 'settings'])
+        expect(array_keys(app(ModuleRegistry::class)->permissionGroups()))->toBe(['dashboard', 'pos', 'catalog', 'sales', 'inventory', 'expenses', 'reports', 'team', 'organization', 'shifts', 'attendance', 'settings'])
             ->and(app(ModuleRegistry::class)->permissionGroups()['sales'])->toContain('view orders', 'view customers', 'manage discounts');
     });
 });
@@ -92,7 +93,7 @@ describe('default roles', function () {
     it('gives the template roles the permissions the seeder used to give', function () {
         $roles = app(ModuleRegistry::class)->defaultRolePermissions();
 
-        $team = ['view activity log', 'view shifts', 'manage shifts', 'view shift reports', 'open pos shift', 'view attendance', 'manage attendance', 'record attendance'];
+        $team = ['view activity log', 'view organization', 'view shifts', 'manage shifts', 'view shift reports', 'open pos shift', 'view attendance', 'manage attendance', 'record attendance'];
 
         expect($roles['Admin'])->toBe(['manage tenants'])
             ->and($roles['Cashier'])->toEqualCanonicalizing(['access pos', 'view customers', 'create customers', 'open pos shift', 'record attendance'])
@@ -104,7 +105,7 @@ describe('default roles', function () {
                 'view inventory reports', 'manage branches', 'manage locations', 'view customers', 'create customers', 'edit customers', 'delete customers',
                 'manage discounts', 'export reports', 'view all branches', ...$team,
             ])
-            ->and($roles['Owner'])->toContain('manage roles', 'manage settings', 'view all branches', 'delete products', ...$team)
+            ->and($roles['Owner'])->toContain('manage roles', 'manage organization', 'manage settings', 'view all branches', 'delete products', ...$team)
             ->not->toContain('manage tenants', 'delete users');
     });
 

@@ -18,6 +18,7 @@ enum Module: string
     case Expenses = 'expenses';
     case Reports = 'reports';
     case Branches = 'branches';
+    case Organization = 'organization';
     case Shifts = 'shifts';
     case Attendance = 'attendance';
     case Activity = 'activity';

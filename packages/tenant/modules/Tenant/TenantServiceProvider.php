@@ -16,6 +16,7 @@ use Tessera\Core\Contracts\BranchScope;
 use Tessera\Core\Contracts\Tenancy;
 use Tessera\Engine\MenuItem;
 use Tessera\Engine\ModuleManifest;
+use Tessera\Engine\ModuleRegistry;
 use Tessera\Engine\ModuleServiceProvider;
 use Tessera\Engine\PlanFeature;
 
@@ -80,22 +81,22 @@ class TenantServiceProvider extends ModuleServiceProvider
     public function features(): array
     {
         return [
-            new PlanFeature('branches', 'Branches & locations', ['manage branches', 'manage locations'], order: 70),
+            new PlanFeature('branches', 'Branches & locations', ['manage branches', ...($this->holdsStock() ? ['manage locations'] : [])], order: 70),
         ];
     }
 
     public function permissionGroups(): array
     {
         return [
-            'settings' => ['manage settings', 'manage branches', 'manage locations', 'view all branches'],
+            'settings' => ['manage settings', 'manage branches', ...($this->holdsStock() ? ['manage locations'] : []), 'view all branches'],
         ];
     }
 
     public function defaultRolePermissions(): array
     {
         return [
-            'Owner' => ['manage branches', 'manage locations', 'manage settings', 'view all branches'],
-            'Manager' => ['manage branches', 'manage locations', 'view all branches'],
+            'Owner' => ['manage branches', ...($this->holdsStock() ? ['manage locations'] : []), 'manage settings', 'view all branches'],
+            'Manager' => ['manage branches', ...($this->holdsStock() ? ['manage locations'] : []), 'view all branches'],
         ];
     }
 
@@ -115,9 +116,20 @@ class TenantServiceProvider extends ModuleServiceProvider
     {
         return [
             new MenuItem('settings', 'settings.title', 'settings.index', 'cog', 'manage settings', ['settings.*'], 20),
-            new MenuItem('settings', 'settings.exchangeRates', 'exchange-rates.index', 'currency', 'manage settings', ['exchange-rates.*'], 30),
+            ...($this->holdsStock() ? [new MenuItem('settings', 'settings.exchangeRates', 'exchange-rates.index', 'currency', 'manage settings', ['exchange-rates.*'], 30)] : []),
             new MenuItem('settings', 'nav.branches', 'branches.index', 'branch', 'manage branches', ['branches.*'], 40),
-            new MenuItem('settings', 'nav.warehouse', 'locations.index', 'location', 'manage locations', ['locations.*'], 50),
+            ...($this->holdsStock() ? [new MenuItem('settings', 'nav.warehouse', 'locations.index', 'location', 'manage locations', ['locations.*'], 50)] : []),
         ];
+    }
+
+    /**
+     * Stock locations and exchange rates only matter to a project that keeps stock or buys and sells in more than one
+     * currency, which is what Inventory and the till are for, so a project without them does not see them.
+     */
+    private function holdsStock(): bool
+    {
+        $modules = $this->app->make(ModuleRegistry::class);
+
+        return $modules->has('inventory') || $modules->has('pos');
     }
 }

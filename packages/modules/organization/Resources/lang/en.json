@@ -1,0 +1,31 @@
+{
+    "organization": {
+        "nav": "Organization",
+        "title": "Organization",
+        "subtitle": "Departments, positions and who reports to whom",
+        "tabChart": "Chart",
+        "tabEmployees": "Employees",
+        "tabDepartments": "Departments",
+        "tabPositions": "Positions",
+        "employee": "Employee",
+        "department": "Department",
+        "position": "Position",
+        "manager": "Manager",
+        "head": "Head of department",
+        "none": "None",
+        "employeesCount": "Employees",
+        "reportsCount": "{count} report | {count} reports",
+        "noEmployees": "No employees yet",
+        "addDepartment": "New department",
+        "editDepartment": "Edit department",
+        "departmentName": "Department name",
+        "parentDepartment": "Part of",
+        "noDepartments": "No departments yet",
+        "confirmDeleteDepartment": "Delete this department? Its employees stay and lose the department.",
+        "addPosition": "New position",
+        "editPosition": "Edit position",
+        "positionName": "Position name",
+        "noPositions": "No positions yet",
+        "confirmDeletePosition": "Delete this position? Its employees stay and lose the position."
+    }
+}

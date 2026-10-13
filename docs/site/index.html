@@ -283,7 +283,7 @@ footer .legal { margin-top: 2rem; max-width: 46em; }
         </div>
         <div class="layers">
             <div class="layer you"><code>app/Modules</code><p>Your own modules. They sit in the project, load exactly like the packaged ones, and can be packaged for other projects later.</p></div>
-            <div class="layer"><code>tessera/tessera-&lt;module&gt;</code><p>Eleven feature modules: catalog, inventory, customers, orders, pos, discounts, expenses, reports, exports, shifts and attendance. A twelfth, sales, installs the orders and the till together.</p></div>
+            <div class="layer"><code>tessera/tessera-&lt;module&gt;</code><p>Twelve feature modules: catalog, inventory, customers, orders, pos, discounts, expenses, reports, exports, organization, shifts and attendance. A thirteenth, sales, installs the orders and the till together.</p></div>
             <div class="layer"><code>tessera/tessera-saas</code><p>Plans, subscriptions and the screens a platform admin uses to create tenants. Add it only when one install serves many businesses.</p></div>
             <div class="layer"><code>tessera/tessera-tenant</code><p>The business: its branches, stock locations, currencies and settings. One tenant for a single business, many with the SaaS layer. The feature modules keep their data here.</p></div>
             <div class="layer"><code>tessera/tessera-base</code><p>Sign-in, registration, password reset, profile, API tokens, users, roles and permissions. Has no tenant, branch or plan of its own.</p></div>
@@ -336,6 +336,7 @@ footer .legal { margin-top: 2rem; max-width: 46em; }
                     <tr><td><code>expenses</code></td><td>Expenses, recurring expenses, categories, a report and a statement. The profit report subtracts them when Reports is installed.</td><td class="req">nothing</td></tr>
                     <tr><td><code>reports</code></td><td>The dashboard, plus sales, item and profit reports.</td><td class="req">orders, catalog, customers, inventory</td></tr>
                     <tr><td><code>exports</code></td><td>Excel and PDF export of any report that offers it, with a page for finished files.</td><td class="req">nothing</td></tr>
+                    <tr><td><code>organization</code></td><td>Departments, positions, managers and an organization chart.</td><td class="req">nothing</td></tr>
                     <tr><td><code>shifts</code></td><td>Shift templates and rosters for employees.</td><td class="req">nothing</td></tr>
                     <tr><td><code>attendance</code></td><td>Check-in and check-out, excuses, absences and an attendance report.</td><td class="req">shifts</td></tr>
                 </tbody>
@@ -565,7 +566,7 @@ php artisan module:package invoices</pre><button class="copy" type="button">Copy
                 <li><a href="https://github.com/Tessera-kit/tessera-catalog">catalog</a>, <a href="https://github.com/Tessera-kit/tessera-inventory">inventory</a>, <a href="https://github.com/Tessera-kit/tessera-customers">customers</a></li>
                 <li><a href="https://github.com/Tessera-kit/tessera-orders">orders</a>, <a href="https://github.com/Tessera-kit/tessera-pos">pos</a>, <a href="https://github.com/Tessera-kit/tessera-sales">sales</a>, <a href="https://github.com/Tessera-kit/tessera-discounts">discounts</a>, <a href="https://github.com/Tessera-kit/tessera-reports">reports</a></li>
                 <li><a href="https://github.com/Tessera-kit/tessera-expenses">expenses</a>, <a href="https://github.com/Tessera-kit/tessera-exports">exports</a></li>
-                <li><a href="https://github.com/Tessera-kit/tessera-shifts">shifts</a>, <a href="https://github.com/Tessera-kit/tessera-attendance">attendance</a></li>
+                <li><a href="https://github.com/Tessera-kit/tessera-organization">organization</a>, <a href="https://github.com/Tessera-kit/tessera-shifts">shifts</a>, <a href="https://github.com/Tessera-kit/tessera-attendance">attendance</a></li>
             </ul></div>
             <div><h4>Development</h4><ul>
                 <li><a href="https://github.com/Tessera-kit/tessera-kit">tessera-kit</a> (monorepo)</li>
@@ -588,6 +589,7 @@ php artisan module:package invoices</pre><button class="copy" type="button">Copy
         { key: 'expenses', name: 'Expenses', d: 'Spending, recurring, statement', req: [], pages: ['Expenses', 'Recurring', 'Expense report', 'Statement'] },
         { key: 'reports', name: 'Reports', d: 'Dashboard, sales, profit', req: ['catalog', 'customers', 'inventory', 'orders'], pages: ['Dashboard', 'Sales report', 'Items report', 'Profit report'] },
         { key: 'exports', name: 'Exports', d: 'Excel and PDF files', req: [], pages: ['Exports'] },
+        { key: 'organization', name: 'Organization', d: 'Departments, managers, org chart', req: [], pages: ['Organization chart', 'Departments', 'Positions'] },
         { key: 'shifts', name: 'Shifts', d: 'Rosters for staff', req: [], pages: ['Shift rosters'] },
         { key: 'attendance', name: 'Attendance', d: 'Check-in, absences', req: ['shifts'], pages: ['Attendance', 'Absences', 'Attendance report'] }
     ];

@@ -52,6 +52,10 @@
         },
         {
             "type": "vcs",
+            "url": "https://github.com/Tessera-kit/tessera-organization"
+        },
+        {
+            "type": "vcs",
             "url": "https://github.com/Tessera-kit/tessera-pos"
         },
         {

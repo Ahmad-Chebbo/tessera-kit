@@ -1,0 +1,31 @@
+{
+    "organization": {
+        "nav": "الهيكل التنظيمي",
+        "title": "الهيكل التنظيمي",
+        "subtitle": "الأقسام والمسميات الوظيفية ومن يتبع لمن",
+        "tabChart": "المخطط",
+        "tabEmployees": "الموظفون",
+        "tabDepartments": "الأقسام",
+        "tabPositions": "المسميات الوظيفية",
+        "employee": "الموظف",
+        "department": "القسم",
+        "position": "المسمى الوظيفي",
+        "manager": "المدير المباشر",
+        "head": "رئيس القسم",
+        "none": "لا يوجد",
+        "employeesCount": "الموظفون",
+        "reportsCount": "{count} مرؤوس | {count} مرؤوسون",
+        "noEmployees": "لا يوجد موظفون بعد",
+        "addDepartment": "قسم جديد",
+        "editDepartment": "تعديل القسم",
+        "departmentName": "اسم القسم",
+        "parentDepartment": "تابع لقسم",
+        "noDepartments": "لا توجد أقسام بعد",
+        "confirmDeleteDepartment": "حذف هذا القسم؟ يبقى موظفوه دون قسم.",
+        "addPosition": "مسمى وظيفي جديد",
+        "editPosition": "تعديل المسمى الوظيفي",
+        "positionName": "اسم المسمى الوظيفي",
+        "noPositions": "لا توجد مسميات وظيفية بعد",
+        "confirmDeletePosition": "حذف هذا المسمى؟ يبقى موظفوه دون مسمى."
+    }
+}

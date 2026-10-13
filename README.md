@@ -20,7 +20,7 @@ Start from the [starter](https://github.com/Tessera-kit/tessera-starter) to buil
 | Tenant | [tessera-tenant](https://github.com/Tessera-kit/tessera-tenant) | Composer | The business: its branches, stock locations, currencies and settings. One business or many. Builds on the base. |
 | SaaS | [tessera-saas](https://github.com/Tessera-kit/tessera-saas) | Composer | Plans, subscriptions and the screens to manage many tenants. Builds on the tenant package. |
 | UI | [tessera-ui](https://github.com/Tessera-kit/tessera-ui) | bun / npm | Vue 3 components, composables and the theme. Standalone. |
-| Modules | `tessera-<key>` | Composer | Attendance, Catalog, Customers, Discounts, Expenses, Exports, Inventory, Orders, Pos, Reports, Sales (the two together), Shifts. |
+| Modules | `tessera-<key>` | Composer | Attendance, Catalog, Customers, Discounts, Expenses, Exports, Inventory, Orders, Organization, Pos, Reports, Sales (the two together), Shifts. |
 | Starter | [tessera-starter](https://github.com/Tessera-kit/tessera-starter) | `composer create-project` | A Laravel SaaS app with the engine, base, tenant, saas, UI and application shell. |
 | Fresh | [tessera-fresh](https://github.com/Tessera-kit/tessera-fresh) | `composer create-project` | The same without tenants and plans: sign-in, users, roles and permissions. Modules you add make it a single business. |
 

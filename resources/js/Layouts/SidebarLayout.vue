@@ -39,6 +39,7 @@ import {
     ShieldCheck,
     Clock,
     Landmark,
+    Network,
     Lock,
     LockOpen,
 } from 'lucide-vue-next';
@@ -126,6 +127,7 @@ const iconComponents = {
     shield: ShieldCheck,
     clock: Clock,
     drawer: Landmark,
+    'org-chart': Network,
 };
 
 const getIcon = (icon) => iconComponents[icon] || LayoutDashboard;

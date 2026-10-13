@@ -82,7 +82,7 @@ const currencies = [
                 <!-- Currency & Tax -->
                 <div class="rounded-2xl border border-line bg-surface p-6">
                     <h3 class="font-display mb-4 text-lg font-normal text-fg">
-                        Currency & Tax
+                        {{ modules.has('orders') ? 'Currency & Tax' : 'Currency' }}
                     </h3>
                     <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
                         <div>
@@ -98,7 +98,7 @@ const currencies = [
                             <InputError :message="form.errors.currency" class="mt-2" />
                         </div>
 
-                        <div>
+                        <div v-if="modules.has('orders')">
                             <InputLabel for="tax_rate" :value="t('settings.taxRate')" />
                             <div class="relative mt-1">
                                 <TextInput
@@ -115,7 +115,7 @@ const currencies = [
                             <InputError :message="form.errors.tax_rate" class="mt-2" />
                         </div>
 
-                        <div v-if="modules.has('sales')" class="md:col-span-2">
+                        <div v-if="modules.has('pos')" class="md:col-span-2">
                             <label class="flex items-start gap-3">
                                 <input
                                     v-model="form.require_pos_shift"
@@ -132,7 +132,7 @@ const currencies = [
                 </div>
 
                 <!-- Receipt Settings -->
-                <div class="rounded-2xl border border-line bg-surface p-6">
+                <div v-if="modules.has('orders')" class="rounded-2xl border border-line bg-surface p-6">
                     <h3 class="font-display mb-4 text-lg font-normal text-fg">
                         Receipt Settings
                     </h3>
